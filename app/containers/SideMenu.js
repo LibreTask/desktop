@@ -153,7 +153,7 @@ const SideMenu = (props) => {
 
         if (props.isLoggedIn) {
           props.closeSideMenu();
-          hashHistory.replace('/profile');
+          hashHistory.push('/profile');
         } else {
           props.toggleLoginDialog();
         }

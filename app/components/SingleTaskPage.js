@@ -172,6 +172,16 @@ class SingleTaskPage extends Component {
           {task.notes || 'No notes yet'}
         </div>
 
+        <h3> Due Date </h3>
+
+        <div style={styles.textField}>
+          {
+            task.dueDateTimeUtc
+            ? task.dueDateTimeUtc.toString()
+            : 'No due date yet'
+          }
+        </div>
+
         <RaisedButton
           label="Edit"
           style={styles.button}

@@ -13,6 +13,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
+import DatePicker from 'material-ui/DatePicker';
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -224,6 +225,34 @@ class EditTask extends Component {
     </DropDownMenu>
   }
 
+  _datePicker = () => {
+    const minDate = new Date();
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() + 10);
+
+    const defaultDate =
+      this.state.task.dueDateTimeUtc
+      ? new Date(this.state.task.dueDateTimeUtc)
+      : minDate
+
+    return (
+      <DatePicker
+        floatingLabelText="Due Date"
+        defaultDate={defaultDate}
+        autoOk={false}
+        minDate={minDate}
+        maxDate={maxDate}
+        container="inline"
+        disableYearSelection={false}
+        onChange={(skip, selectedDate) => {
+            let task = this.state.task
+            task.dueDateTimeUtc = selectedDate
+            this.setState({task: task})
+        }}
+      />
+    )
+  }
+
   render = () => {
 
     // TODO - add other task attributes here as well
@@ -311,6 +340,12 @@ class EditTask extends Component {
             }
           }
         />
+
+        <br/>
+
+        <h3> Due Date </h3>
+
+        {this._datePicker()}
 
         <br/>
 
