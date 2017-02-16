@@ -90,7 +90,7 @@ function _constructListsDropdown(props) {
           }}
           onClick={()=>{
             props.closeSideMenu();
-            hashHistory.replace('/list/create');
+            hashHistory.push('/list/create');
           }}>
 
           <span className={'sideMenuItem'}>

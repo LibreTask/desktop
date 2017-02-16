@@ -107,6 +107,7 @@ class Login extends Component {
          hashHistory.replace('/'); // navigate to main on successful login
        })
        .catch( error => {
+
             this.setState({
              loginError: error.message,
              isLoggingIn: false

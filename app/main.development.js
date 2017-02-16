@@ -68,8 +68,8 @@ app.on('ready', async () => {
   // TODO - window-width
   mainWindow = new BrowserWindow({
     show: false,
-    width: 400,
-    height: 430,
+    width: 420,
+    height: 445,
     title: '' // TODO - make it dynamic and useful
   });
 

@@ -67,11 +67,8 @@ class EditTask extends Component {
 
     let task = this._getTask()
 
-    let transitionLocation = `/tasks/${task.listId}`
-
-    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON,
-       transitionLocation)
-   this.props.setNavbarTitle('Edit List')
+    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setNavbarTitle('Edit List')
   }
 
   componentWillUnmount() {

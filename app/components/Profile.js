@@ -54,6 +54,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Profile')
   }
 
@@ -326,7 +327,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
-  setNavbarTitle: NavbarActions.setNavbarTitle
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setRightNavButton: NavbarActions.setRightNavButton,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

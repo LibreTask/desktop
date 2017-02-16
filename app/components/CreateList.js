@@ -48,6 +48,7 @@ class CreateList extends Component {
 
   componentDidMount() {
     this.props.setNavbarTitle('Create List')
+    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
   }
 
   _createList = () => {
@@ -152,6 +153,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   createOrUpdateList: ListActions.createOrUpdateList,
+  setRightNavButton: NavbarActions.setRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
 };
 

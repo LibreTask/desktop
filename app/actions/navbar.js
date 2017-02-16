@@ -3,7 +3,13 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-export function setRightNavButton(rightButtonLocation, transitionLocation) {
+/*
+ When rightButtonLocation === AppConstants.BACK_NAVBAR_BUTTON, then a
+ transitionLocation is not used, because we simply hashHistory.goBack()
+*/
+export function setRightNavButton(rightButtonLocation,
+  transitionLocation = undefined) {
+
   return {
     type: 'SET_RIGHT_NAV_BUTTON',
     rightButton: rightButtonLocation,

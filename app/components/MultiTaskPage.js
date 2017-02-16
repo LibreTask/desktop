@@ -290,7 +290,7 @@ class MultiTaskPage extends Component {
           onClick={
             (event) => {
               this.props.removeRightNavButton(); // remove before transition
-              hashHistory.replace(`/task/${task.id}`);
+              hashHistory.push(`/task/${task.id}`);
             }
           }
           primaryText={task.name}
@@ -356,7 +356,7 @@ class MultiTaskPage extends Component {
           let listId = this._getListId()
 
           this.props.removeRightNavButton(); // remove before transition
-          hashHistory.replace(`/task/create/${listId}`);
+          hashHistory.push(`/task/create/${listId}`);
         }}>
       </ListItem>
     );

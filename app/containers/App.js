@@ -135,7 +135,7 @@ class App extends Component {
         iconStyle={styles.mediumIcon}
         style={styles.mediumRightNavButton}
         onTouchTap={() => {
-            hashHistory.replace(this.props.rightNavTransitionLocation);
+            hashHistory.push(this.props.rightNavTransitionLocation);
         }}>
           <ModeEdit/>
       </IconButton>
@@ -145,7 +145,7 @@ class App extends Component {
               hoverColor="transparent"
               style={styles.mediumRightBackButton}
               onTouchTap={() => {
-                hashHistory.replace(this.props.rightNavTransitionLocation);
+                hashHistory.goBack(); // back button always goes back
               }}
             />
     }

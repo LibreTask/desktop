@@ -7,8 +7,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link } from 'react-router';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import Divider from 'material-ui/Divider';
+
 import AppConstants from '../constants';
+import AppStyles from '../styles';
 
 import * as NavbarActions from '../actions/navbar'
 
@@ -18,6 +20,9 @@ const styles = {
   main: {
     margin: 12,
     color: '#000000',
+  },
+  dividerPadding: {
+    paddingVertical: 5
   },
   button: {
     marginBottom: 20,
@@ -31,6 +36,10 @@ const styles = {
     marginBottom: 10,
     fontSize: '120%'
   },
+  linkText: {
+    fontSize: '110%',
+    color: AppStyles.linkColor
+  }
 };
 
 class About extends Component {
@@ -44,33 +53,52 @@ class About extends Component {
     return (
       <div style={styles.main}>
 
+        <h3>Algernon</h3>
+
         <div style={styles.textField}>
-          Seamlessly sync tasks across all devices.
+          Organize your goals, track your progress, and have updates seamlessly sync across all of your devices.
         </div>
 
-        <RaisedButton
-          label="Terms"
-          style={styles.button}
-          onTouchTap={() => {
-             // TODO - consider going manually via a-href
-             shell.openExternal(AppConstants.PRODUCT_TERMS_LINK)
-           }}
-         />
+        <Divider />
 
-        <RaisedButton
-          label="Privacy"
-          style={styles.button}
-           onTouchTap={() => {
-             // TODO - consider going manually via a-href
-              shell.openExternal(AppConstants.PRODUCT_PRIVACY_LINK)
-           }}
-         />
+        <p style={styles.linkText} onClick={() => {
+          shell.openExternal(AppConstants.WEBSITE_LINK)
+        }}>
+          Website
+        </p>
+
+        <Divider />
+
+        <p style={styles.linkText} onClick={() => {
+          shell.openExternal(AppConstants.SOURCE_CODE_LINK)
+        }}>
+          Source Code
+        </p>
+
+        <Divider />
+
+        <p style={styles.linkText} onClick={() => {
+          shell.openExternal(AppConstants.PRODUCT_PRIVACY_LINK)
+        }}>
+          Privacy Policy
+        </p>
+
+        <Divider />
+
+        <p style={styles.linkText} onClick={() => {
+          shell.openExternal(AppConstants.PRODUCT_TERMS_LINK)
+        }}>
+          Terms of Service
+        </p>
+
+        <Divider />
+
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({ });
+const mapStateToProps = (state) => ({ /* TODO */ });
 
 const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle

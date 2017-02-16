@@ -48,6 +48,7 @@ class CreateTask extends Component {
 
   componentDidMount() {
     this.props.setNavbarTitle('Create Task')
+    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
   }
 
   _getListId = () => {
@@ -166,7 +167,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
-  setNavbarTitle: NavbarActions.setNavbarTitle
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setRightNavButton: NavbarActions.setRightNavButton,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateTask);
