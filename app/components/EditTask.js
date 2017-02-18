@@ -39,6 +39,12 @@ const styles = {
   textField: {
     fontSize: '120%'
   },
+  errorText: {
+    color: 'red'
+  },
+  successText: {
+    color: 'green'
+  }
 }
 
 class EditTask extends Component {
@@ -49,6 +55,7 @@ class EditTask extends Component {
     this.state = {
       deleteError: '',
       updateError: '',
+      updateSuccess: '',
       isDeleting: false,
       isUpdating: false,
       deleteTaskDialogIsOpen: false,
@@ -149,6 +156,11 @@ class EditTask extends Component {
   _updateTaskLocally = (task) => {
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
+
+    this.setState({updateSuccess: 'Successfully updated'})
+
+    // erase update success text after 1.5 seconds
+    setTimeout(() => this.setState({updateSuccess: ''}), 1500)
   }
 
   /*
@@ -193,7 +205,6 @@ class EditTask extends Component {
   }
 
   _listDropdown = () => {
-
     let menuItems = [];
     let initialIndex = 1;
     let currentIndex = 1;
@@ -219,6 +230,52 @@ class EditTask extends Component {
       onChange={(event, key, payload) => {
         let task = this.state.task
         task.listId = Object.keys(this.props.lists)[key]
+        this.setState({task: task})
+      }}>
+      {menuItems}
+    </DropDownMenu>
+  }
+
+  _recurringFrequencyDropdown = () => {
+
+    let frequencyToIndex = {
+      'EVERYDAY': 0,
+      'ONCE': 1
+    }
+
+    let indexToFrequency = {
+      0: 'EVERYDAY',
+      1: 'ONCE'
+    }
+
+    let defaultFrequency = 'ONCE'
+    let defaultIndex = frequencyToIndex[defaultFrequency]
+
+    let menuItems = [
+      <MenuItem
+        key='EVERYDAY'
+        value={0}
+        primaryText='Everyday' />,
+      <MenuItem
+        key='ONCE'
+        value={1}
+        primaryText='Once' />
+
+      // TODO - expand these options
+    ];
+
+
+    let recurringFrequency = this.state.task.recurringFrequency
+
+    let initialIndex = (recurringFrequency in frequencyToIndex)
+      ? frequencyToIndex[recurringFrequency]
+      : defaultIndex
+
+    return <DropDownMenu
+      value={initialIndex}
+      onChange={(event, key, payload) => {
+        let task = this.state.task
+        task.recurringFrequency = indexToFrequency[key]
         this.setState({task: task})
       }}>
       {menuItems}
@@ -346,6 +403,22 @@ class EditTask extends Component {
         <h3> Due Date </h3>
 
         {this._datePicker()}
+
+        <br/>
+
+        <h3> Recurring Frequency </h3>
+
+        {this._recurringFrequencyDropdown()}
+
+        <br/>
+
+        <div style={styles.errorText}>
+          {this.state.updateError}
+        </div>
+
+        <div style={styles.successText}>
+          {this.state.updateSuccess}
+        </div>
 
         <br/>
 

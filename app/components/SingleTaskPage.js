@@ -124,6 +124,19 @@ class SingleTaskPage extends Component {
     hashHistory.replace(`/tasks/${task.listId}`)
   }
 
+  _renderRecurringFrequency = () => {
+    let frequencyToHumanReadable = {
+      'EVERYDAY': 'Everyday',
+      'ONCE': 'Once'
+    }
+
+    let frequency = this.state.task.recurringFrequency
+
+    return (frequency in frequencyToHumanReadable)
+      ? frequencyToHumanReadable[frequency] 
+      : 'Currently unspecified'
+  }
+
   render = () => {
 
     let task = this.state.task
@@ -184,6 +197,14 @@ class SingleTaskPage extends Component {
             ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
             : 'No due date yet'
           }
+        </div>
+
+        <Divider style={styles.divider}/>
+
+        <h3> Recurring Frequency </h3>
+
+        <div style={styles.textField}>
+          { this._renderRecurringFrequency()}
         </div>
 
         <RaisedButton

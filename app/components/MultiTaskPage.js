@@ -56,6 +56,10 @@ const styles = {
   completedTask: {
     opacity: 0.3,
     // TODO - strike through the task when completed
+  },
+  emptyListText: {
+    margin: 30,
+    fontSize: '140%'
   }
 }
 
@@ -410,9 +414,24 @@ class MultiTaskPage extends Component {
       listItems.push(this._renderRow(task))
     }
 
+    // add create task footer; if a specific list is selected
     if (myListId !== AppConstants.ALL_TASKS_IDENTIFIER) {
-      // add create task footer; if a specific list is selected
       listItems.push(this._renderCreateTaskFooter())
+    }
+
+    // if no tasks exist, and no list selected, display
+    // text so that the screen is not blank
+    if (myListId === AppConstants.ALL_TASKS_IDENTIFIER
+      && tasksToDisplay.length === 0) {
+
+        // TODO - consider adding a more accessible way to create a task
+        // for this scenario, like a link, etc 
+
+        return (
+          <div style={styles.emptyListText}>
+            Navigate to a new or existing list, then create a task.
+          </div>
+        )
     }
 
     return <List>
