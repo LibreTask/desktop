@@ -59,9 +59,9 @@ export function invoke(request) {
   .catch(error => {
 
     if (error.error && error.error.code === 'ECONNREFUSED') {
-      throw new NoConnection();
+      throw new NoConnection()
     } else {
       throw new Error(humanReadableError(error))
     }
-  });
+  })
 }

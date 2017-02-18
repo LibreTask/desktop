@@ -3,7 +3,7 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 import AppStyles from '../styles'
 
@@ -18,7 +18,7 @@ const styles = {
     padding: '16px',
     fontSize: '1.5em',
   },
-};
+}
 
 const TitlePanel = (props) => {
   const rootStyle = props.style
@@ -34,8 +34,8 @@ const TitlePanel = (props) => {
 
       {props.children}
     </div>
-  );
-};
+  )
+}
 
 TitlePanel.propTypes = {
   style: PropTypes.object,
@@ -44,6 +44,6 @@ TitlePanel.propTypes = {
     PropTypes.object,
   ]),
   children: PropTypes.object,
-};
+}
 
 export default TitlePanel;

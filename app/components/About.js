@@ -3,14 +3,14 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router';
+import { Link } from 'react-router'
 
-import Divider from 'material-ui/Divider';
+import Divider from 'material-ui/Divider'
 
-import AppConstants from '../constants';
-import AppStyles from '../styles';
+import AppConstants from '../constants'
+import AppStyles from '../styles'
 
 import * as NavbarActions from '../actions/navbar'
 
@@ -40,7 +40,7 @@ const styles = {
     fontSize: '110%',
     color: AppStyles.linkColor
   }
-};
+}
 
 class About extends Component {
 
@@ -94,14 +94,14 @@ class About extends Component {
         <Divider />
 
       </div>
-    );
+    )
   }
 }
 
-const mapStateToProps = (state) => ({ /* TODO */ });
+const mapStateToProps = (state) => ({ /* TODO */ })
 
 const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(About);
+export default connect(mapStateToProps, mapDispatchToProps)(About)

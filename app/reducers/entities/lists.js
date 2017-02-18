@@ -19,16 +19,13 @@ import {
 import * as _ from 'lodash'
 
 function deleteAllLists(state, action) {
-  return {};
+  return {}
 }
 
 function deleteList(state, action) {
-  const listId = action.list.listId
-
-  let updatedListEntry = {}
-  updatedListEntry[listId] = undefined;
-
-  return updateObject(state, updatedListEntry);
+  // TODO - can we filter instead?
+  delete state[action.listId]
+  return state
 }
 
 function addLists(state, action) {
@@ -40,15 +37,15 @@ function addLists(state, action) {
 }
 
 function addList(state, action) {
-  return addNormalizedList(state, action.list);
+  return addNormalizedList(state, action.list)
 }
 
 function addNormalizedList(state, normalizedList) {
 
-  let updatedListEntry = {};
+  let updatedListEntry = {}
   updatedListEntry[normalizedList.id] = normalizedList;
 
-  return updateObject(state, updatedListEntry);
+  return updateObject(state, updatedListEntry)
 }
 
 function syncLists(state, action) {
@@ -60,7 +57,7 @@ function syncLists(state, action) {
 
 const initialState = {
   // listId: {public list attributes}
-};
+}
 
 function listsReducer(state = initialState, action) {
   switch(action.type) {
@@ -75,25 +72,25 @@ function listsReducer(state = initialState, action) {
       TODO - doc
     */
     case CREATE_OR_UPDATE_LIST:
-      return addList(state, action);
+      return addList(state, action)
 
     /*
       TODO - doc
     */
     case CREATE_OR_UPDATE_LISTS:
-      return addLists(state, action);
+      return addLists(state, action)
 
     /*
       TODO - doc
     */
     case DELETE_LIST:
-      return deleteList(state, action);
+      return deleteList(state, action)
 
     /*
       TODO - doc
     */
     case DELETE_ALL_LISTS:
-      return deleteAllLists(state, action);
+      return deleteAllLists(state, action)
 
     default:
       return state;

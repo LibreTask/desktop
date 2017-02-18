@@ -6,9 +6,9 @@
 // TODO - how to properly create DB and share across all storage adapters?
 
 import PouchDB from 'pouchdb-browser'
-PouchDB.plugin(require('pouchdb-upsert'));
+PouchDB.plugin(require('pouchdb-upsert'))
 
-let db = new PouchDB('./endoradb', {adapter: 'websql'});
+let db = new PouchDB('./endoradb', {adapter: 'websql'})
 
 function _endoraFormat(profile) {
   let endoraFormattedProfile = {}
@@ -27,7 +27,7 @@ export function createOrUpdateProfile(profile) {
 
   console.log("createOrUpdateProfile")
 
-  console.dir(db);
+  console.dir(db)
 
   // TODO - use encrypted storage for confidential information
 
@@ -37,15 +37,15 @@ export function createOrUpdateProfile(profile) {
     profile.type = 'profile' // type helps differentiates between all objects
 
     return profile;
-  });
+  })
 }
 
 export function deleteProfile() {
-  return cleanProfileStorage();
+  return cleanProfileStorage()
 }
 
 export async function getMyProfile() {
-    return _endoraFormat(await db.get('profile'));
+    return _endoraFormat(await db.get('profile'))
 }
 
 export function logout() {
@@ -56,7 +56,7 @@ export async function isLoggedIn() {
 
   // TODO - refine this approach
 
-  let profile = await getMyProfile();
+  let profile = await getMyProfile()
 
   return profile !== null
     && profile !== undefined
@@ -69,6 +69,6 @@ export function cleanProfileStorage() {
 
     // and then recreate the database, in case the user wants to
     // log in again or perform other actions
-    db = new PouchDB('./endoradb', {adapter: 'websql'});
-  });
+    db = new PouchDB('./endoradb', {adapter: 'websql'})
+  })
 }

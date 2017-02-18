@@ -3,14 +3,14 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router'
 
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog'
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton'
 
 import * as NavbarActions from '../actions/navbar'
 import * as ListActions from '../actions/entities/list'
@@ -20,7 +20,8 @@ import * as UserController from '../models/controllers/user'
 
 import Validator from 'validator'
 
-import AppConstants from '../constants';
+import AppConstants from '../constants'
+import AppStyles from '../styles'
 
 const styles = {
   main: {
@@ -28,10 +29,9 @@ const styles = {
     color: '#000000',
   },
   button: {
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20,
+    marginBottom: 10,
+    marginTop: 10,
+    width: 200,
     fontSize: '120%'
   },
   textField: {
@@ -47,7 +47,7 @@ const styles = {
   successText: {
     color: 'green'
   }
-};
+}
 
 class EditList extends Component {
 
@@ -79,7 +79,7 @@ class EditList extends Component {
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton();
+    this.props.removeRightNavButton()
   }
 
   _getList = () => {
@@ -123,9 +123,9 @@ class EditList extends Component {
                this.setState({
                  updateError: error.message,
                  isUpdatingList: false
-               });
+               })
              }
-         });
+         })
       })
     } else {
       this._editListLocally(list)
@@ -168,9 +168,9 @@ class EditList extends Component {
               this.setState({
                 deleteError: error.message,
                 isDeletingList: false
-              });
+              })
             }
-         });
+         })
       })
     } else {
       this._deleteListLocallyAndRedirect(listId)
@@ -180,7 +180,7 @@ class EditList extends Component {
   _deleteListLocallyAndRedirect = (listId) => {
     ListStorage.deleteListByListId(listId)
     this.props.deleteList(listId)
-    hashHistory.replace(`/`); // navigate to main on deletion
+    hashHistory.replace(`/`) // navigate to main on deletion
   }
 
   render = () => {
@@ -199,7 +199,7 @@ class EditList extends Component {
         keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteListDialogIsOpen: false})
-          this._deleteList();
+          this._deleteList()
         }}
       />,
     ];
@@ -253,19 +253,21 @@ class EditList extends Component {
 
         <RaisedButton
           label="Update"
+          labelColor={AppStyles.linkColor}
           style={styles.button}
            onTouchTap={this._editList}
          />
 
          <RaisedButton
            label="Delete"
+           labelColor={AppStyles.linkColor}
            style={styles.button}
             onTouchTap={() => {
               this.setState({deleteListDialogIsOpen: true})
             }}
           />
       </div>
-    );
+    )
   }
 }
 
@@ -273,7 +275,7 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   lists: state.entities.lists,
-});
+})
 
 const mapDispatchToProps = {
   createOrUpdateList: ListActions.createOrUpdateList,
@@ -281,6 +283,6 @@ const mapDispatchToProps = {
   setRightNavButton: NavbarActions.setRightNavButton,
   removeRightNavButton: NavbarActions.removeRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditList);
+export default connect(mapStateToProps, mapDispatchToProps)(EditList)

@@ -3,15 +3,15 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router'
 
-import Divider from 'material-ui/Divider';
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
+import Divider from 'material-ui/Divider'
+import Dialog from 'material-ui/Dialog'
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -19,7 +19,9 @@ import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
-import AppConstants from '../constants';
+import dateFormat from 'dateformat'
+
+import AppConstants from '../constants'
 
 const styles = {
   main: {
@@ -40,7 +42,7 @@ const styles = {
     marginTop: 15,
     marginBottom: 15
   }
-};
+}
 
 class SingleTaskPage extends Component {
 
@@ -69,7 +71,7 @@ class SingleTaskPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton();
+    this.props.removeRightNavButton()
   }
 
   _getTask = () => {
@@ -107,19 +109,19 @@ class SingleTaskPage extends Component {
              this.setState({
                deleteError: error.message,
                isDeleting: false
-             });
+             })
            }
-         });
+         })
       })
     } else {
-      this._deleteProfileLocallyAndRedirect(task)
+      this._deleteTaskLocallyAndRedirect(task)
     }
   }
 
   _deleteTaskLocallyAndRedirect = (task) => {
     TaskStorage.deleteTaskByTaskId(task.id)
     this.props.deleteTask(task.id)
-    hashHistory.replace(`/tasks/${task.listId}`);
+    hashHistory.replace(`/tasks/${task.listId}`)
   }
 
   render = () => {
@@ -139,7 +141,7 @@ class SingleTaskPage extends Component {
         keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteTaskDialogIsOpen: false})
-          this._onDeleteTask();
+          this._onDeleteTask()
         }}
       />,
     ];
@@ -172,12 +174,14 @@ class SingleTaskPage extends Component {
           {task.notes || 'No notes yet'}
         </div>
 
+        <Divider style={styles.divider}/>
+
         <h3> Due Date </h3>
 
         <div style={styles.textField}>
           {
             task.dueDateTimeUtc
-            ? task.dueDateTimeUtc.toString()
+            ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
             : 'No due date yet'
           }
         </div>
@@ -186,7 +190,7 @@ class SingleTaskPage extends Component {
           label="Edit"
           style={styles.button}
            onTouchTap={() => {
-              hashHistory.push(`/task/${task.id}/edit`);
+              hashHistory.push(`/task/${task.id}/edit`)
            }}
          />
 
@@ -198,7 +202,7 @@ class SingleTaskPage extends Component {
            }}
           />
       </div>
-    );
+    )
   }
 }
 
@@ -207,7 +211,7 @@ const mapStateToProps = (state) => ({
   profile: state.user.profile,
   lists: state.entities.lists,
   tasks: state.entities.tasks
-});
+})
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
@@ -215,6 +219,6 @@ const mapDispatchToProps = {
   setRightNavButton: NavbarActions.setRightNavButton,
   removeRightNavButton: NavbarActions.removeRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(SingleTaskPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SingleTaskPage)

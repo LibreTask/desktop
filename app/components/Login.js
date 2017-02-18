@@ -3,12 +3,12 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
-import { hashHistory } from 'react-router';
+import React, { Component } from 'react'
+import { hashHistory } from 'react-router'
 import { connect } from 'react-redux'
 
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
 
 import * as NavbarActions from '../actions/navbar'
 import * as UserController from '../models/controllers/user'
@@ -16,7 +16,7 @@ import * as ProfileStorage from '../models/storage/profile-storage'
 import * as UserActions from '../actions/entities/user'
 
 import AppStyles from '../styles'
-import AppConstants from '../constants';
+import AppConstants from '../constants'
 
 import Validator from 'validator'
 
@@ -42,7 +42,7 @@ const styles = {
   errorText: {
     color: 'red'
   }
-};
+}
 
 class Login extends Component {
 
@@ -104,15 +104,15 @@ class Login extends Component {
          this.props.createOrUpdateProfile(profile)
          ProfileStorage.createOrUpdateProfile(profile)
 
-         hashHistory.replace('/'); // navigate to main on successful login
+         hashHistory.replace('/') // navigate to main on successful login
        })
        .catch( error => {
 
             this.setState({
              loginError: error.message,
              isLoggingIn: false
-           });
-       });
+           })
+       })
     })
   }
 
@@ -165,15 +165,15 @@ class Login extends Component {
            onTouchTap={this._login}
          />
       </div>
-    );
+    )
   }
 }
 
-const mapStateToProps = (state) => ({ /* TODO */ });
+const mapStateToProps = (state) => ({ /* TODO */ })
 
 const mapDispatchToProps = {
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

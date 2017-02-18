@@ -3,21 +3,22 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
-import { hashHistory } from 'react-router';
+import React, { Component } from 'react'
+import { hashHistory } from 'react-router'
 import { connect } from 'react-redux'
 
-import TextField from 'material-ui/TextField';
+import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
 
 import * as NavbarActions from '../actions/navbar'
 import * as UserActions from '../actions/entities/user'
 import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
 
-import AppConstants from '../constants';
+import AppConstants from '../constants'
+import AppStyles from '../styles'
 import Validator from 'validator'
 
 const styles = {
@@ -29,13 +30,12 @@ const styles = {
     fontSize: '120%'
   },
   button: {
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20,
+    marginBottom: 10,
+    marginTop: 10,
+    width: 200,
     fontSize: '120%'
-  }
-};
+  },
+}
 
 class Profile extends Component {
 
@@ -85,7 +85,7 @@ class Profile extends Component {
     let updatedProfile = Object.assign({}, this.props.profile, {
       name: updatedName,
       email: updatedEmail
-    });
+    })
 
     this.setState({
       isUpdatingProfile: true,
@@ -105,7 +105,7 @@ class Profile extends Component {
 
          // TODO - toast success
 
-         this.setState({isUpdatingProfile: false});
+         this.setState({isUpdatingProfile: false})
 
        })
        .catch( error => {
@@ -116,9 +116,9 @@ class Profile extends Component {
             this.setState({
               updateError: error.message,
               isUpdatingProfile: false
-            });
+            })
           }
-       });
+       })
     })
   }
 
@@ -148,9 +148,9 @@ class Profile extends Component {
            this.setState({
              updateError: error.message,
              isUpdatingProfile: false
-           });
+           })
          }
-       });
+       })
     })
   }
 
@@ -158,7 +158,7 @@ class Profile extends Component {
     this.props.deleteProfile()
     ProfileStorage.deleteProfile()
 
-    hashHistory.replace('/'); // navigate to main on deletion
+    hashHistory.replace('/') // navigate to main on deletion
   }
 
   _onAccountUpgrade = () => {
@@ -179,8 +179,8 @@ class Profile extends Component {
          this.setState({
            updateError: 'An error occurred',
            isUpdatingProfile: false
-         });
-     });
+         })
+     })
   }
 
   _onAccountDowngrade = () => {
@@ -202,8 +202,8 @@ class Profile extends Component {
          this.setState({
            updateError: 'An error occurred',
            isUpdatingProfile: false
-         });
-     });
+         })
+     })
   }
 
   _accountStatusButton = () => {
@@ -213,6 +213,7 @@ class Profile extends Component {
       accountStatusButton = (
         <RaisedButton
           style={styles.button}
+          labelColor={AppStyles.linkColor}
           label="Downgrade"
           onTouchTap={this._onAccountDowngrade}
          />
@@ -221,6 +222,7 @@ class Profile extends Component {
       accountStatusButton = (
         <RaisedButton
           style={styles.button}
+          labelColor={AppStyles.linkColor}
           label="Upgrade"
           onTouchTap={this._onAccountUpgrade}
          />
@@ -237,7 +239,7 @@ class Profile extends Component {
         label="Cancel"
         primary={true}
         onTouchTap={() => {
-          this.setState({deleteProfileDialogIsOpen})
+          this.setState({deleteProfileDialogIsOpen: false})
         }}
       />,
       <FlatButton
@@ -246,7 +248,7 @@ class Profile extends Component {
         keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteProfileDialogIsOpen: false})
-          this._onProfileDelete();
+          this._onProfileDelete()
         }}
       />,
     ];
@@ -254,7 +256,7 @@ class Profile extends Component {
     return (
       <div style={styles.main}>
         <Dialog
-          title=""
+          title="Profile Deletion"
           actions={actions}
           modal={false}
           open={this.state.deleteProfileDialogIsOpen}
@@ -300,35 +302,41 @@ class Profile extends Component {
         <div>
           <RaisedButton
             style={styles.button}
+            labelColor={AppStyles.linkColor}
             label="Update"
             onTouchTap={this._onProfileUpdate}
            />
 
+           <br/>
+
            <RaisedButton
              style={styles.button}
+             labelColor={AppStyles.linkColor}
              label="Delete"
              onTouchTap={()=>{
                this.setState({deleteProfileDialogIsOpen: true })
              }}
             />
 
+            <br/>
+
             {this._accountStatusButton()}
         </div>
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile
-});
+})
 
 const mapDispatchToProps = {
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setRightNavButton: NavbarActions.setRightNavButton,
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

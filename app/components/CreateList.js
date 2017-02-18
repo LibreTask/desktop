@@ -3,12 +3,12 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router'
 
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
 
 import * as NavbarActions from '../actions/navbar'
 import * as ListActions from '../actions/entities/list'
@@ -18,7 +18,7 @@ import * as UserController from '../models/controllers/user'
 
 import Validator from 'validator'
 
-import AppConstants from '../constants';
+import AppConstants from '../constants'
 
 const styles = {
   main: {
@@ -31,7 +31,7 @@ const styles = {
   errorText: {
     color: 'red'
   }
-};
+}
 
 class CreateList extends Component {
 
@@ -85,7 +85,7 @@ class CreateList extends Component {
           this.props.createOrUpdateList(list)
 
           // navigate to main on success
-          hashHistory.replace(`/tasks/${list.id}`);
+          hashHistory.replace(`/tasks/${list.id}`)
          })
          .catch( error => {
 
@@ -95,9 +95,9 @@ class CreateList extends Component {
              this.setState({
                createError: error.message,
                isCreatingList: false
-             });
+             })
            }
-         });
+         })
       })
     } else {
       this._createListLocallyAndRedirect(name)
@@ -109,7 +109,7 @@ class CreateList extends Component {
     let list = ListController.constructListLocally(name, userId)
     ListStorage.createOrUpdateList(list)
     this.props.createOrUpdateList(list)
-    hashHistory.replace(`/tasks/${list.id}`);
+    hashHistory.replace(`/tasks/${list.id}`)
   }
 
   render = () => {
@@ -142,19 +142,19 @@ class CreateList extends Component {
            onTouchTap={this._createList}
          />
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile
-});
+})
 
 const mapDispatchToProps = {
   createOrUpdateList: ListActions.createOrUpdateList,
   setRightNavButton: NavbarActions.setRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateList);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateList)

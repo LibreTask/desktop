@@ -6,9 +6,9 @@
 import * as _ from 'lodash'
 
 import PouchDB from 'pouchdb-browser'
-PouchDB.plugin(require('pouchdb-upsert'));
+PouchDB.plugin(require('pouchdb-upsert'))
 
-const db = new PouchDB('./endoradb', {adapter: 'websql'});
+const db = new PouchDB('./endoradb', {adapter: 'websql'})
 
 function _endoraFormat(task) {
   let endoraFormattedTask = {}
@@ -24,7 +24,7 @@ function _endoraFormat(task) {
 }
 
 export async function getTaskByTaskId(taskId) {
-  return _endoraFormat(await db.get(taskId));
+  return _endoraFormat(await db.get(taskId))
 }
 
 export async function getAllTasks() {
@@ -32,11 +32,11 @@ export async function getAllTasks() {
   function map(doc) {
 
     if (doc.type === 'task') {
-      emit(doc);
+      emit(doc)
     }
   }
 
-  let tasks = await db.query(map);
+  let tasks = await db.query(map)
 
   let taskMap = {}
   for (let task of tasks.rows) {
@@ -51,11 +51,11 @@ export async function getTasksByListId(listId) {
   function map(doc) {
 
     if (doc.type === 'task' && doc.listd === listId ) {
-      emit(doc);
+      emit(doc)
     }
   }
 
-  let tasks = await db.query(map);
+  let tasks = await db.query(map)
 
   let taskMap = {}
   for (let task of tasks.rows) {
@@ -80,7 +80,7 @@ export function createOrUpdateTask(task) {
     task.type = 'task'
 
     return task;
-  });
+  })
 }
 
 export function deleteTaskByTaskId(taskId) {

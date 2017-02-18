@@ -4,7 +4,7 @@
  */
 
 import { combineReducers } from 'redux'
-import { routerReducer as routing } from 'react-router-redux';
+import { routerReducer as routing } from 'react-router-redux'
 
 import sideMenu from './ui/sidemenu'
 import navbar from './ui/navbar'
@@ -23,13 +23,13 @@ const uiReducer = combineReducers({
   logoutdialog,
   sideMenu,
   navbar,
-});
+})
 
 const entitiesReducer = combineReducers({
   tasks: tasksReducer,
   lists: listsReducer,
   storeItems: storeItemsReducer
-});
+})
 
 const appReducer = combineReducers({
   ui: uiReducer,
@@ -37,14 +37,14 @@ const appReducer = combineReducers({
   user: userReducer,
   sync: syncReducer,
   routing
-});
+})
 
 const rootReducer = (state, action) => {
   if (action.type === 'RESET') {
     state = undefined;
   }
 
-  return appReducer(state, action);
-};
+  return appReducer(state, action)
+}
 
 export default rootReducer

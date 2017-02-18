@@ -3,25 +3,25 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
-import {hashHistory} from 'react-router';
+import React, { Component } from 'react'
+import {hashHistory} from 'react-router'
 import { connect } from 'react-redux'
 
-import TitlePanel from './TitlePanel';
-import SideMenu from './SideMenu';
+import TitlePanel from './TitlePanel'
+import SideMenu from './SideMenu'
 
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton'
-import FontIcon from 'material-ui/FontIcon';
+import FontIcon from 'material-ui/FontIcon'
 
 // see complete list of icons: https://material.io/icons/
-import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 
-import {deepOrange500} from 'material-ui/styles/colors';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {deepOrange500} from 'material-ui/styles/colors'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import * as SideMenuActions from '../actions/sidemenu'
 import * as LoginDialogActions from '../actions/logindialog'
@@ -37,13 +37,13 @@ import * as SyncActions from '../actions/sync'
 
 let Sidebar = require('react-sidebar').default;
 
-import AppConstants from '../constants';
+import AppConstants from '../constants'
 
 const muiTheme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500,
   },
-});
+})
 
 const styles = {
   contentHeaderMenuLink: {
@@ -69,15 +69,17 @@ const styles = {
     top: 0,
     right: 24,
     padding: '10px',
-    fontSize: '140%',
+  },
+  mediumRightBackButtonLabel: {
+    fontSize: '80%',
     fontWeight: 'bold',
   }
-};
+}
 
 class App extends Component {
   props: {
     children: HTMLElement
-  };
+  }
 
   constructor(props) {
     super(props)
@@ -117,12 +119,12 @@ class App extends Component {
   }
 
   _onSetOpen = (open) => {
-    this.props.toggleSideMenu();
+    this.props.toggleSideMenu()
   }
 
   _menuButtonClick = (ev) => {
-    ev.preventDefault();
-    this.props.toggleSideMenu();
+    ev.preventDefault()
+    this.props.toggleSideMenu()
   }
 
   render() {
@@ -135,7 +137,7 @@ class App extends Component {
         iconStyle={styles.mediumIcon}
         style={styles.mediumRightNavButton}
         onTouchTap={() => {
-            hashHistory.push(this.props.rightNavTransitionLocation);
+            hashHistory.push(this.props.rightNavTransitionLocation)
         }}>
           <ModeEdit/>
       </IconButton>
@@ -144,8 +146,9 @@ class App extends Component {
               label="Back"
               hoverColor="transparent"
               style={styles.mediumRightBackButton}
+              labelStyle={styles.mediumRightBackButtonLabel}
               onTouchTap={() => {
-                hashHistory.goBack(); // back button always goes back
+                hashHistory.goBack() // back button always goes back
               }}
             />
     }
@@ -159,7 +162,7 @@ class App extends Component {
           {navbutton}
         </span>
       </span>
-    );
+    )
 
     const sidebarProps = {
       sidebar: sidebar,
@@ -173,7 +176,7 @@ class App extends Component {
       dragToggleDistance: this.state.dragToggleDistance,
       transitions: this.state.transitions,
       onSetOpen: this._onSetOpen,
-    };
+    }
 
     const loginActions = [
       <FlatButton
@@ -191,7 +194,7 @@ class App extends Component {
         onTouchTap={() => {
             this.props.closeLoginDialog()
             this.props.closeSideMenu()
-            hashHistory.replace('/signup');
+            hashHistory.replace('/signup')
         }}
       />,
       <FlatButton
@@ -201,7 +204,7 @@ class App extends Component {
         onTouchTap={() => {
             this.props.closeLoginDialog()
             this.props.closeSideMenu()
-            hashHistory.replace('/login');
+            hashHistory.replace('/login')
         }}
       />,
     ];
@@ -224,12 +227,12 @@ class App extends Component {
             this.props.closeSideMenu()
 
             // remove profile and all entities
-            this.props.deleteProfile();
-            this.props.deleteAllTasks();
-            this.props.deleteAllLists();
-            ProfileStorage.logout();
+            this.props.deleteProfile()
+            this.props.deleteAllTasks()
+            this.props.deleteAllLists()
+            ProfileStorage.logout()
 
-            hashHistory.replace('/');
+            hashHistory.replace('/')
         }}
       />,
     ];
@@ -272,7 +275,7 @@ class App extends Component {
           </TitlePanel>
         </Sidebar>
       </MuiThemeProvider>
-    );
+    )
   }
 }
 
@@ -286,7 +289,7 @@ const mapStateToProps = (state) => ({
   rightNavButton: state.ui.navbar.rightButton,
   rightNavTransitionLocation: state.ui.navbar.transitionLocation,
   isSyncing: state.sync.isSyncing
-});
+})
 
 const mapDispatchToProps = {
   toggleSideMenu: SideMenuActions.toggle,
@@ -301,6 +304,6 @@ const mapDispatchToProps = {
   startSync: SyncActions.startSync,
   stopSync: SyncActions.stopSync,
   sync: SyncActions.sync
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App)

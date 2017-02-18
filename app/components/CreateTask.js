@@ -3,12 +3,12 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router'
 
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -18,7 +18,7 @@ import * as UserController from '../models/controllers/user'
 
 import Validator from 'validator'
 
-import AppConstants from '../constants';
+import AppConstants from '../constants'
 
 const styles = {
   main: {
@@ -31,7 +31,7 @@ const styles = {
   errorText: {
     color: 'red'
   }
-};
+}
 
 class CreateTask extends Component {
 
@@ -92,12 +92,13 @@ class CreateTask extends Component {
         .then( response => {
 
           let task = response.task
+          task.isCompleted = false // initialize to false 
 
           TaskStorage.createOrUpdateTask(task)
           this.props.createOrUpdateTask(task)
 
           // navigate to main on success
-          hashHistory.replace(`/tasks/${listId}`);
+          hashHistory.replace(`/tasks/${listId}`)
          })
          .catch( error => {
 
@@ -107,9 +108,9 @@ class CreateTask extends Component {
                this.setState({
                  createError: error.message,
                  isCreatingTask: false
-               });
+               })
              }
-         });
+         })
       })
     } else {
       this._createTaskLocallyAndRedirect(name, listId)
@@ -123,7 +124,7 @@ class CreateTask extends Component {
     this.props.createOrUpdateTask(task)
 
     // navigate to main on success
-    hashHistory.replace(`/tasks/${listId}`);
+    hashHistory.replace(`/tasks/${listId}`)
   }
 
   render = () => {
@@ -156,19 +157,19 @@ class CreateTask extends Component {
           onTouchTap={this._createTask}
          />
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile
-});
+})
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setRightNavButton: NavbarActions.setRightNavButton,
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTask);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTask)

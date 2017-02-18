@@ -15,7 +15,7 @@ import {
 
 const initialState = {
   storeItems: {},
-};
+}
 
 function storeItemsReducer(state = initialState, action) {
   return state;

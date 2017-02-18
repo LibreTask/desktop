@@ -37,15 +37,15 @@ export default function navbarReducer(state = initialState, action) {
           buttonIcon: action.rightButton.buttonIcon
         }
         */
-      });
+      })
     case 'REMOVE_RIGHT_NAV_BUTTON':
       return Object.assign({}, state, {
         rightButton: null
-      });
+      })
     case 'SET_NAVBAR_TITLE':
       return Object.assign({}, state, {
         title: action.title
-      });
+      })
     default:
       return state
   }

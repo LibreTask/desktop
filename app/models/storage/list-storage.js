@@ -6,9 +6,9 @@
 import * as _ from 'lodash'
 
 import PouchDB from 'pouchdb-browser'
-PouchDB.plugin(require('pouchdb-upsert'));
+PouchDB.plugin(require('pouchdb-upsert'))
 
-const db = new PouchDB('./endoradb', {adapter: 'websql'});
+const db = new PouchDB('./endoradb', {adapter: 'websql'})
 
 function _endoraFormat(list) {
   let endoraFormattedList = {}
@@ -32,11 +32,11 @@ export async function getAllLists() {
   function map(doc) {
 
     if (doc.type === 'list') {
-      emit(doc);
+      emit(doc)
     }
   }
 
-  let lists = await db.query(map);
+  let lists = await db.query(map)
 
   let listMap = {}
   for (let list of lists.rows) {
@@ -51,11 +51,11 @@ export async function getListsByUserId(userId) {
   function map(doc) {
 
     if (doc.type === 'list' && doc.userId === userId ) {
-      emit(doc);
+      emit(doc)
     }
   }
 
-  let lists = await db.query(map);
+  let lists = await db.query(map)
 
   let listMap = {}
   for (let list of lists.rows) {
@@ -80,7 +80,7 @@ export function createOrUpdateList(list) {
     list.type = 'list'
 
     return list;
-  });
+  })
 }
 
 export function deleteListByListId(listId) {

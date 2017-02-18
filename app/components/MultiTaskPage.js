@@ -3,26 +3,26 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {deepOrange500} from 'material-ui/styles/colors';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {List, ListItem} from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import {deepOrange500} from 'material-ui/styles/colors'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import {List, ListItem} from 'material-ui/List'
+import Checkbox from 'material-ui/Checkbox'
 
-const FaChevronRight = require('react-icons/lib/fa/chevron-right');
-const FaChevronDown = require('react-icons/lib/fa/chevron-down');
+const FaChevronRight = require('react-icons/lib/fa/chevron-right')
+const FaChevronDown = require('react-icons/lib/fa/chevron-down')
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 
-import AppConstants from '../constants';
-import AppStyles from '../styles';
+import AppConstants from '../constants'
+import AppStyles from '../styles'
 
 const styles = {
   container: {
@@ -52,20 +52,24 @@ const styles = {
     color: 'black',
     fontSize: '130%',
     fontWeight: 'bold'
+  },
+  completedTask: {
+    opacity: 0.3,
+    // TODO - strike through the task when completed
   }
-};
+}
 
 // TODO - look into alternate themes
 const muiTheme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500,
   },
-});
+})
 
 class MultiTaskPage extends Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     let millis = new Date()
     millis = millis.getTime()
@@ -88,7 +92,7 @@ class MultiTaskPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton();
+    this.props.removeRightNavButton()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -119,7 +123,7 @@ class MultiTaskPage extends Component {
   }
 
   _getHeaderName() {
-    let myListId = this._getListId();
+    let myListId = this._getListId()
 
     if (myListId === AppConstants.ALL_TASKS_IDENTIFIER) {
       return "All Tasks"
@@ -275,27 +279,43 @@ class MultiTaskPage extends Component {
 
     if (this._shouldRenderTask(task)) {
 
+      let listItemStyle =
+        task.isCompleted
+        ? {...styles.listItem, ...styles.completedTask}
+        : styles.listItem
+
       return (
         <ListItem
-          style={styles.listItem}
+          style={listItemStyle}
           key={`task-list-item-${task.id}`}
           leftCheckbox={
-            <Checkbox onClick={(eventcheck) => {
+            <Checkbox
+              checked={task.isCompleted}
+              onClick={(event) => {
 
-              // TODO - update status?
+              /*
+                We must use `onClick`, rather than `onCheck`, so that we can
+                stop event propagation. That means we do not have access to
+                the checked status, so we simply invert the task's current
+                completion status.
+              */
+              task.isCompleted = !task.isCompleted
 
-              eventcheck.stopPropagation();
+              TaskStorage.createOrUpdateTask(task)
+              this.props.createOrUpdateTask(task)
+
+              event.stopPropagation()
             }}/>
           }
           onClick={
             (event) => {
-              this.props.removeRightNavButton(); // remove before transition
-              hashHistory.push(`/task/${task.id}`);
+              this.props.removeRightNavButton() // remove before transition
+              hashHistory.push(`/task/${task.id}`)
             }
           }
           primaryText={task.name}
         />
-      );
+      )
     }
 
     return <div key={`empty-task-list-item-${task.id}`}></div>
@@ -355,20 +375,22 @@ class MultiTaskPage extends Component {
 
           let listId = this._getListId()
 
-          this.props.removeRightNavButton(); // remove before transition
-          hashHistory.push(`/task/create/${listId}`);
+          this.props.removeRightNavButton() // remove before transition
+          hashHistory.push(`/task/create/${listId}`)
         }}>
       </ListItem>
-    );
+    )
   }
 
   _getTasksToDisplay() {
-    let myListId = this._getListId();
+    let myListId = this._getListId()
 
     let tasks = []
 
     for (let taskId in this.props.tasks) {
       let task = this.props.tasks[taskId]
+
+      if (!task) continue;
 
       if (myListId === AppConstants.ALL_TASKS_IDENTIFIER
           || myListId === task.listId) {
@@ -381,13 +403,17 @@ class MultiTaskPage extends Component {
 
   _renderTasks() {
     let listItems = []
+    let myListId = this._getListId()
     let tasksToDisplay = this._getTasksToDisplay()
+
     for (let task of tasksToDisplay) {
-      listItems.push(this._renderRow(task));
+      listItems.push(this._renderRow(task))
     }
 
-    // add footer to list
-    listItems.push(this._renderCreateTaskFooter());
+    if (myListId !== AppConstants.ALL_TASKS_IDENTIFIER) {
+      // add create task footer; if a specific list is selected
+      listItems.push(this._renderCreateTaskFooter())
+    }
 
     return <List>
         {listItems}
@@ -399,7 +425,7 @@ class MultiTaskPage extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         {this._renderTasks()}
       </MuiThemeProvider>
-    );
+    )
   }
 }
 
@@ -409,13 +435,13 @@ const mapStateToProps = (state) => ({
   lists: state.entities.lists,
   tasks: state.entities.tasks,
   // TODO - currently selected list id
-});
+})
 
 const mapDispatchToProps = {
   setRightNavButton: NavbarActions.setRightNavButton,
   removeRightNavButton: NavbarActions.removeRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiTaskPage);
+export default connect(mapStateToProps, mapDispatchToProps)(MultiTaskPage)

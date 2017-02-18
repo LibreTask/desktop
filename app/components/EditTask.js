@@ -3,17 +3,17 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router'
 
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import DatePicker from 'material-ui/DatePicker';
+import Dialog from 'material-ui/Dialog'
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton'
+import DropDownMenu from 'material-ui/DropDownMenu'
+import MenuItem from 'material-ui/MenuItem'
+import DatePicker from 'material-ui/DatePicker'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -21,7 +21,7 @@ import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
-import AppConstants from '../constants';
+import AppConstants from '../constants'
 import Validator from 'validator'
 
 const styles = {
@@ -39,7 +39,7 @@ const styles = {
   textField: {
     fontSize: '120%'
   },
-};
+}
 
 class EditTask extends Component {
 
@@ -73,7 +73,7 @@ class EditTask extends Component {
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton();
+    this.props.removeRightNavButton()
   }
 
   _getTask = () => {
@@ -127,7 +127,7 @@ class EditTask extends Component {
 
           TaskStorage.createOrUpdateTask(task)
           this.props.createOrUpdateTask(task)
-          hashHistory.replace(`/tasks/${task.listId}`);
+          hashHistory.replace(`/tasks/${task.listId}`)
          })
          .catch( error => {
 
@@ -137,9 +137,9 @@ class EditTask extends Component {
               this.setState({
                 updateError: error.message,
                 isUpdating: false
-              });
+              })
             }
-         });
+         })
       })
     } else {
       this._updateTaskLocally(task)
@@ -177,9 +177,9 @@ class EditTask extends Component {
              this.setState({
                deleteError: error.message,
                isDeleting: false
-             });
+             })
            }
-         });
+         })
       })
     } else {
       this._deleteTaskLocallyAndRedirect(task)
@@ -189,7 +189,7 @@ class EditTask extends Component {
   _deleteTaskLocallyAndRedirect = (task) => {
     TaskStorage.deleteTaskByTaskId(task.id)
     this.props.deleteTask(task.id)
-    hashHistory.replace(`/tasks/${task.listId}`);
+    hashHistory.replace(`/tasks/${task.listId}`)
   }
 
   _listDropdown = () => {
@@ -226,9 +226,9 @@ class EditTask extends Component {
   }
 
   _datePicker = () => {
-    const minDate = new Date();
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() + 10);
+    const minDate = new Date()
+    const maxDate = new Date()
+    maxDate.setFullYear(maxDate.getFullYear() + 10)
 
     const defaultDate =
       this.state.task.dueDateTimeUtc
@@ -272,7 +272,7 @@ class EditTask extends Component {
         keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteTaskDialogIsOpen: false})
-          this._onDeleteTask();
+          this._onDeleteTask()
         }}
       />,
     ];
@@ -363,7 +363,7 @@ class EditTask extends Component {
            }}
           />
       </div>
-    );
+    )
   }
 }
 
@@ -372,7 +372,7 @@ const mapStateToProps = (state) => ({
   profile: state.user.profile,
   lists: state.entities.lists,
   tasks: state.entities.tasks
-});
+})
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
@@ -380,6 +380,6 @@ const mapDispatchToProps = {
   setRightNavButton: NavbarActions.setRightNavButton,
   removeRightNavButton: NavbarActions.removeRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditTask);
+export default connect(mapStateToProps, mapDispatchToProps)(EditTask)

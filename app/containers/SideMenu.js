@@ -3,14 +3,14 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { PropTypes } from 'react';
-import { hashHistory } from 'react-router';
+import React, { PropTypes } from 'react'
+import { hashHistory } from 'react-router'
 import { connect } from 'react-redux'
 
-const FaChevronRight = require('react-icons/lib/fa/chevron-right');
-const FaChevronDown = require('react-icons/lib/fa/chevron-down');
+const FaChevronRight = require('react-icons/lib/fa/chevron-right')
+const FaChevronDown = require('react-icons/lib/fa/chevron-down')
 
-import TitlePanel from './TitlePanel';
+import TitlePanel from './TitlePanel'
 
 import * as SideMenuActions from '../actions/sidemenu'
 import * as LoginDialogActions from '../actions/logindialog'
@@ -47,7 +47,7 @@ const styles = {
   listsChevron: {
     marginRight: 10,
   }
-};
+}
 
 function _constructListsDropdown(props) {
   let listsArrowImage =
@@ -69,16 +69,16 @@ function _constructListsDropdown(props) {
             style={styles.listsSubmenuItem}
             onClick={()=>{
 
-              props.closeSideMenu();
+              props.closeSideMenu()
 
               // navigate to tasks view for this list
-              hashHistory.replace(`/tasks/${list.id}`);
+              hashHistory.replace(`/tasks/${list.id}`)
             }}>
             <span className={'sideMenuItem'}>
               {list.name}
             </span>
           </div>
-        );
+        )
       }
 
       listsMenuItems.push(
@@ -89,15 +89,15 @@ function _constructListsDropdown(props) {
             ...{color: AppStyles.linkColor}
           }}
           onClick={()=>{
-            props.closeSideMenu();
-            hashHistory.push('/list/create');
+            props.closeSideMenu()
+            hashHistory.push('/list/create')
           }}>
 
           <span className={'sideMenuItem'}>
             Create List
           </span>
         </div>
-      );
+      )
     }
 
     return <div
@@ -130,8 +130,8 @@ const SideMenu = (props) => {
       style={styles.sidebarLink}
       onClick={
       () =>  {
-          props.closeSideMenu();
-          hashHistory.replace('/');
+          props.closeSideMenu()
+          hashHistory.replace('/')
       }
     }>
 
@@ -142,7 +142,7 @@ const SideMenu = (props) => {
     </div>,
   ];
 
-  sideMenuItems = sideMenuItems.concat(_constructListsDropdown(props));
+  sideMenuItems = sideMenuItems.concat(_constructListsDropdown(props))
 
   sideMenuItems.push(
     <div
@@ -152,10 +152,10 @@ const SideMenu = (props) => {
       () =>  {
 
         if (props.isLoggedIn) {
-          props.closeSideMenu();
-          hashHistory.push('/profile');
+          props.closeSideMenu()
+          hashHistory.push('/profile')
         } else {
-          props.toggleLoginDialog();
+          props.toggleLoginDialog()
         }
       }
     }>
@@ -163,7 +163,7 @@ const SideMenu = (props) => {
         Profile
       </span>
     </div>,
-  );
+  )
 
   if (props.isLoggedIn) {
     sideMenuItems.push(
@@ -172,7 +172,7 @@ const SideMenu = (props) => {
         style={styles.sidebarLink}
         onClick={
         () =>  {
-            props.toggleLogoutDialog();
+            props.toggleLogoutDialog()
         }
       }>
       <span className={'sideMenuItem'}>
@@ -188,15 +188,15 @@ const SideMenu = (props) => {
       style={styles.sidebarLink}
       onClick={
       () =>  {
-          props.closeSideMenu();
-          hashHistory.replace('/about');
+          props.closeSideMenu()
+          hashHistory.replace('/about')
       }
     }>
       <span className={'sideMenuItem'}>
         About
       </span>
     </div>
-  );
+  )
 
   let welcomeText = "Hello!"
   if (props.isLoggedIn && props.profile && props.profile.name) {
@@ -213,12 +213,12 @@ const SideMenu = (props) => {
         </style>
       </div>
     </TitlePanel>
-  );
-};
+  )
+}
 
 SideMenu.propTypes = {
   style: PropTypes.object,
-};
+}
 
 const mapStateToProps = (state) => ({
   sideMenuListsViewIsCollapsed: state.ui.sideMenu.isListsViewCollapsed,
@@ -228,7 +228,7 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   lists: state.entities.lists
-});
+})
 
 const mapDispatchToProps = {
   toggleListsView: SideMenuActions.toggleListsView,
@@ -238,6 +238,6 @@ const mapDispatchToProps = {
   closeLoginDialog: LoginDialogActions.close,
   toggleLogoutDialog: LogoutDialogActions.toggle,
   closeLogoutDialog: LogoutDialogActions.toggle,
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(SideMenu)

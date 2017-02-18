@@ -26,7 +26,7 @@ function addProfile(state, action) {
   return updateObject(state, {
     profile: action.profile,
     isLoggedIn: action.isLoggedIn
-  });
+  })
 }
 
 function syncProfile(state, action) {
@@ -43,7 +43,7 @@ function syncProfile(state, action) {
 const initialState = {
   profile: undefined,
   isLoggedIn: false
-};
+}
 
 function userReducer(state = initialState, action) {
   switch (action.type) {
@@ -58,13 +58,13 @@ function userReducer(state = initialState, action) {
       TODO - doc
     */
     case CREATE_OR_UPDATE_PROFILE:
-      return addProfile(state, action);
+      return addProfile(state, action)
 
     /*
       TODO - doc
     */
     case DELETE_PROFILE:
-      return deleteProfile(state, action);
+      return deleteProfile(state, action)
 
     default:
       return state;

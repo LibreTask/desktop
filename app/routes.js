@@ -3,9 +3,9 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React from 'react';
-import { Route, IndexRedirect } from 'react-router';
-import App from './containers/App';
+import React from 'react'
+import { Route, IndexRedirect } from 'react-router'
+import App from './containers/App'
 
 import About from './components/About'
 import CreateList from './components/CreateList'
@@ -48,4 +48,4 @@ export default (
     <Route path="/profile" component={Profile} />
     <Route path="/signup" component={Signup} />
   </Route>
-);
+)
