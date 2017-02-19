@@ -33,14 +33,20 @@ const styles = {
     marginTop: 20,
     marginLeft: 20,
     marginRight: 20,
-    fontSize: '120%'
+    fontSize: '110%'
   },
-  textField: {
-    fontSize: '120%'
+  header: {
+    fontSize: '110%',
+    fontWeight: 'bold'
+  },
+  taskFont: {
+    fontSize: '100%',
+    marginTop: 10,
+    marginBottom: 10
   },
   divider: {
-    marginTop: 15,
-    marginBottom: 15
+    marginTop: 10,
+    marginBottom: 10
   }
 }
 
@@ -133,7 +139,7 @@ class SingleTaskPage extends Component {
     let frequency = this.state.task.recurringFrequency
 
     return (frequency in frequencyToHumanReadable)
-      ? frequencyToHumanReadable[frequency] 
+      ? frequencyToHumanReadable[frequency]
       : 'Currently unspecified'
   }
 
@@ -173,25 +179,31 @@ class SingleTaskPage extends Component {
           Are you sure you want to delete this task?
         </Dialog>
 
-        <h3> List </h3>
+        <div style={styles.header}>
+          List
+        </div>
 
-        <div style={styles.textField}>
+        <div style={styles.taskFont}>
           {list.name}
         </div>
 
         <Divider style={styles.divider}/>
 
-        <h3> Notes </h3>
+        <div style={styles.header}>
+          Notes
+        </div>
 
-        <div style={styles.textField}>
+        <div style={styles.taskFont}>
           {task.notes || 'No notes yet'}
         </div>
 
         <Divider style={styles.divider}/>
 
-        <h3> Due Date </h3>
+        <div style={styles.header}>
+          Due Date
+        </div>
 
-        <div style={styles.textField}>
+        <div style={styles.taskFont}>
           {
             task.dueDateTimeUtc
             ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
@@ -201,9 +213,11 @@ class SingleTaskPage extends Component {
 
         <Divider style={styles.divider}/>
 
-        <h3> Recurring Frequency </h3>
+        <div style={styles.header}>
+          Recurring Frequency
+        </div>
 
-        <div style={styles.textField}>
+        <div style={styles.taskFont}>
           { this._renderRecurringFrequency()}
         </div>
 

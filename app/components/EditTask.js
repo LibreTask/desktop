@@ -9,11 +9,11 @@ import { hashHistory } from 'react-router'
 
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
-import DropDownMenu from 'material-ui/DropDownMenu'
+import TextField from 'material-ui/TextField'
 import MenuItem from 'material-ui/MenuItem'
 import DatePicker from 'material-ui/DatePicker'
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -29,6 +29,9 @@ const styles = {
     margin: 12,
     color: '#000000',
   },
+  radioButton: {
+    marginTop: 12,
+  },
   button: {
     marginBottom: 20,
     marginTop: 20,
@@ -37,7 +40,7 @@ const styles = {
     fontSize: '120%'
   },
   textField: {
-    fontSize: '120%'
+    fontSize: '100%'
   },
   errorText: {
     color: 'red'
@@ -59,6 +62,9 @@ class EditTask extends Component {
       isDeleting: false,
       isUpdating: false,
       deleteTaskDialogIsOpen: false,
+
+      listDialogIsOpen: false,
+      recurringFrequencyDialogIsOpen: false,
 
       // TODO - we keep these references in case props are updated
         // eg: when this exact task is deleted
@@ -204,8 +210,8 @@ class EditTask extends Component {
     hashHistory.replace(`/tasks/${task.listId}`)
   }
 
-  _listDropdown = () => {
-    let menuItems = [];
+  _renderListDialog = () => {
+    let radios = [];
     let initialIndex = 1;
     let currentIndex = 1;
 
@@ -213,10 +219,11 @@ class EditTask extends Component {
 
       let list = this.props.lists[listId]
 
-      menuItems.push(<MenuItem
+      radios.push(<RadioButton
         key={list.id}
         value={currentIndex}
-        primaryText={list.name} />)
+        label={list.name}
+        style={styles.radioButton} />)
 
       if (list.id === this.state.task.listId) {
         initialIndex = currentIndex; // found the task's parent list
@@ -225,18 +232,50 @@ class EditTask extends Component {
       currentIndex += 1;
     }
 
-    return <DropDownMenu
-      value={initialIndex}
-      onChange={(event, key, payload) => {
-        let task = this.state.task
-        task.listId = Object.keys(this.props.lists)[key]
-        this.setState({task: task})
-      }}>
-      {menuItems}
-    </DropDownMenu>
+    const actions = [
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={() => {
+          this.setState({listDialogIsOpen: false})
+        }}
+      />,
+      <FlatButton
+        label="Update"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => {
+          this.setState({listDialogIsOpen: false})
+        }}
+      />,
+    ]
+
+    return (
+      <Dialog
+          title="List"
+          actions={actions}
+          modal={false}
+          open={this.state.listDialogIsOpen}
+          onRequestClose={() => {
+            this.setState({listDialogIsOpen: false})
+          }}
+          autoScrollBodyContent={true}
+        >
+          <RadioButtonGroup
+            list="lists"
+            valueSelected={initialIndex}
+            onChange={(event, value) => {
+              let task = this.state.task
+              task.listId = Object.keys(this.props.lists)[value]
+              this.setState({task: task})
+            }}>
+            {radios}
+          </RadioButtonGroup>
+        </Dialog>
+    )
   }
 
-  _recurringFrequencyDropdown = () => {
+  _renderRecurringFrequencyDialog = () => {
 
     let frequencyToIndex = {
       'EVERYDAY': 0,
@@ -251,19 +290,38 @@ class EditTask extends Component {
     let defaultFrequency = 'ONCE'
     let defaultIndex = frequencyToIndex[defaultFrequency]
 
-    let menuItems = [
-      <MenuItem
+    let radios = [
+      <RadioButton
         key='EVERYDAY'
         value={0}
-        primaryText='Everyday' />,
-      <MenuItem
+        label='Everyday'
+        style={styles.radioButton} />,
+      <RadioButton
         key='ONCE'
         value={1}
-        primaryText='Once' />
+        label='Once'
+        style={styles.radioButton} />
 
       // TODO - expand these options
     ];
 
+    const actions = [
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={() => {
+          this.setState({recurringFrequencyDialogIsOpen: false})
+        }}
+      />,
+      <FlatButton
+        label="Update"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={() => {
+          this.setState({recurringFrequencyDialogIsOpen: false})
+        }}
+      />,
+    ]
 
     let recurringFrequency = this.state.task.recurringFrequency
 
@@ -271,15 +329,29 @@ class EditTask extends Component {
       ? frequencyToIndex[recurringFrequency]
       : defaultIndex
 
-    return <DropDownMenu
-      value={initialIndex}
-      onChange={(event, key, payload) => {
-        let task = this.state.task
-        task.recurringFrequency = indexToFrequency[key]
-        this.setState({task: task})
-      }}>
-      {menuItems}
-    </DropDownMenu>
+    return (
+      <Dialog
+          title="Recurring Frequency"
+          actions={actions}
+          modal={false}
+          open={this.state.recurringFrequencyDialogIsOpen}
+          onRequestClose={() => {
+            this.setState({recurringFrequencyDialogIsOpen: false})
+          }}
+          autoScrollBodyContent={true}
+        >
+          <RadioButtonGroup
+            name="recurring_frequencies"
+            valueSelected={initialIndex}
+            onChange={(event, value) => {
+              let task = this.state.task
+              task.recurringFrequency = indexToFrequency[value]
+              this.setState({task: task})
+            }}>
+            {radios}
+          </RadioButtonGroup>
+        </Dialog>
+    )
   }
 
   _datePicker = () => {
@@ -334,6 +406,8 @@ class EditTask extends Component {
       />,
     ];
 
+    // TODO - consider scrollable dialog instead of dropdown
+
     return (
       <div style={styles.main}>
 
@@ -348,8 +422,6 @@ class EditTask extends Component {
         >
           Are you sure you want to delete this task?
         </Dialog>
-
-        <h3> Name </h3>
 
         <TextField
           style={styles.TextField}
@@ -372,12 +444,19 @@ class EditTask extends Component {
 
         <br/>
 
-        <h3> List </h3>
-        {this._listDropdown()}
+        <TextField
+          style={styles.TextField}
+          hintText="List"
+          floatingLabelText="List"
+          type="text"
+          value={this.state.list.name || ''}
+          onClick={() => {
+            this.setState({listDialogIsOpen: true})
+          }}
+        />
+        {this._renderListDialog()}
 
         <br/>
-
-        <h3> Notes </h3>
 
         <TextField
           style={styles.TextField}
@@ -400,15 +479,22 @@ class EditTask extends Component {
 
         <br/>
 
-        <h3> Due Date </h3>
 
         {this._datePicker()}
 
         <br/>
 
-        <h3> Recurring Frequency </h3>
-
-        {this._recurringFrequencyDropdown()}
+        <TextField
+          style={styles.TextField}
+          hintText="Recurring Frequency"
+          floatingLabelText="Recurring Frequency"
+          type="text"
+          value={task.recurringFrequency || ''}
+          onClick={() => {
+            this.setState({recurringFrequencyDialogIsOpen: true})
+          }}
+        />
+        {this._renderRecurringFrequencyDialog()}
 
         <br/>
 

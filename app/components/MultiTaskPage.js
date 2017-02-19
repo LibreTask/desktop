@@ -25,32 +25,18 @@ import AppConstants from '../constants'
 import AppStyles from '../styles'
 
 const styles = {
-  container: {
-    textAlign: 'center',
-    paddingTop: 200,
-  },
-  header: {
-    margin: 12,
-    fontSize: '140%',
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  checkbox: {
-    height: 30,
-    width: 30
-  },
   footer: {
     textAlign: 'center',
-    fontSize: '130%',
+    fontSize: '100%',
     color: AppStyles.linkColor
   },
   listItem: {
     color: 'black',
-    fontSize: '130%'
+    fontSize: '100%'
   },
   listItemHeader: {
     color: 'black',
-    fontSize: '130%',
+    fontSize: '110%',
     fontWeight: 'bold'
   },
   completedTask: {
@@ -425,7 +411,7 @@ class MultiTaskPage extends Component {
       && tasksToDisplay.length === 0) {
 
         // TODO - consider adding a more accessible way to create a task
-        // for this scenario, like a link, etc 
+        // for this scenario, like a link, etc
 
         return (
           <div style={styles.emptyListText}>
