@@ -85,7 +85,9 @@ export function createOrUpdateList(list) {
 
 export function deleteListByListId(listId) {
   // TODO - we should instead update the "deletion status"
-  return db.remove(listId)
+  return db.get(listId).then(function(list) {
+    return db.remove(list)
+  })
 }
 
 export function cleanListStorage() {
