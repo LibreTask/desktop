@@ -21,6 +21,7 @@ import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 
+import DateUtils from '../utils/date-utils'
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
@@ -381,6 +382,14 @@ class MultiTaskPage extends Component {
       let task = this.props.tasks[taskId]
 
       if (!task) continue;
+
+      if (!task.dueDateTimeUtc && task.isCompleted) continue;
+
+      // do not display completed task older than yesterday
+      if (new Date(task.dueDateTimeUtc) < DateUtils.yesterday()
+        && task.isCompleted) {
+        continue;
+      }
 
       if (myListId === AppConstants.ALL_TASKS_IDENTIFIER
           || myListId === task.listId) {
