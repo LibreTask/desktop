@@ -66,7 +66,9 @@ class EditList extends Component {
       // TODO - we keep these references in case props are updated
         // eg: when this exact task is deleted
         // but how can we do this cleaner?
-      list: this._getList()
+
+      // copy objects, so that editing does not modify original
+      editedList: Object.assign({}, this._getList())
     }
   }
 
@@ -87,7 +89,7 @@ class EditList extends Component {
   }
 
   _editList = () => {
-    let list = this.state.list
+    let list = this.state.editedList
 
     let nameValidationError = ''
 
@@ -148,7 +150,7 @@ class EditList extends Component {
   */
   _deleteList = () => {
 
-    let listId = this.state.list.id
+    let listId = this.state.editedList.id
 
     if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState({isDeletingList: true}, () => {
@@ -185,7 +187,7 @@ class EditList extends Component {
 
   render = () => {
 
-    let list = this.state.list
+    let list = this.state.editedList
 
     const actions = [
       <FlatButton
@@ -231,7 +233,7 @@ class EditList extends Component {
             (event, name) => {
 
               // update our reference to list
-              let list = this.state.list
+              let list = this.state.editedList
               list.name = name
 
               this.setState({list: list})

@@ -69,8 +69,10 @@ class EditTask extends Component {
       // TODO - we keep these references in case props are updated
         // eg: when this exact task is deleted
         // but how can we do this cleaner?
-      task: this._getTask(),
-      list: this._getList(),
+
+      // copy objects, so that editing does not modify originals
+      editedTask: Object.assign({}, this._getTask()),
+      editedList: Object.assign({}, this._getList()),
 
       nameValidationError: '',
       notesValidationError: ''
@@ -100,7 +102,7 @@ class EditTask extends Component {
   }
 
   _onEditTask = () => {
-    let task = this.state.task
+    let task = this.state.editedTask
 
     let nameValidationError = ''
     let notesValidationError = ''
@@ -175,7 +177,7 @@ class EditTask extends Component {
   */
   _onDeleteTask = () => {
 
-    let task = this.state.task
+    let task = this.state.editedTask
 
     if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState({isDeleting: true}, () => {
@@ -225,7 +227,7 @@ class EditTask extends Component {
         label={list.name}
         style={styles.radioButton} />)
 
-      if (list.id === this.state.task.listId) {
+      if (list.id === this.state.editedTask.listId) {
         initialIndex = currentIndex; // found the task's parent list
       }
 
@@ -262,10 +264,10 @@ class EditTask extends Component {
           autoScrollBodyContent={true}
         >
           <RadioButtonGroup
-            list="lists"
+            name="lists"
             valueSelected={initialIndex}
             onChange={(event, value) => {
-              let task = this.state.task
+              let task = this.state.editedTask
               task.listId = Object.keys(this.props.lists)[value]
               this.setState({task: task})
             }}>
@@ -323,7 +325,7 @@ class EditTask extends Component {
       />,
     ]
 
-    let recurringFrequency = this.state.task.recurringFrequency
+    let recurringFrequency = this.state.editedTask.recurringFrequency
 
     let initialIndex = (recurringFrequency in frequencyToIndex)
       ? frequencyToIndex[recurringFrequency]
@@ -344,7 +346,7 @@ class EditTask extends Component {
             name="recurring_frequencies"
             valueSelected={initialIndex}
             onChange={(event, value) => {
-              let task = this.state.task
+              let task = this.state.editedTask
               task.recurringFrequency = indexToFrequency[value]
               this.setState({task: task})
             }}>
@@ -360,8 +362,8 @@ class EditTask extends Component {
     maxDate.setFullYear(maxDate.getFullYear() + 10)
 
     const defaultDate =
-      this.state.task.dueDateTimeUtc
-      ? new Date(this.state.task.dueDateTimeUtc)
+      this.state.editedTask.dueDateTimeUtc
+      ? new Date(this.state.editedTask.dueDateTimeUtc)
       : minDate
 
     return (
@@ -374,7 +376,7 @@ class EditTask extends Component {
         container="inline"
         disableYearSelection={false}
         onChange={(skip, selectedDate) => {
-            let task = this.state.task
+            let task = this.state.editedTask
             task.dueDateTimeUtc = selectedDate
             this.setState({task: task})
         }}
@@ -386,8 +388,8 @@ class EditTask extends Component {
 
     // TODO - add other task attributes here as well
 
-    let task = this.state.task
-    let list = this.state.list
+    let task = this.state.editedTask
+    let list = this.state.editedList
 
     const actions = [
       <FlatButton
@@ -434,7 +436,7 @@ class EditTask extends Component {
             (event, name) => {
 
               // update our reference to task
-              let list = this.state.task
+              let list = this.state.editedTask
               task.name = name
 
               this.setState({task: task})
@@ -449,7 +451,7 @@ class EditTask extends Component {
           hintText="List"
           floatingLabelText="List"
           type="text"
-          value={this.state.list.name || ''}
+          value={this.state.editedList.name || ''}
           onClick={() => {
             this.setState({listDialogIsOpen: true})
           }}
@@ -469,7 +471,7 @@ class EditTask extends Component {
             (event, notes) => {
 
               // update our reference to list
-              let list = this.state.task
+              let list = this.state.editedTask
               task.notes = notes
 
               this.setState({task: task})

@@ -31,8 +31,8 @@ import * as UserActions from '../actions/entities/user'
 import * as TaskActions from '../actions/entities/task'
 import * as ListActions from '../actions/entities/list'
 
+import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
-
 import * as SyncActions from '../actions/sync'
 
 let Sidebar = require('react-sidebar').default;
@@ -100,10 +100,8 @@ class App extends Component {
 
     if (!this.props.isSyncing) {
       let intervalId = setInterval( () => {
-        console.log("within setInterval.sync!")
 
-        // TODO - also check for network
-        if (this.props.isLoggedIn) {
+        if (UserController.canAccessNetwork(this.props.profile)) {
           this.props.sync()
         }
 

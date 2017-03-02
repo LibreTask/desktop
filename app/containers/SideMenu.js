@@ -44,16 +44,21 @@ const styles = {
   listItems: {
     marginLeft: 20,
   },
-  listsChevron: {
+  listsChevronContainer: {
     marginRight: 10,
+  },
+  listsChevron: {
+    width: 20,
+    height: 20,
+    marginBottom: 5
   }
 }
 
 function _constructListsDropdown(props) {
   let listsArrowImage =
       props.sideMenuListsViewIsCollapsed
-      ? <FaChevronRight/>
-      : <FaChevronDown/>;
+      ? <FaChevronRight style={styles.listsChevron}/>
+      : <FaChevronDown style={styles.listsChevron}/>;
 
     let listsMenuItems = [];
 
@@ -105,7 +110,7 @@ function _constructListsDropdown(props) {
       style={styles.sidebarLink}
       onClick={()=>props.toggleListsView()}>
 
-      <span style={styles.listsChevron}>
+      <span style={styles.listsChevronContainer}>
         {listsArrowImage}
       </span>
 
