@@ -90,6 +90,13 @@ class MultiTaskPage extends Component {
     // updated props could mean a new header name; so we set it here
     this.props.setNavbarTitle(this._getHeaderName())
     this._setRightNavButtonIfNecessary()
+
+    // consume any actions triggered via the Navbar
+    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
+      let listId = this._getListId()
+      hashHistory.push(`/list/${listId}/edit`)
+      this.props.setNavAction(undefined)
+    }
   }
 
   _setRightNavButtonIfNecessary() {
@@ -97,10 +104,7 @@ class MultiTaskPage extends Component {
 
     // only display edit list when an actual list has been selected
     if (listId !== AppConstants.ALL_TASKS_IDENTIFIER) {
-      let transitionLocation = `/list/${listId}/edit`
-
-      this.props.setFarRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON,
-         transitionLocation)
+      this.props.setFarRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
     } else {
       this.props.removeFarRightNavButton()
     }
@@ -448,6 +452,7 @@ const mapStateToProps = (state) => ({
   profile: state.user.profile,
   lists: state.entities.lists,
   tasks: state.entities.tasks,
+  navAction: state.ui.navbar.navAction
   // TODO - currently selected list id
 })
 
@@ -455,7 +460,8 @@ const mapDispatchToProps = {
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,
-  setNavbarTitle: NavbarActions.setNavbarTitle
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setNavAction: NavbarActions.setNavAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MultiTaskPage)

@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import Dialog from 'material-ui/Dialog'
-import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -27,12 +26,6 @@ const styles = {
   main: {
     margin: 12,
     color: '#000000',
-  },
-  button: {
-    marginBottom: 10,
-    marginTop: 10,
-    width: 200,
-    fontSize: '120%'
   },
   textField: {
     fontSize: '120%'
@@ -77,11 +70,27 @@ class EditList extends Component {
     let list = this._getList()
 
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
+    this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Edit List')
   }
 
   componentWillUnmount() {
     this.props.removeLeftNavButton()
+    this.props.removeMediumRightNavButton()
+    this.props.removeFarRightNavButton()
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    // consume any actions triggered via the Navbar
+    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
+      this._editList()
+      this.props.setNavAction(undefined)
+    } else if (nextProps.navAction === NavbarActions.DELETE_NAV_ACTION) {
+      this.setState({deleteListDialogIsOpen: true})
+      this.props.setNavAction(undefined)
+    }
   }
 
   _getList = () => {
@@ -250,24 +259,6 @@ class EditList extends Component {
         <div style={styles.successText}>
           {this.state.updateSuccess}
         </div>
-
-        <br/>
-
-        <RaisedButton
-          label="Update"
-          labelColor={AppStyles.linkColor}
-          style={styles.button}
-           onTouchTap={this._editList}
-         />
-
-         <RaisedButton
-           label="Delete"
-           labelColor={AppStyles.linkColor}
-           style={styles.button}
-            onTouchTap={() => {
-              this.setState({deleteListDialogIsOpen: true})
-            }}
-          />
       </div>
     )
   }
@@ -277,6 +268,7 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   lists: state.entities.lists,
+  navAction: state.ui.navbar.navAction
 })
 
 const mapDispatchToProps = {
@@ -284,7 +276,12 @@ const mapDispatchToProps = {
   deleteList: ListActions.deleteList,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton,
-  setNavbarTitle: NavbarActions.setNavbarTitle
+  setMediumRightNavButton: NavbarActions.setMediumRightNavButton,
+  removeMediumRightNavButton: NavbarActions.removeMediumRightNavButton,
+  setFarRightNavButton: NavbarActions.setFarRightNavButton,
+  removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setNavAction: NavbarActions.setNavAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditList)

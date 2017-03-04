@@ -27,6 +27,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import * as SideMenuActions from '../actions/sidemenu'
+import * as NavbarActions from '../actions/navbar'
 import * as LoginDialogActions from '../actions/logindialog'
 import * as LogoutDialogActions from '../actions/logoutdialog'
 
@@ -176,13 +177,16 @@ class App extends Component {
 
   _constructMediumRightNavButton() {
     let mediumRightNavIcon
+    let navbarAction
 
     if (this.props.mediumRightNavButton
       === AppConstants.EDIT_NAVBAR_BUTTON) {
       mediumRightNavIcon = <ModeEdit/>
+      navbarAction = NavbarActions.EDIT_NAV_ACTION
     } else if (this.props.mediumRightNavButton
       === AppConstants.DELETE_NAVBAR_BUTTON) {
         mediumRightNavIcon = <Delete/>
+        navbarAction = NavbarActions.DELETE_NAV_ACTION
     } else {
       return; // no navbutton set; return nothing
     }
@@ -192,7 +196,7 @@ class App extends Component {
         iconStyle={styles.mediumIcon}
         style={styles.mediumRightNavButton}
         onTouchTap={() => {
-            hashHistory.push(this.props.mediumRightNavTransitionLocation)
+            this.props.setNavAction(navbarAction)
         }}>
           {mediumRightNavIcon}
       </IconButton>
@@ -201,13 +205,16 @@ class App extends Component {
 
   _constructFarRightNavButton() {
     let farRightNavIcon
+    let navbarAction
 
     if (this.props.farRightNavButton
       === AppConstants.EDIT_NAVBAR_BUTTON) {
       farRightNavIcon = <ModeEdit/>
+      navbarAction = NavbarActions.EDIT_NAV_ACTION
     } else if (this.props.farRightNavButton
       === AppConstants.DELETE_NAVBAR_BUTTON) {
         farRightNavIcon = <Delete/>
+        navbarAction = NavbarActions.DELETE_NAV_ACTION
     } else {
       return; // no navbutton set; return nothing
     }
@@ -217,7 +224,7 @@ class App extends Component {
         iconStyle={styles.mediumIcon}
         style={styles.farRightNavButton}
         onTouchTap={() => {
-            hashHistory.push(this.props.farRightNavTransitionLocation)
+            this.props.setNavAction(navbarAction)
         }}>
           {farRightNavIcon}
       </IconButton>
@@ -398,7 +405,8 @@ const mapDispatchToProps = {
   deleteAllTasks: TaskActions.deleteAllTasks,
   startSync: SyncActions.startSync,
   stopSync: SyncActions.stopSync,
-  sync: SyncActions.sync
+  sync: SyncActions.sync,
+  setNavAction: NavbarActions.setNavAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -9,7 +9,6 @@ import { hashHistory } from 'react-router'
 
 import Divider from 'material-ui/Divider'
 import Dialog from 'material-ui/Dialog'
-import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -27,13 +26,6 @@ const styles = {
   main: {
     margin: 12,
     color: '#000000',
-  },
-  button: {
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    fontSize: '110%'
   },
   header: {
     fontSize: '110%',
@@ -83,6 +75,18 @@ class SingleTaskPage extends Component {
     this.props.removeLeftNavButton()
     this.props.removeMediumRightNavButton()
     this.props.removeFarRightNavButton()
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    // consume any actions triggered via the Navbar
+    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
+      hashHistory.push(`/task/${this.state.task.id}/edit`)
+      this.props.setNavAction(undefined)
+    } else if (nextProps.navAction === NavbarActions.DELETE_NAV_ACTION) {
+      this.setState({deleteTaskDialogIsOpen: true })
+      this.props.setNavAction(undefined)
+    }
   }
 
   _getTask = () => {
@@ -225,22 +229,6 @@ class SingleTaskPage extends Component {
         <div style={styles.taskFont}>
           { this._renderRecurringFrequency()}
         </div>
-
-        <RaisedButton
-          label="Edit"
-          style={styles.button}
-           onTouchTap={() => {
-              hashHistory.push(`/task/${task.id}/edit`)
-           }}
-         />
-
-         <RaisedButton
-           label="Delete"
-           style={styles.button}
-           onTouchTap={() => {
-             this.setState({deleteTaskDialogIsOpen: true })
-           }}
-          />
       </div>
     )
   }
@@ -250,7 +238,8 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   lists: state.entities.lists,
-  tasks: state.entities.tasks
+  tasks: state.entities.tasks,
+  navAction: state.ui.navbar.navAction
 })
 
 const mapDispatchToProps = {
@@ -262,7 +251,8 @@ const mapDispatchToProps = {
   removeMediumRightNavButton: NavbarActions.removeMediumRightNavButton,
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
-  setNavbarTitle: NavbarActions.setNavbarTitle
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setNavAction: NavbarActions.setNavAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleTaskPage)

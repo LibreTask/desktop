@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import Dialog from 'material-ui/Dialog'
-import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import MenuItem from 'material-ui/MenuItem'
@@ -32,13 +31,6 @@ const styles = {
   },
   radioButton: {
     marginTop: 12,
-  },
-  button: {
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    fontSize: '120%'
   },
   textField: {
     marginHorizontal: 12,
@@ -87,11 +79,27 @@ class EditTask extends Component {
     let task = this._getTask()
 
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
+    this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Edit List')
   }
 
   componentWillUnmount() {
     this.props.removeLeftNavButton()
+    this.props.removeMediumRightNavButton()
+    this.props.removeFarRightNavButton()
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    // consume any actions triggered via the Navbar
+    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
+      this._onEditTask()
+      this.props.setNavAction(undefined)
+    } else if (nextProps.navAction === NavbarActions.DELETE_NAV_ACTION) {
+      this.setState({deleteTaskDialogIsOpen: true })
+      this.props.setNavAction(undefined)
+    }
   }
 
   _getTask = () => {
@@ -511,22 +519,6 @@ class EditTask extends Component {
         <div style={styles.successText}>
           {this.state.updateSuccess}
         </div>
-
-        <br/>
-
-        <RaisedButton
-          label="Update"
-          style={styles.button}
-           onTouchTap={this._onEditTask}
-         />
-
-         <RaisedButton
-           label="Delete"
-           style={styles.button}
-           onTouchTap={() => {
-             this.setState({deleteTaskDialogIsOpen: true })
-           }}
-          />
       </div>
     )
   }
@@ -536,7 +528,8 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   lists: state.entities.lists,
-  tasks: state.entities.tasks
+  tasks: state.entities.tasks,
+  navAction: state.ui.navbar.navAction
 })
 
 const mapDispatchToProps = {
@@ -544,7 +537,12 @@ const mapDispatchToProps = {
   deleteTask: TaskActions.deleteTask,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton,
-  setNavbarTitle: NavbarActions.setNavbarTitle
+  setMediumRightNavButton: NavbarActions.setMediumRightNavButton,
+  removeMediumRightNavButton: NavbarActions.removeMediumRightNavButton,
+  setFarRightNavButton: NavbarActions.setFarRightNavButton,
+  removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setNavAction: NavbarActions.setNavAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditTask)
