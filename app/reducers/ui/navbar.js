@@ -3,11 +3,20 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
+import AppConstants from '../../constants'
+
 const initialState = {
 
-  rightButton: null,
+  farRightButton: null,
+  farRightTransitionLocation: null,
+
+  mediumRightButton: null,
+  mediumRightTransitionLocation: null,
+
   leftButton: null,
-  title: 'Endora'
+  leftTransitionLocation: null,
+
+  title: AppConstants.APP_NAME
   /*** No right button initially ***
   rightButton: {
     buttonIcon: 'pencil-square-o',
@@ -22,10 +31,10 @@ const initialState = {
 export default function navbarReducer(state = initialState, action) {
 
   switch (action.type) {
-    case 'SET_RIGHT_NAV_BUTTON':
+    case 'SET_MEDIUM_RIGHT_NAV_BUTTON':
       return Object.assign({}, state, {
-        rightButton: action.rightButton,
-        transitionLocation: action.transitionLocation
+        mediumRightButton: action.mediumRightButton,
+        mediumRightTransitionLocation: action.mediumRightTransitionLocation
         /*
 
         TODO - expand to this functionality
@@ -39,9 +48,18 @@ export default function navbarReducer(state = initialState, action) {
         }
         */
       })
-    case 'REMOVE_RIGHT_NAV_BUTTON':
+    case 'REMOVE_MEDIUM_RIGHT_NAV_BUTTON':
       return Object.assign({}, state, {
-        rightButton: null
+        mediumRightButton: null
+      })
+    case 'SET_FAR_RIGHT_NAV_BUTTON':
+      return Object.assign({}, state, {
+        farRightButton: action.farRightButton,
+        farRightTransitionLocation: action.farRightTransitionLocation
+      })
+    case 'REMOVE_FAR_RIGHT_NAV_BUTTON':
+      return Object.assign({}, state, {
+        farRightButton: null
       })
     case 'SET_LEFT_NAV_BUTTON':
       return Object.assign({}, state, {

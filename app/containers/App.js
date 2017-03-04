@@ -20,6 +20,7 @@ import FontIcon from 'material-ui/FontIcon'
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
 import Menu from 'material-ui/svg-icons/navigation/menu'
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
+import Delete from 'material-ui/svg-icons/action/delete'
 
 import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -75,6 +76,12 @@ const styles = {
     height: 34,
   },
   mediumRightNavButton: {
+    position: 'absolute',
+    top: 4,
+    right: 80,
+    padding: '10px'
+  },
+  farRightNavButton: {
     position: 'absolute',
     top: 4,
     right: 40,
@@ -141,23 +148,9 @@ class App extends Component {
     this.props.toggleSideMenu()
   }
 
-  render() {
+  _constructLeftNavButton() {
+    let leftNavButton
 
-    const sidebar = <SideMenu />;
-
-    let navbutton;
-    if (this.props.rightNavButton === AppConstants.LIST_EDIT_NAVBAR_BUTTON) {
-      navbutton = <IconButton
-        iconStyle={styles.mediumIcon}
-        style={styles.mediumRightNavButton}
-        onTouchTap={() => {
-            hashHistory.push(this.props.rightNavTransitionLocation)
-        }}>
-          <ModeEdit/>
-      </IconButton>
-    }
-
-    let leftNavButton;
     if (this.props.leftNavButton === AppConstants.BACK_NAVBAR_BUTTON) {
       leftNavButton = (
         <a
@@ -178,6 +171,68 @@ class App extends Component {
       )
     }
 
+    return leftNavButton
+  }
+
+  _constructMediumRightNavButton() {
+    let mediumRightNavIcon
+
+    if (this.props.mediumRightNavButton
+      === AppConstants.EDIT_NAVBAR_BUTTON) {
+      mediumRightNavIcon = <ModeEdit/>
+    } else if (this.props.mediumRightNavButton
+      === AppConstants.DELETE_NAVBAR_BUTTON) {
+        mediumRightNavIcon = <Delete/>
+    } else {
+      return; // no navbutton set; return nothing
+    }
+
+    return (
+      <IconButton
+        iconStyle={styles.mediumIcon}
+        style={styles.mediumRightNavButton}
+        onTouchTap={() => {
+            hashHistory.push(this.props.mediumRightNavTransitionLocation)
+        }}>
+          {mediumRightNavIcon}
+      </IconButton>
+    )
+  }
+
+  _constructFarRightNavButton() {
+    let farRightNavIcon
+
+    if (this.props.farRightNavButton
+      === AppConstants.EDIT_NAVBAR_BUTTON) {
+      farRightNavIcon = <ModeEdit/>
+    } else if (this.props.farRightNavButton
+      === AppConstants.DELETE_NAVBAR_BUTTON) {
+        farRightNavIcon = <Delete/>
+    } else {
+      return; // no navbutton set; return nothing
+    }
+
+    return (
+      <IconButton
+        iconStyle={styles.mediumIcon}
+        style={styles.farRightNavButton}
+        onTouchTap={() => {
+            hashHistory.push(this.props.farRightNavTransitionLocation)
+        }}>
+          {farRightNavIcon}
+      </IconButton>
+    )
+  }
+
+  render() {
+
+    const sidebar = <SideMenu />;
+
+    let mediumRightNavButton = this._constructMediumRightNavButton()
+    let farRightNavButton = this._constructFarRightNavButton()
+
+    let leftNavButton = this._constructLeftNavButton()
+
     // TODO - fix the hack of adding 3 "&nbsp;"
     const contentHeader = (
       <div style={styles.contentHeader}>
@@ -189,7 +244,10 @@ class App extends Component {
           {this.props.navbarTitle}
         </span>
         <span style={styles.contentHeaderMenuButton}>
-          {navbutton}
+          {mediumRightNavButton}
+        </span>
+        <span style={styles.contentHeaderMenuButton}>
+          {farRightNavButton}
         </span>
       </div>
     )
@@ -319,9 +377,12 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   navbarTitle: state.ui.navbar.title,
-  rightNavButton: state.ui.navbar.rightButton,
+  mediumRightNavButton: state.ui.navbar.mediumRightButton,
+  farRightNavButton: state.ui.navbar.farRightButton,
   leftNavButton: state.ui.navbar.leftButton,
-  rightNavTransitionLocation: state.ui.navbar.transitionLocation,
+  mediumRightNavTransitionLocation:
+    state.ui.navbar.mediumRightTransitionLocation,
+  farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
   isSyncing: state.sync.isSyncing
 })
 

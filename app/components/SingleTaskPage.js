@@ -74,11 +74,15 @@ class SingleTaskPage extends Component {
     let task = this._getTask()
 
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
+    this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
     this.props.setNavbarTitle(task.name)
   }
 
   componentWillUnmount() {
     this.props.removeLeftNavButton()
+    this.props.removeMediumRightNavButton()
+    this.props.removeFarRightNavButton()
   }
 
   _getTask = () => {
@@ -254,6 +258,10 @@ const mapDispatchToProps = {
   deleteTask: TaskActions.deleteTask,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton,
+  setMediumRightNavButton: NavbarActions.setMediumRightNavButton,
+  removeMediumRightNavButton: NavbarActions.removeMediumRightNavButton,
+  setFarRightNavButton: NavbarActions.setFarRightNavButton,
+  removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
 }
 

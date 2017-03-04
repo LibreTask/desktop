@@ -13,7 +13,7 @@ export function setLeftNavButton(leftButtonLocation,
   return {
     type: 'SET_LEFT_NAV_BUTTON',
     leftButton: leftButtonLocation,
-    transitionLocation: transitionLocation
+    leftTransitionLocation: transitionLocation
     /* TODO - expand this functionality
     rightButton: {
       onClickFunc: onClickFunc,
@@ -31,13 +31,13 @@ export function removeLeftNavButton() {
   }
 }
 
-export function setRightNavButton(rightButtonLocation,
+export function setMediumRightNavButton(rightButtonLocation,
   transitionLocation = undefined) {
 
   return {
-    type: 'SET_RIGHT_NAV_BUTTON',
-    rightButton: rightButtonLocation,
-    transitionLocation: transitionLocation
+    type: 'SET_MEDIUM_RIGHT_NAV_BUTTON',
+    mediumRightButton: rightButtonLocation,
+    mediumRightTransitionLocation: transitionLocation
     /* TODO - expand this functionality
     rightButton: {
       onClickFunc: onClickFunc,
@@ -48,10 +48,38 @@ export function setRightNavButton(rightButtonLocation,
   }
 }
 
-export function removeRightNavButton() {
+export function removeMediumRightNavButton() {
   return {
-    type: 'REMOVE_RIGHT_NAV_BUTTON',
-    rightButton: null
+    type: 'REMOVE_MEDIUM_RIGHT_NAV_BUTTON',
+    mediumRightButton: null
+  }
+}
+
+/*
+The default right navigation bar button is intended to be the 'far right' nav
+button. If a secondary button is required, then use the 'medium right' button.
+*/
+export function setFarRightNavButton(rightButtonLocation,
+  transitionLocation = undefined) {
+
+  return {
+    type: 'SET_FAR_RIGHT_NAV_BUTTON',
+    farRightButton: rightButtonLocation,
+    farRightTransitionLocation: transitionLocation
+    /* TODO - expand this functionality
+    rightButton: {
+      onClickFunc: onClickFunc,
+      onClickArgs: onClickArgs,
+      buttonIcon: buttonIcon
+    }
+    */
+  }
+}
+
+export function removeFarRightNavButton() {
+  return {
+    type: 'REMOVE_FAR_RIGHT_NAV_BUTTON',
+    farRightButton: null
   }
 }
 

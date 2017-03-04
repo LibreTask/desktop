@@ -83,7 +83,7 @@ class MultiTaskPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton()
+    this.props.removeFarRightNavButton()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -99,10 +99,10 @@ class MultiTaskPage extends Component {
     if (listId !== AppConstants.ALL_TASKS_IDENTIFIER) {
       let transitionLocation = `/list/${listId}/edit`
 
-      this.props.setRightNavButton(AppConstants.LIST_EDIT_NAVBAR_BUTTON,
+      this.props.setFarRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON,
          transitionLocation)
     } else {
-      this.props.removeRightNavButton()
+      this.props.removeFarRightNavButton()
     }
   }
 
@@ -300,7 +300,7 @@ class MultiTaskPage extends Component {
           }
           onClick={
             (event) => {
-              this.props.removeRightNavButton() // remove before transition
+              this.props.removeFarRightNavButton() // remove before transition
               hashHistory.push(`/task/${task.id}`)
             }
           }
@@ -366,7 +366,7 @@ class MultiTaskPage extends Component {
 
           let listId = this._getListId()
 
-          this.props.removeRightNavButton() // remove before transition
+          this.props.removeFarRightNavButton() // remove before transition
           hashHistory.push(`/task/create/${listId}`)
         }}>
       </ListItem>
@@ -452,8 +452,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  setRightNavButton: NavbarActions.setRightNavButton,
-  removeRightNavButton: NavbarActions.removeRightNavButton,
+  setFarRightNavButton: NavbarActions.setFarRightNavButton,
+  removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,
   setNavbarTitle: NavbarActions.setNavbarTitle
 }
