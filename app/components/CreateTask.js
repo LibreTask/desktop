@@ -51,6 +51,10 @@ class CreateTask extends Component {
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
   }
 
+  componentWillUnmount() {
+    this.props.removeLeftNavButton()
+  }
+
   _getListId = () => {
     return (this.props.router.params && this.props.router.params.listId)
       ? this.props.router.params.listId
@@ -170,6 +174,7 @@ const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setLeftNavButton: NavbarActions.setLeftNavButton,
+  removeLeftNavButton: NavbarActions.removeLeftNavButton
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateTask)

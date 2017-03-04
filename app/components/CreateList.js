@@ -51,6 +51,10 @@ class CreateList extends Component {
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
   }
 
+  componentWillUnmount() {
+    this.props.removeLeftNavButton()
+  }
+
   _createList = () => {
     let name = this.state.currentName
 
@@ -154,6 +158,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   createOrUpdateList: ListActions.createOrUpdateList,
   setLeftNavButton: NavbarActions.setLeftNavButton,
+  removeLeftNavButton: NavbarActions.removeLeftNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
 }
 
