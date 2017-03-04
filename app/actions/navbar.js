@@ -7,6 +7,30 @@
  When rightButtonLocation === AppConstants.BACK_NAVBAR_BUTTON, then a
  transitionLocation is not used, because we simply hashHistory.goBack()
 */
+export function setLeftNavButton(leftButtonLocation,
+  transitionLocation = undefined) {
+
+  return {
+    type: 'SET_LEFT_NAV_BUTTON',
+    leftButton: leftButtonLocation,
+    transitionLocation: transitionLocation
+    /* TODO - expand this functionality
+    rightButton: {
+      onClickFunc: onClickFunc,
+      onClickArgs: onClickArgs,
+      buttonIcon: buttonIcon
+    }
+    */
+  }
+}
+
+export function removeLeftNavButton() {
+  return {
+    type: 'REMOVE_LEFT_NAV_BUTTON',
+    leftButton: null
+  }
+}
+
 export function setRightNavButton(rightButtonLocation,
   transitionLocation = undefined) {
 

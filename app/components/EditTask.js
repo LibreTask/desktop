@@ -28,6 +28,7 @@ const styles = {
   main: {
     margin: 12,
     color: '#000000',
+    width: '100%'
   },
   radioButton: {
     marginTop: 12,
@@ -40,7 +41,9 @@ const styles = {
     fontSize: '120%'
   },
   textField: {
-    fontSize: '100%'
+    marginHorizontal: 12,
+    fontSize: '100%',
+    width: '100%'
   },
   errorText: {
     color: 'red'
@@ -83,12 +86,12 @@ class EditTask extends Component {
 
     let task = this._getTask()
 
-    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Edit List')
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton()
+    this.props.removeLeftNavButton()
   }
 
   _getTask = () => {
@@ -426,7 +429,7 @@ class EditTask extends Component {
         </Dialog>
 
         <TextField
-          style={styles.TextField}
+          style={styles.textField}
           hintText="Name Field"
           floatingLabelText="Name"
           errorText={this.state.nameValidationError}
@@ -447,7 +450,7 @@ class EditTask extends Component {
         <br/>
 
         <TextField
-          style={styles.TextField}
+          style={styles.textField}
           hintText="List"
           floatingLabelText="List"
           type="text"
@@ -461,7 +464,8 @@ class EditTask extends Component {
         <br/>
 
         <TextField
-          style={styles.TextField}
+          multiLine={true}
+          style={styles.textField}
           hintText="Notes Field"
           floatingLabelText="Notes"
           errorText={this.state.notesValidationError}
@@ -487,7 +491,7 @@ class EditTask extends Component {
         <br/>
 
         <TextField
-          style={styles.TextField}
+          style={styles.textField}
           hintText="Recurring Frequency"
           floatingLabelText="Recurring Frequency"
           type="text"
@@ -538,8 +542,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
   deleteTask: TaskActions.deleteTask,
-  setRightNavButton: NavbarActions.setRightNavButton,
-  removeRightNavButton: NavbarActions.removeRightNavButton,
+  setLeftNavButton: NavbarActions.setLeftNavButton,
+  removeLeftNavButton: NavbarActions.removeLeftNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
 }
 

@@ -6,6 +6,7 @@
 const initialState = {
 
   rightButton: null,
+  leftButton: null,
   title: 'Endora'
   /*** No right button initially ***
   rightButton: {
@@ -41,6 +42,15 @@ export default function navbarReducer(state = initialState, action) {
     case 'REMOVE_RIGHT_NAV_BUTTON':
       return Object.assign({}, state, {
         rightButton: null
+      })
+    case 'SET_LEFT_NAV_BUTTON':
+      return Object.assign({}, state, {
+        leftButton: action.leftButton,
+        transitionLocation: action.transitionLocation
+      })
+    case 'REMOVE_LEFT_NAV_BUTTON':
+      return Object.assign({}, state, {
+        leftButton: null
       })
     case 'SET_NAVBAR_TITLE':
       return Object.assign({}, state, {

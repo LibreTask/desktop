@@ -18,6 +18,8 @@ import FontIcon from 'material-ui/FontIcon'
 
 // see complete list of icons: https://material.io/icons/
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
+import Menu from 'material-ui/svg-icons/navigation/menu'
+import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 
 import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -46,22 +48,36 @@ const muiTheme = getMuiTheme({
 })
 
 const styles = {
-  contentHeaderMenuLink: {
+  contentHeaderMenuButton: {
     textDecoration: 'none',
-    color: 'white',
-    padding: 8,
+    paddingHorizontal: 10
+  },
+  leftNavButton: {
+    width: 30,
+    height: 30,
+    display: 'inlineFlex',
+    verticalAlign: 'middle',
+  },
+  navbarTitle: {
+    paddingHorizontal: 10,
+    display: 'inlineFlex',
+    verticalAlign: 'middle',
+    textAlign: 'center',
+  },
+  contentHeader: {
+    width: '100%'
   },
   content: {
     padding: '16px',
   },
   mediumIcon: {
-    width: 40,
-    height: 40,
+    width: 34,
+    height: 34,
   },
   mediumRightNavButton: {
     position: 'absolute',
-    top: 0,
-    right: 24,
+    top: 4,
+    right: 14,
     padding: '10px'
   },
   mediumRightBackButton: {
@@ -139,27 +155,43 @@ class App extends Component {
         }}>
           <ModeEdit/>
       </IconButton>
-    } else if (this.props.rightNavButton === AppConstants.BACK_NAVBAR_BUTTON) {
-      navbutton =  <FlatButton
-              label="Back"
-              hoverColor="transparent"
-              style={styles.mediumRightBackButton}
-              labelStyle={styles.mediumRightBackButtonLabel}
-              onTouchTap={() => {
-                hashHistory.goBack() // back button always goes back
-              }}
-            />
     }
 
+    let leftNavButton;
+    if (this.props.leftNavButton === AppConstants.BACK_NAVBAR_BUTTON) {
+      leftNavButton = (
+        <a
+          onClick={() => {
+            hashHistory.goBack() // back button always goes back
+          }}
+          href="#">
+            <ArrowBack style={styles.leftNavButton}/>
+        </a>
+      )
+    } else {
+      leftNavButton = (
+        <a
+          onClick={this._menuButtonClick}
+          href="#">
+          <Menu style={styles.leftNavButton}/>
+        </a>
+      )
+    }
+
+    // TODO - fix the hack of adding 3 "&nbsp;"
     const contentHeader = (
-      <span>
-        {!this.state.docked &&
-         <a onClick={this._menuButtonClick} href="#" style={styles.contentHeaderMenuLink}>=</a>}
-        <span>
+      <div style={styles.contentHeader}>
+        <span style={styles.contentHeaderMenuButton}>
+          {!this.state.docked && leftNavButton}
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <span style={styles.navbarTitle}>
           {this.props.navbarTitle}
+        </span>
+        <span style={styles.contentHeaderMenuButton}>
           {navbutton}
         </span>
-      </span>
+      </div>
     )
 
     const sidebarProps = {
@@ -285,6 +317,7 @@ const mapStateToProps = (state) => ({
   profile: state.user.profile,
   navbarTitle: state.ui.navbar.title,
   rightNavButton: state.ui.navbar.rightButton,
+  leftNavButton: state.ui.navbar.leftButton,
   rightNavTransitionLocation: state.ui.navbar.transitionLocation,
   isSyncing: state.sync.isSyncing
 })

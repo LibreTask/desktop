@@ -76,12 +76,12 @@ class EditList extends Component {
 
     let list = this._getList()
 
-    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Edit List')
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton()
+    this.props.removeLeftNavButton()
   }
 
   _getList = () => {
@@ -282,8 +282,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   createOrUpdateList: ListActions.createOrUpdateList,
   deleteList: ListActions.deleteList,
-  setRightNavButton: NavbarActions.setRightNavButton,
-  removeRightNavButton: NavbarActions.removeRightNavButton,
+  setLeftNavButton: NavbarActions.setLeftNavButton,
+  removeLeftNavButton: NavbarActions.removeLeftNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
 }
 

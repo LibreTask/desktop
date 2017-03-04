@@ -41,6 +41,7 @@ const styles = {
   },
   taskFont: {
     fontSize: '100%',
+    whiteSpace: 'pre-wrap',
     marginTop: 10,
     marginBottom: 10
   },
@@ -72,12 +73,12 @@ class SingleTaskPage extends Component {
 
     let task = this._getTask()
 
-    this.props.setRightNavButton(AppConstants.BACK_NAVBAR_BUTTON)
+    this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setNavbarTitle(task.name)
   }
 
   componentWillUnmount() {
-    this.props.removeRightNavButton()
+    this.props.removeLeftNavButton()
   }
 
   _getTask = () => {
@@ -251,8 +252,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
   deleteTask: TaskActions.deleteTask,
-  setRightNavButton: NavbarActions.setRightNavButton,
-  removeRightNavButton: NavbarActions.removeRightNavButton,
+  setLeftNavButton: NavbarActions.setLeftNavButton,
+  removeLeftNavButton: NavbarActions.removeLeftNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle
 }
 
