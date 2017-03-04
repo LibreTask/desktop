@@ -79,7 +79,7 @@ class EditTask extends Component {
     let task = this._getTask()
 
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
-    this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
+    this.props.setMediumRightNavButton(AppConstants.SAVE_NAVBAR_BUTTON)
     this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Edit List')
   }
@@ -93,7 +93,7 @@ class EditTask extends Component {
   componentWillReceiveProps(nextProps) {
 
     // consume any actions triggered via the Navbar
-    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
+    if (nextProps.navAction === NavbarActions.SAVE_NAV_ACTION) {
       this._onEditTask()
       this.props.setNavAction(undefined)
     } else if (nextProps.navAction === NavbarActions.DELETE_NAV_ACTION) {

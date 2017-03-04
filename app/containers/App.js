@@ -16,11 +16,13 @@ import RaisedButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton'
 import FontIcon from 'material-ui/FontIcon'
 
-// see complete list of icons: https://material.io/icons/
-import ModeEdit from 'material-ui/svg-icons/editor/mode-edit'
+// see complete list of icons: https://material.io/icons/fa
 import Menu from 'material-ui/svg-icons/navigation/menu'
-import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
-import Delete from 'material-ui/svg-icons/action/delete'
+
+const FaArrowLeft = require('react-icons/lib/fa/arrow-left')
+const FaFloppyO = require('react-icons/lib/fa/floppy-o')
+const FaTrashO = require('react-icons/lib/fa/trash-o')
+const FaEdit = require('react-icons/lib/fa/edit')
 
 import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -59,6 +61,7 @@ const styles = {
     height: 30,
     display: 'inlineFlex',
     verticalAlign: 'middle',
+    color: 'black'
   },
   navbarTitle: {
     paddingHorizontal: 10,
@@ -159,7 +162,7 @@ class App extends Component {
             hashHistory.goBack() // back button always goes back
           }}
           href="#">
-            <ArrowBack style={styles.leftNavButton}/>
+            <FaArrowLeft style={styles.leftNavButton}/>
         </a>
       )
     } else {
@@ -181,12 +184,16 @@ class App extends Component {
 
     if (this.props.mediumRightNavButton
       === AppConstants.EDIT_NAVBAR_BUTTON) {
-      mediumRightNavIcon = <ModeEdit/>
+      mediumRightNavIcon = <FaEdit/>
       navbarAction = NavbarActions.EDIT_NAV_ACTION
     } else if (this.props.mediumRightNavButton
       === AppConstants.DELETE_NAVBAR_BUTTON) {
-        mediumRightNavIcon = <Delete/>
+        mediumRightNavIcon = <FaTrashO/>
         navbarAction = NavbarActions.DELETE_NAV_ACTION
+    } else if (this.props.mediumRightNavButton
+      === AppConstants.SAVE_NAVBAR_BUTTON) {
+        mediumRightNavIcon = <FaFloppyO/>
+        navbarAction = NavbarActions.SAVE_NAV_ACTION
     } else {
       return; // no navbutton set; return nothing
     }
@@ -209,12 +216,16 @@ class App extends Component {
 
     if (this.props.farRightNavButton
       === AppConstants.EDIT_NAVBAR_BUTTON) {
-      farRightNavIcon = <ModeEdit/>
+      farRightNavIcon = <FaEdit/>
       navbarAction = NavbarActions.EDIT_NAV_ACTION
     } else if (this.props.farRightNavButton
       === AppConstants.DELETE_NAVBAR_BUTTON) {
-        farRightNavIcon = <Delete/>
+        farRightNavIcon = <FaTrashO/>
         navbarAction = NavbarActions.DELETE_NAV_ACTION
+    } else if (this.props.farRightNavButton
+      === AppConstants.SAVE_NAVBAR_BUTTON) {
+        farRightNavIcon = <FaFloppyO/>
+        navbarAction = NavbarActions.SAVE_NAV_ACTION
     } else {
       return; // no navbutton set; return nothing
     }
