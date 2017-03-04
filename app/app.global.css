@@ -4,3 +4,20 @@
  */
 
 @import "~font-awesome/css/font-awesome.css";
+
+/*
+ HACK: this margin-top is meant to be exactly the height of the header.
+ That means Header.height + Header.paddingBottom + Header.paddingTop
+*/
+#root > [data-reactroot] {
+  margin-top: 62;
+  overflow: visible !important;
+}
+
+/*
+ HACK: same as data-reactroot, but inverted so that the sidebar is always
+ displayed at the top of the screen.
+*/
+.custom-sidebar-class {
+  margin-top: -62;
+}

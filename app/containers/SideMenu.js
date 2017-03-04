@@ -22,6 +22,7 @@ const styles = {
   sidebar: {
     width: 256,
     height: '100%',
+    top: 0,
   },
   sidebarLink: {
     display: 'block',
@@ -31,6 +32,7 @@ const styles = {
     fontSize: '140%',
   },
   content: {
+    marginTop: 60,
     padding: '16px',
     minHeight: '100%',
     backgroundColor: 'white',
@@ -209,7 +211,9 @@ const SideMenu = (props) => {
   }
 
   return (
-    <TitlePanel title={welcomeText} style={style}>
+    <TitlePanel
+      title={welcomeText}
+      style={style}>
       <div style={styles.content}>
         {sideMenuItems}
 

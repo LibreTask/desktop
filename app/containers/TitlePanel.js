@@ -12,11 +12,20 @@ const styles = {
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontWeight: 300,
   },
+
+  /*
+   HACK: Anytime that header padding or height is changed, app.global.css will
+   also need to be changed.
+  */
   header: {
     backgroundColor: AppStyles.mainColor,
     color: 'white',
     padding: '16px',
     fontSize: '1.2em',
+    position: 'fixed',
+    width: '100%',
+    top: 0,
+    height: 30,
   },
 }
 

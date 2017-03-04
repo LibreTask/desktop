@@ -77,7 +77,7 @@ const styles = {
   mediumRightNavButton: {
     position: 'absolute',
     top: 4,
-    right: 14,
+    right: 40,
     padding: '10px'
   },
   mediumRightBackButton: {
@@ -206,6 +206,9 @@ class App extends Component {
       dragToggleDistance: this.state.dragToggleDistance,
       transitions: this.state.transitions,
       onSetOpen: this._onSetOpen,
+      styles: {
+        marginTop: -62
+      }
     }
 
     const loginActions = [
