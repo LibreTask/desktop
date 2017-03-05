@@ -154,6 +154,20 @@ class SingleTaskPage extends Component {
 
   render = () => {
 
+    /*
+    TODO - implement recurring frequency
+
+    <Divider style={styles.divider}/>
+
+    <div style={styles.header}>
+      Recurring Frequency
+    </div>
+
+    <div style={styles.taskFont}>
+      { this._renderRecurringFrequency()}
+    </div>
+    */
+
     let task = this.state.task
     let list = this.state.list
 
@@ -218,16 +232,6 @@ class SingleTaskPage extends Component {
             ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
             : 'No due date yet'
           }
-        </div>
-
-        <Divider style={styles.divider}/>
-
-        <div style={styles.header}>
-          Recurring Frequency
-        </div>
-
-        <div style={styles.taskFont}>
-          { this._renderRecurringFrequency()}
         </div>
       </div>
     )

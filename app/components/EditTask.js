@@ -397,6 +397,25 @@ class EditTask extends Component {
 
   render = () => {
 
+    /*
+    TODO - implement recurring frequency
+
+
+            <TextField
+              style={styles.textField}
+              hintText="Recurring Frequency"
+              floatingLabelText="Recurring Frequency"
+              type="text"
+              value={task.recurringFrequency || ''}
+              onClick={() => {
+                this.setState({recurringFrequencyDialogIsOpen: true})
+              }}
+            />
+            {this._renderRecurringFrequencyDialog()}
+
+            <br/>
+    */
+
     // TODO - add other task attributes here as well
 
     let task = this.state.editedTask
@@ -495,20 +514,6 @@ class EditTask extends Component {
 
 
         {this._datePicker()}
-
-        <br/>
-
-        <TextField
-          style={styles.textField}
-          hintText="Recurring Frequency"
-          floatingLabelText="Recurring Frequency"
-          type="text"
-          value={task.recurringFrequency || ''}
-          onClick={() => {
-            this.setState({recurringFrequencyDialogIsOpen: true})
-          }}
-        />
-        {this._renderRecurringFrequencyDialog()}
 
         <br/>
 
