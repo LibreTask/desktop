@@ -62,9 +62,6 @@ class SingleTaskPage extends Component {
   }
 
   componentDidMount() {
-
-    let task = this._getTask()
-
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
     this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)

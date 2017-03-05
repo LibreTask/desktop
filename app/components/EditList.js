@@ -66,9 +66,6 @@ class EditList extends Component {
   }
 
   componentDidMount() {
-
-    let list = this._getList()
-
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setMediumRightNavButton(AppConstants.SAVE_NAVBAR_BUTTON)
     this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
