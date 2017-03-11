@@ -3,8 +3,6 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import * as _ from 'lodash'
-
 import PouchDB from 'pouchdb-browser'
 PouchDB.plugin(require('pouchdb-upsert'))
 

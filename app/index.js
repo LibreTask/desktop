@@ -14,9 +14,29 @@ import routes from './routes'
 import configureStore from './store/configureStore'
 import './app.global.css'
 
+import AppConstants from './constants'
+
+import * as MetaStorage from './models/storage/meta-storage'
 import * as TaskStorage from './models/storage/task-storage'
 import * as ListStorage from './models/storage/list-storage'
 import * as ProfileStorage from './models/storage/profile-storage'
+
+MetaStorage.getWindowSize()
+.then(initialWindowSize => {
+  const window = require('electron').BrowserWindow
+
+  /*
+  let initialWidth = initialWindowSize[MetaStorage.WINDOW_WIDTH]
+      || AppConstants.INITIAL_WINDOW_WIDTH
+  let initialHeight = initialWindowSize[MetaStorage.WINDOW_HEIGHT]
+      || AppConstants.INITIAL_WINDOW_HEIGHT
+
+  window.setSize(initialWidth, initialHeight)*/
+  window.setSize(600, 600)
+})
+.catch(err => {
+  window.setSize(600, 600)
+})
 
 async function getInitialState() {
 
@@ -55,7 +75,7 @@ async function getInitialState() {
 
 getInitialState()
 .then(initialState => {
-  
+
   const store = configureStore(initialState)
   const history = syncHistoryWithStore(hashHistory, store)
 
