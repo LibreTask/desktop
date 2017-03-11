@@ -23,9 +23,9 @@ function deleteAllLists(state, action) {
 }
 
 function deleteList(state, action) {
-  // TODO - can we filter instead?
-  delete state[action.listId]
-  return state
+  return _.filter(state, function(list) {
+    return list.id !== action.listId // filter out listId
+  })
 }
 
 function addLists(state, action) {

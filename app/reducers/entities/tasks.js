@@ -23,9 +23,9 @@ function deleteAllTasks(state, action) {
 }
 
 function deleteTask(state, action) {
-  // TODO - can we filter instead?
-  delete state[action.taskId]
-  return state
+  return _.filter(state, function(task) {
+    return task.id !== action.taskId // filter out taskId
+  })
 }
 
 function addTasks(state, action) {
