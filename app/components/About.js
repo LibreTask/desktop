@@ -34,11 +34,12 @@ const styles = {
   textField: {
     marginTop: 20,
     marginBottom: 10,
-    fontSize: '120%'
+    fontSize: '120%',
   },
   linkText: {
     fontSize: '110%',
-    color: AppStyles.linkColor
+    color: AppStyles.linkColor,
+    cursor: 'pointer'
   }
 }
 

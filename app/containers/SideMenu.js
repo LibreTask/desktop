@@ -30,6 +30,7 @@ const styles = {
     marginTop: 15,
     color: 'black',
     fontSize: '140%',
+    cursor: 'pointer'
   },
   content: {
     marginTop: 60,
