@@ -315,15 +315,12 @@ class EditTask extends Component {
     const actions = [
       <FlatButton
         label="Close"
-        primary={true}
         onTouchTap={() => {
           this.setState({recurringFrequencyDialogIsOpen: false})
         }}
       />,
       <FlatButton
         label="Update"
-        primary={true}
-        keyboardFocused={true}
         onTouchTap={() => {
           this.setState({recurringFrequencyDialogIsOpen: false})
         }}
@@ -425,7 +422,6 @@ class EditTask extends Component {
       />,
       <FlatButton
         label="Yes"
-        keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteTaskDialogIsOpen: false})
           this._onDeleteTask()
@@ -456,6 +452,7 @@ class EditTask extends Component {
               ...styles.textField,
               ...AppStyles.centeredElement
             }}
+            multiLine={true}
             hintText="Name Field"
             floatingLabelText="Name"
             errorText={this.state.nameValidationError}

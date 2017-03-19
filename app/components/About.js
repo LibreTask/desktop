@@ -17,23 +17,13 @@ import * as NavbarActions from '../actions/navbar'
 const shell = require('electron').shell;
 
 const styles = {
-  dividerPadding: {
-    paddingVertical: 5
-  },
-  button: {
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    fontSize: '120%'
-  },
   textField: {
     marginTop: 20,
     marginBottom: 10,
     fontSize: '120%',
   },
   linkText: {
-    fontSize: '110%',
+    fontSize: '100%',
     color: AppStyles.linkColor,
     cursor: 'pointer'
   }

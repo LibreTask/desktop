@@ -23,10 +23,6 @@ import AppConstants from '../constants'
 import AppStyles from '../styles'
 
 const styles = {
-  divider: {
-    marginTop: 15,
-    marginBottom: 15
-  },
   errorText: {
     color: 'red'
   },
@@ -197,7 +193,6 @@ class EditList extends Component {
       />,
       <FlatButton
         label="Yes"
-        keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteListDialogIsOpen: false})
           this._deleteList()
@@ -221,9 +216,8 @@ class EditList extends Component {
             Are you sure you want to delete this list?
           </Dialog>
 
-          <h2> Name </h2>
-
           <TextField
+            multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.nameValidationError}
             hintText="Name Field"

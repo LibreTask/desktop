@@ -135,6 +135,7 @@ class Signup extends Component {
           <br/>
 
           <TextField
+            multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.passwordValidationError}
             hintText="Password Field"
@@ -150,6 +151,7 @@ class Signup extends Component {
           <br/>
 
           <TextField
+            multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.confirmPasswordValidationError}
             hintText="Confirm Password Field"

@@ -26,11 +26,13 @@ const styles = {
     fontSize: '120%'
   },
   button: {
-    marginBottom: 10,
-    marginTop: 10,
     width: 200,
     fontSize: '120%'
   },
+  spacer: {
+    marginTop: 10,
+    marginBottom: 10
+  }
 }
 
 class Profile extends Component {
@@ -238,15 +240,12 @@ class Profile extends Component {
     const actions = [
       <FlatButton
         label="Cancel"
-        primary={true}
         onTouchTap={() => {
           this.setState({deleteProfileDialogIsOpen: false})
         }}
       />,
       <FlatButton
         label="Yes"
-        primary={true}
-        keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteProfileDialogIsOpen: false})
           this._onProfileDelete()
@@ -305,7 +304,7 @@ class Profile extends Component {
             }
           />
 
-          <br/>
+          <div style={styles.spacer}/>
 
           <div>
             <RaisedButton
@@ -318,7 +317,7 @@ class Profile extends Component {
               onTouchTap={this._onProfileUpdate}
              />
 
-             <br/>
+             <div style={styles.spacer}/>
 
              <RaisedButton
                style={{
@@ -332,7 +331,7 @@ class Profile extends Component {
                }}
               />
 
-              <br/>
+              <div style={styles.spacer}/>
 
               {this._accountStatusButton()}
           </div>

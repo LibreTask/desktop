@@ -174,7 +174,6 @@ class SingleTaskPage extends Component {
       />,
       <FlatButton
         label="Yes"
-        keyboardFocused={true}
         onTouchTap={() => {
           this.setState({deleteTaskDialogIsOpen: false})
           this._onDeleteTask()

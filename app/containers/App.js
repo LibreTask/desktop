@@ -290,7 +290,6 @@ class App extends Component {
     const loginActions = [
       <FlatButton
         label="Cancel"
-        primary={true}
         onTouchTap={() => {
           this.props.closeLoginDialog()
           this.props.closeSideMenu()
@@ -298,8 +297,6 @@ class App extends Component {
       />,
       <FlatButton
         label="Signup"
-        primary={true}
-        keyboardFocused={true}
         onTouchTap={() => {
             this.props.closeLoginDialog()
             this.props.closeSideMenu()
@@ -308,8 +305,6 @@ class App extends Component {
       />,
       <FlatButton
         label="Login"
-        primary={true}
-        keyboardFocused={true}
         onTouchTap={() => {
             this.props.closeLoginDialog()
             this.props.closeSideMenu()
@@ -321,7 +316,6 @@ class App extends Component {
     const logoutActions = [
       <FlatButton
         label="Cancel"
-        primary={true}
         onTouchTap={() => {
           this.props.closeLogoutDialog()
           this.props.closeSideMenu()
@@ -329,8 +323,6 @@ class App extends Component {
       />,
       <FlatButton
         label="Logout"
-        primary={true}
-        keyboardFocused={true}
         onTouchTap={() => {
             this.props.closeLogoutDialog()
             this.props.closeSideMenu()

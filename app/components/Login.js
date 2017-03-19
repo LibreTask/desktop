@@ -116,6 +116,7 @@ class Login extends Component {
 
         <div style={AppStyles.centeredWindow}>
           <TextField
+            multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.emailValidationError}
             hintText="Email Field"
@@ -129,6 +130,7 @@ class Login extends Component {
           />
           <br/>
           <TextField
+            multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.passwordValidationError}
             hintText="Password Field"
