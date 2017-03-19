@@ -21,14 +21,11 @@ import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
 import AppConstants from '../constants'
+import AppStyles from '../styles'
+
 import Validator from 'validator'
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-    width: '100%'
-  },
   radioButton: {
     marginTop: 12,
   },
@@ -376,6 +373,7 @@ class EditTask extends Component {
 
     return (
       <DatePicker
+        textFieldStyle={AppStyles.centeredElement}
         floatingLabelText="Due Date"
         defaultDate={defaultDate}
         autoOk={false}
@@ -438,88 +436,98 @@ class EditTask extends Component {
     // TODO - consider scrollable dialog instead of dropdown
 
     return (
-      <div style={styles.main}>
+      <div style={AppStyles.mainWindow}>
 
-        <Dialog
-          title="Delete Task"
-          actions={actions}
-          modal={false}
-          open={this.state.deleteTaskDialogIsOpen}
-          onRequestClose={() => {
-              this.setState({deleteTaskDialogIsOpen: false})
-          }}
-        >
-          Are you sure you want to delete this task?
-        </Dialog>
+        <div style={AppStyles.centeredWindow}>
+          <Dialog
+            title="Delete Task"
+            actions={actions}
+            modal={false}
+            open={this.state.deleteTaskDialogIsOpen}
+            onRequestClose={() => {
+                this.setState({deleteTaskDialogIsOpen: false})
+            }}
+          >
+            Are you sure you want to delete this task?
+          </Dialog>
 
-        <TextField
-          style={styles.textField}
-          hintText="Name Field"
-          floatingLabelText="Name"
-          errorText={this.state.nameValidationError}
-          type="text"
-          value={task.name || ''}
-          onChange={
-            (event, name) => {
+          <TextField
+            style={{
+              ...styles.textField,
+              ...AppStyles.centeredElement
+            }}
+            hintText="Name Field"
+            floatingLabelText="Name"
+            errorText={this.state.nameValidationError}
+            type="text"
+            value={task.name || ''}
+            onChange={
+              (event, name) => {
 
-              // update our reference to task
-              let list = this.state.editedTask
-              task.name = name
+                // update our reference to task
+                let list = this.state.editedTask
+                task.name = name
 
-              this.setState({task: task})
+                this.setState({task: task})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <TextField
-          style={styles.textField}
-          hintText="List"
-          floatingLabelText="List"
-          type="text"
-          value={this.state.editedList.name || ''}
-          onClick={() => {
-            this.setState({listDialogIsOpen: true})
-          }}
-        />
-        {this._renderListDialog()}
+          <TextField
+            style={{
+              ...styles.textField,
+              ...AppStyles.centeredElement
+            }}
+            hintText="List"
+            floatingLabelText="List"
+            type="text"
+            value={this.state.editedList.name || ''}
+            onClick={() => {
+              this.setState({listDialogIsOpen: true})
+            }}
+          />
+          {this._renderListDialog()}
 
-        <br/>
+          <br/>
 
-        <TextField
-          multiLine={true}
-          style={styles.textField}
-          hintText="Notes Field"
-          floatingLabelText="Notes"
-          errorText={this.state.notesValidationError}
-          type="text"
-          value={task.notes || ''}
-          onChange={
-            (event, notes) => {
+          <TextField
+            multiLine={true}
+            style={{
+              ...styles.textField,
+              ...AppStyles.centeredElement
+            }}
+            hintText="Notes Field"
+            floatingLabelText="Notes"
+            errorText={this.state.notesValidationError}
+            type="text"
+            value={task.notes || ''}
+            onChange={
+              (event, notes) => {
 
-              // update our reference to list
-              let list = this.state.editedTask
-              task.notes = notes
+                // update our reference to list
+                let list = this.state.editedTask
+                task.notes = notes
 
-              this.setState({task: task})
+                this.setState({task: task})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
+          {this._datePicker()}
 
-        {this._datePicker()}
+          <br/>
 
-        <br/>
+          <div style={styles.errorText}>
+            {this.state.updateError}
+          </div>
 
-        <div style={styles.errorText}>
-          {this.state.updateError}
-        </div>
-
-        <div style={styles.successText}>
-          {this.state.updateSuccess}
+          <div style={styles.successText}>
+            {this.state.updateSuccess}
+          </div>
         </div>
       </div>
     )

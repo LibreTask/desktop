@@ -19,17 +19,17 @@ import * as UserController from '../models/controllers/user'
 import Validator from 'validator'
 
 import AppConstants from '../constants'
+import AppStyles from '../styles'
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-  },
   button: {
     marginTop: 15,
   },
   errorText: {
     color: 'red'
+  },
+  createTaskButtonLabel: {
+    textTransform: 'none',
   }
 }
 
@@ -133,33 +133,40 @@ class CreateTask extends Component {
 
   render = () => {
     return (
-      <div style={styles.main}>
+      <div style={AppStyles.mainWindow}>
 
-        <TextField
-          errorText={this.state.nameValidationError}
-          hintText="Name Field"
-          floatingLabelText="Name"
-          type="text"
-          onChange={
-            (event, name) => {
-              this.setState({currentName: name})
+        <div style={AppStyles.centeredWindow}>
+
+          <TextField
+            style={AppStyles.centeredElement}
+            errorText={this.state.nameValidationError}
+            floatingLabelText="Name"
+            type="text"
+            onChange={
+              (event, name) => {
+                this.setState({currentName: name})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <div style={styles.errorText}>
-          {this.state.createError}
+          <div style={styles.errorText}>
+            {this.state.createError}
+          </div>
+
+          <br/>
+
+          <RaisedButton
+            style={{
+              ...AppStyles.centeredElement,
+              ...styles.button
+            }}
+            labelStyle={styles.createTaskButtonLabel}
+            label="Create"
+            onTouchTap={this._createTask}
+           />
         </div>
-
-        <br/>
-
-        <RaisedButton
-          style={styles.button}
-          label="Create"
-          onTouchTap={this._createTask}
-         />
       </div>
     )
   }

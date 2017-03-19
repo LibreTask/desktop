@@ -22,10 +22,6 @@ import AppStyles from '../styles'
 import Validator from 'validator'
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-  },
   input: {
     fontSize: '120%'
   },
@@ -211,7 +207,10 @@ class Profile extends Component {
     if (this.props.profile.currentPlan === 'premium') {
       accountStatusButton = (
         <RaisedButton
-          style={styles.button}
+          style={{
+            ...styles.button,
+            ...AppStyles.centeredElement
+          }}
           labelColor={AppStyles.linkColor}
           label="Downgrade"
           onTouchTap={this._onAccountDowngrade}
@@ -220,7 +219,10 @@ class Profile extends Component {
     } else {
       accountStatusButton = (
         <RaisedButton
-          style={styles.button}
+          style={{
+            ...styles.button,
+            ...AppStyles.centeredElement
+          }}
           labelColor={AppStyles.linkColor}
           label="Upgrade"
           onTouchTap={this._onAccountUpgrade}
@@ -253,73 +255,87 @@ class Profile extends Component {
     ];
 
     return (
-      <div style={styles.main}>
-        <Dialog
-          title="Profile Deletion"
-          actions={actions}
-          modal={false}
-          open={this.state.deleteProfileDialogIsOpen}
-          onRequestClose={() => {
-              this.setState({deleteProfileDialogIsOpen: false})
-          }}
-        >
-          Are you sure you want to delete your profile?
-        </Dialog>
+      <div style={AppStyles.mainWindow}>
+        <div style={AppStyles.centeredWindow}>
+          <Dialog
+            title="Profile Deletion"
+            actions={actions}
+            modal={false}
+            open={this.state.deleteProfileDialogIsOpen}
+            onRequestClose={() => {
+                this.setState({deleteProfileDialogIsOpen: false})
+            }}
+          >
+            Are you sure you want to delete your profile?
+          </Dialog>
 
-        <TextField
-          style={styles.input}
-          hintText="Name Field"
-          floatingLabelText="Name"
-          errorText={this.state.nameValidationError}
-          type="text"
-          value={this.state.currentName}
-          onChange={
-            (event, name) => {
-              this.setState({currentName: name})
+          <TextField
+            style={{
+              ...styles.input,
+              ...AppStyles.centeredElement
+            }}
+            hintText="Name Field"
+            floatingLabelText="Name"
+            errorText={this.state.nameValidationError}
+            type="text"
+            value={this.state.currentName}
+            onChange={
+              (event, name) => {
+                this.setState({currentName: name})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <TextField
-          style={styles.input}
-          hintText="Email Field"
-          floatingLabelText="Email"
-          errorText={this.state.emailValidationError}
-          type="email"
-          value={this.state.currentEmail}
-          onChange={
-            (event, email) => {
-              this.setState({currentEmail: email})
+          <TextField
+            style={{
+              ...styles.input,
+              ...AppStyles.centeredElement
+            }}
+            hintText="Email Field"
+            floatingLabelText="Email"
+            errorText={this.state.emailValidationError}
+            type="email"
+            value={this.state.currentEmail}
+            onChange={
+              (event, email) => {
+                this.setState({currentEmail: email})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <div>
-          <RaisedButton
-            style={styles.button}
-            labelColor={AppStyles.linkColor}
-            label="Update"
-            onTouchTap={this._onProfileUpdate}
-           />
+          <div>
+            <RaisedButton
+              style={{
+                ...styles.button,
+                ...AppStyles.centeredElement
+              }}
+              labelColor={AppStyles.linkColor}
+              label="Update"
+              onTouchTap={this._onProfileUpdate}
+             />
 
-           <br/>
+             <br/>
 
-           <RaisedButton
-             style={styles.button}
-             labelColor={AppStyles.linkColor}
-             label="Delete"
-             onTouchTap={()=>{
-               this.setState({deleteProfileDialogIsOpen: true })
-             }}
-            />
+             <RaisedButton
+               style={{
+                 ...styles.button,
+                 ...AppStyles.centeredElement
+               }}
+               labelColor={AppStyles.linkColor}
+               label="Delete"
+               onTouchTap={()=>{
+                 this.setState({deleteProfileDialogIsOpen: true })
+               }}
+              />
 
-            <br/>
+              <br/>
 
-            {this._accountStatusButton()}
+              {this._accountStatusButton()}
+          </div>
         </div>
       </div>
     )

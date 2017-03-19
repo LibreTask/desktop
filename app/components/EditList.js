@@ -23,13 +23,6 @@ import AppConstants from '../constants'
 import AppStyles from '../styles'
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-  },
-  textField: {
-    fontSize: '120%'
-  },
   divider: {
     marginTop: 15,
     marginBottom: 15
@@ -213,48 +206,51 @@ class EditList extends Component {
     ];
 
     return (
-      <div style={styles.main}>
-        <Dialog
-          title="List Deletion"
-          actions={actions}
-          modal={false}
-          open={this.state.deleteListDialogIsOpen}
-          onRequestClose={() => {
-              this.setState({deleteListDialogIsOpen: false})
-          }}
-        >
-          Are you sure you want to delete this list?
-        </Dialog>
+      <div style={AppStyles.mainWindow}>
 
-        <h2> Name </h2>
+        <div style={AppStyles.centeredWindow}>
+          <Dialog
+            title="List Deletion"
+            actions={actions}
+            modal={false}
+            open={this.state.deleteListDialogIsOpen}
+            onRequestClose={() => {
+                this.setState({deleteListDialogIsOpen: false})
+            }}
+          >
+            Are you sure you want to delete this list?
+          </Dialog>
 
-        <TextField
-          style={styles.TextField}
-          errorText={this.state.nameValidationError}
-          hintText="Name Field"
-          floatingLabelText="Name"
-          type="text"
-          value={list.name}
-          onChange={
-            (event, name) => {
+          <h2> Name </h2>
 
-              // update our reference to list
-              let list = this.state.editedList
-              list.name = name
+          <TextField
+            style={AppStyles.centeredElement}
+            errorText={this.state.nameValidationError}
+            hintText="Name Field"
+            floatingLabelText="Name"
+            type="text"
+            value={list.name}
+            onChange={
+              (event, name) => {
 
-              this.setState({list: list})
+                // update our reference to list
+                let list = this.state.editedList
+                list.name = name
+
+                this.setState({list: list})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <div style={styles.errorText}>
-          {this.state.updateError}
-        </div>
+          <div style={styles.errorText}>
+            {this.state.updateError}
+          </div>
 
-        <div style={styles.successText}>
-          {this.state.updateSuccess}
+          <div style={styles.successText}>
+            {this.state.updateSuccess}
+          </div>
         </div>
       </div>
     )

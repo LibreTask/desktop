@@ -21,12 +21,9 @@ import * as UserController from '../models/controllers/user'
 import dateFormat from 'dateformat'
 
 import AppConstants from '../constants'
+import AppStyles from '../styles'
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-  },
   header: {
     fontSize: '110%',
     fontWeight: 'bold'
@@ -186,49 +183,52 @@ class SingleTaskPage extends Component {
     ];
 
     return (
-      <div style={styles.main}>
-        <Dialog
-          title={'Task Deletion'}
-          actions={actions}
-          modal={false}
-          open={this.state.deleteTaskDialogIsOpen}
-          onRequestClose={() => {
-              this.setState({deleteTaskDialogIsOpen: false})
-          }}
-        >
-          Are you sure you want to delete this task?
-        </Dialog>
+      <div style={AppStyles.mainWindow}>
 
-        <div style={styles.header}>
-          List
-        </div>
+        <div style={AppStyles.centeredWindow}>
+          <Dialog
+            title={'Task Deletion'}
+            actions={actions}
+            modal={false}
+            open={this.state.deleteTaskDialogIsOpen}
+            onRequestClose={() => {
+                this.setState({deleteTaskDialogIsOpen: false})
+            }}
+          >
+            Are you sure you want to delete this task?
+          </Dialog>
 
-        <div style={styles.taskFont}>
-          {list.name}
-        </div>
+          <div style={styles.header}>
+            List
+          </div>
 
-        <Divider style={styles.divider}/>
+          <div style={styles.taskFont}>
+            {list.name}
+          </div>
 
-        <div style={styles.header}>
-          Notes
-        </div>
+          <Divider style={styles.divider}/>
 
-        <div style={styles.taskFont}>
-          {task.notes || 'No notes yet'}
-        </div>
+          <div style={styles.header}>
+            Notes
+          </div>
 
-        <Divider style={styles.divider}/>
+          <div style={styles.taskFont}>
+            {task.notes || 'No notes yet'}
+          </div>
 
-        <div style={styles.header}>
-          Due Date
-        </div>
+          <Divider style={styles.divider}/>
 
-        <div style={styles.taskFont}>
-          {
-            task.dueDateTimeUtc
-            ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
-            : 'No due date yet'
-          }
+          <div style={styles.header}>
+            Due Date
+          </div>
+
+          <div style={styles.taskFont}>
+            {
+              task.dueDateTimeUtc
+              ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
+              : 'No due date yet'
+            }
+          </div>
         </div>
       </div>
     )

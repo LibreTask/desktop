@@ -16,20 +16,15 @@ import * as ProfileStorage from '../models/storage/profile-storage'
 import * as UserActions from '../actions/entities/user'
 
 import AppConstants from '../constants'
+import AppStyles from '../styles'
+
 import Validator from 'validator'
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-  },
   button: {
     marginBottom: 10,
     marginTop: 10,
     fontSize: '140%'
-  },
-  textField: {
-    fontSize: '120%'
   },
   errorText: {
     color: 'red'
@@ -121,59 +116,65 @@ class Signup extends Component {
 
   render = () => {
     return (
-      <div style={styles.main}>
+      <div style={AppStyles.mainWindow}>
 
-        <TextField
-          hintText="Email Field"
-          errorText={this.state.emailValidationError}
-          floatingLabelText="Email"
-          type="email"
-          onChange={
-            (event, email) => {
-              this.setState({currentEmail: email})
+        <div style={AppStyles.centeredWindow}>
+          <TextField
+            style={AppStyles.centeredElement}
+            hintText="Email Field"
+            errorText={this.state.emailValidationError}
+            floatingLabelText="Email"
+            type="email"
+            onChange={
+              (event, email) => {
+                this.setState({currentEmail: email})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <TextField
-          style={styles.textField}
-          errorText={this.state.passwordValidationError}
-          hintText="Password Field"
-          floatingLabelText="Password"
-          type="password"
-          onChange={
-            (event, password) => {
-              this.setState({currentPassword: password})
+          <TextField
+            style={AppStyles.centeredElement}
+            errorText={this.state.passwordValidationError}
+            hintText="Password Field"
+            floatingLabelText="Password"
+            type="password"
+            onChange={
+              (event, password) => {
+                this.setState({currentPassword: password})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <TextField
-          style={styles.textField}
-          errorText={this.state.confirmPasswordValidationError}
-          hintText="Confirm Password Field"
-          floatingLabelText="Confirm Password"
-          type="password"
-          onChange={
-            (event, confirmPassword) => {
-              this.setState({currentConfirmPassword: confirmPassword})
+          <TextField
+            style={AppStyles.centeredElement}
+            errorText={this.state.confirmPasswordValidationError}
+            hintText="Confirm Password Field"
+            floatingLabelText="Confirm Password"
+            type="password"
+            onChange={
+              (event, confirmPassword) => {
+                this.setState({currentConfirmPassword: confirmPassword})
+              }
             }
-          }
-        />
+          />
 
-        <div style={styles.errorText}>
-          {this.state.signupError}
+          <div style={styles.errorText}>
+            {this.state.signupError}
+          </div>
+
+          <RaisedButton
+            label="Signup"
+            style={{
+              ...styles.button,
+              ...AppStyles.centeredElement
+            }}
+            onTouchTap={this._signup}
+           />
         </div>
-
-        <RaisedButton
-          label="Signup"
-          style={styles.button}
-          onTouchTap={this._signup}
-         />
       </div>
     )
   }

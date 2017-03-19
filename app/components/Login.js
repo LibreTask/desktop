@@ -23,17 +23,10 @@ import Validator from 'validator'
 const shell = require('electron').shell;
 
 const styles = {
-  main: {
-    margin: 12,
-    color: '#000000',
-  },
   button: {
     marginBottom: 10,
     marginTop: 10,
     fontSize: '140%'
-  },
-  textField: {
-    fontSize: '120%'
   },
   link: {
     color: AppStyles.linkColor,
@@ -119,51 +112,56 @@ class Login extends Component {
   render = () => {
 
     return (
-      <div style={styles.main}>
+      <div style={AppStyles.mainWindow}>
 
-        <TextField
-          style={styles.TextField}
-          errorText={this.state.emailValidationError}
-          hintText="Email Field"
-          floatingLabelText="Email"
-          type="email"
-          onChange={
-            (event, email) => {
-              this.setState({currentEmail: email})
+        <div style={AppStyles.centeredWindow}>
+          <TextField
+            style={AppStyles.centeredElement}
+            errorText={this.state.emailValidationError}
+            hintText="Email Field"
+            floatingLabelText="Email"
+            type="email"
+            onChange={
+              (event, email) => {
+                this.setState({currentEmail: email})
+              }
             }
-          }
-        />
-        <br/>
-        <TextField
-          style={styles.TextField}
-          errorText={this.state.passwordValidationError}
-          hintText="Password Field"
-          floatingLabelText="Password"
-          type="password"
-          onChange={
-            (event, password) => {
-              this.setState({currentPassword: password})
+          />
+          <br/>
+          <TextField
+            style={AppStyles.centeredElement}
+            errorText={this.state.passwordValidationError}
+            hintText="Password Field"
+            floatingLabelText="Password"
+            type="password"
+            onChange={
+              (event, password) => {
+                this.setState({currentPassword: password})
+              }
             }
-          }
-        />
+          />
 
-        <br/>
+          <br/>
 
-        <p style={styles.link} onClick={() => {
-          shell.openExternal(AppConstants.PASSWORD_RESET_LINK)
-        }}>
-          Forgot password?
-        </p>
+          <p style={styles.link} onClick={() => {
+            shell.openExternal(AppConstants.PASSWORD_RESET_LINK)
+          }}>
+            Forgot password?
+          </p>
 
-        <div style={styles.errorText}>
-          {this.state.loginError}
+          <div style={styles.errorText}>
+            {this.state.loginError}
+          </div>
+
+          <RaisedButton
+            label="Login"
+            style={{
+              ...styles.button,
+              ...AppStyles.centeredElement
+            }}
+            onTouchTap={this._login}
+           />
         </div>
-
-        <RaisedButton
-          label="Login"
-          style={styles.button}
-           onTouchTap={this._login}
-         />
       </div>
     )
   }
