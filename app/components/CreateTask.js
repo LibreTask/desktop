@@ -9,6 +9,8 @@ import { hashHistory } from 'react-router'
 
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
+import IconButton from 'material-ui/IconButton'
+import DatePicker from 'material-ui/DatePicker'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -21,6 +23,10 @@ import Validator from 'validator'
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
+const FaCommentO = require('react-icons/lib/fa/comment-o')
+const FaListUl = require('react-icons/lib/fa/list-ul')
+const FaCalendar = require('react-icons/lib/fa/calendar')
+
 const styles = {
   button: {
     marginTop: 15,
@@ -30,6 +36,14 @@ const styles = {
   },
   createTaskButtonLabel: {
     textTransform: 'none',
+  },
+  mediumIcon: {
+    width: 30,
+    height: 30,
+    display: 'inline-flex',
+  },
+  selectedIcon: {
+    color: 'green'
   }
 }
 
@@ -42,7 +56,13 @@ class CreateTask extends Component {
       createError: '',
       isCreatingTask: false,
       currentName: '',
-      nameValidationError: ''
+      currentNotes: '',
+      selectedDate: '',
+      nameValidationError: '',
+      notesValidationError: '',
+      listIconSelected: false,
+      notesIconSelected: false,
+      calendarIconSelected: false
     }
   }
 
@@ -63,16 +83,28 @@ class CreateTask extends Component {
 
   _createTask = () => {
     let name = this.state.currentName
+    let notes = this.state.currentNotes
+    let dueDateTimeUtc = this.state.selectedDate
+
     let listId = this._getListId()
 
     let nameValidationError = ''
+    let notesValidationError = ''
 
     if (!Validator.isLength(name, {min: 2, max: 100})) {
       nameValidationError = 'Name must be between 2 and 100 characters'
     }
 
-    if (nameValidationError) {
-      this.setState({ nameValidationError: nameValidationError })
+    if (this.state.notesIconSelected
+        && !Validator.isLength(notes, {min: 0, max: 5000})) {
+        notesValidationError = 'Notes must be between 0 and 5000 characters'
+    }
+
+    if (nameValidationError || notesValidationError) {
+      this.setState({
+        nameValidationError: nameValidationError,
+        notesValidationError: notesValidationError
+      })
 
       return; // validation failed; cannot create list
     }
@@ -86,13 +118,15 @@ class CreateTask extends Component {
       this.setState({
         isCreatingTask: true,
         nameValidationError: '',
+        notesValidationError: '',
         createError: ''
       }, () => {
 
         let userId = this.props.profile.id
         let pw = this.props.profile.password
 
-        TaskController.createTask(name, listId, userId, pw)
+        TaskController.createTask(name, notes, dueDateTimeUtc, listId,
+          userId, pw)
         .then( response => {
 
           let task = response.task
@@ -117,18 +151,146 @@ class CreateTask extends Component {
          })
       })
     } else {
-      this._createTaskLocallyAndRedirect(name, listId)
+      this._createTaskLocallyAndRedirect(name, notes, dueDateTimeUtc, listId)
     }
   }
 
-  _createTaskLocallyAndRedirect = (name, listId) => {
+  _createTaskLocallyAndRedirect = (name, notes, dueDateTimeUtc, listId) => {
     // create task locally; user it not logged in or has no network connection
-    let task = TaskController.constructTaskLocally(name, listId)
+    let task = TaskController.constructTaskLocally(name, notes, dueDateTimeUtc,
+       listId)
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
 
     // navigate to main on success
     hashHistory.replace(`/tasks/${listId}`)
+  }
+
+  _constructNotesTextEdit = () => {
+
+    if (!this.state.notesIconSelected) {
+      return <span/>
+    }
+
+    return (
+      <span>
+        <TextField
+          multiLine={true}
+          style={AppStyles.centeredElement}
+          errorText={this.state.nameValidationError}
+          floatingLabelText="Notes"
+          type="text"
+          onChange={
+            (event, notes) => {
+              this.setState({currentNotes: notes})
+            }
+          }
+        />
+
+        <br/>
+      </span>
+    )
+  }
+
+  _constructDatePicker = () => {
+
+    if (!this.state.calendarIconSelected) {
+      return <span/>
+    }
+
+    const minDate = new Date()
+    const maxDate = new Date()
+    maxDate.setFullYear(maxDate.getFullYear() + 10)
+
+    const defaultDate =
+      this.selectedDate
+      ? new Date(this.selectedDate)
+      : minDate
+
+    return (
+      <span>
+        <DatePicker
+          textFieldStyle={AppStyles.centeredElement}
+          floatingLabelText="Due Date"
+          defaultDate={defaultDate}
+          autoOk={false}
+          minDate={minDate}
+          maxDate={maxDate}
+          container="inline"
+          disableYearSelection={false}
+          onChange={(skip, selectedDate) => {
+              this.setState({selectedDate: selectedDate})
+          }}
+        />
+        <br/>
+      </span>
+    )
+  }
+
+  _constructAttributeIcons = () => {
+
+    let listIconStyle = styles.mediumIcon
+    if (this.state.listIconSelected) {
+      listIconStyle = {
+        ...styles.mediumIcon,
+        ...styles.selectedIcon
+      }
+    }
+
+    let notesIconStyle = styles.mediumIcon
+    if (this.state.notesIconSelected) {
+      notesIconStyle = {
+        ...styles.mediumIcon,
+        ...styles.selectedIcon
+      }
+    }
+
+    let calendarIconStyle = styles.mediumIcon
+    if (this.state.calendarIconSelected) {
+      calendarIconStyle = {
+        ...styles.mediumIcon,
+        ...styles.selectedIcon
+      }
+    }
+
+    /*
+
+    TODO - should we allow a list selection here?
+
+    <IconButton
+      iconStyle={listIconStyle}
+      onTouchTap={() => {
+        this.setState({
+          listIconSelected: !this.state.listIconSelected
+        })
+      }}>
+        <FaListUl/>
+    </IconButton>
+    */
+
+    return (
+      <div>
+        <IconButton
+          iconStyle={notesIconStyle}
+          onTouchTap={() => {
+            this.setState({
+              notesIconSelected: !this.state.notesIconSelected
+            })
+          }}>
+            <FaCommentO/>
+        </IconButton>
+
+        <IconButton
+          iconStyle={calendarIconStyle}
+          onTouchTap={() => {
+            this.setState({
+              calendarIconSelected: !this.state.calendarIconSelected
+            })
+          }}>
+            <FaCalendar/>
+        </IconButton>
+      </div>
+    )
   }
 
   render = () => {
@@ -152,11 +314,13 @@ class CreateTask extends Component {
 
           <br/>
 
+          {this._constructNotesTextEdit()}
+
+          {this._constructDatePicker()}
+
           <div style={styles.errorText}>
             {this.state.createError}
           </div>
-
-          <br/>
 
           <RaisedButton
             style={{
@@ -167,6 +331,8 @@ class CreateTask extends Component {
             label="Create"
             onTouchTap={this._createTask}
            />
+
+           {this._constructAttributeIcons()}
         </div>
       </div>
     )

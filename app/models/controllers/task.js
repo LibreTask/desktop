@@ -12,9 +12,12 @@ const uuid = require('node-uuid')
   side. That is, when the client 1) has no network connection OR 2) is not
   logged in.
 */
-export const constructTaskLocally = (taskName, listId) => {
+export const constructTaskLocally = (taskName, taskNotes, taskDueDateTimeUtc,
+   listId) => {
   return {
     name: taskName,
+    notes: taskNotes,
+    dueDateTimeUtc: taskDueDateTimeUtc,
     id: 'client-task-' + uuid.v4(),
     listId: listId
     // Notably, no userId is assigned because one may not exist.
@@ -22,7 +25,8 @@ export const constructTaskLocally = (taskName, listId) => {
   }
 }
 
-export const createTask = (taskName, listId, userId, password) => {
+export const createTask = (taskName, taskNotes, taskDueDateTimeUtc, listId,
+   userId, password) => {
   const request = {
     endpoint: `task/create`,
     method: 'POST',
@@ -33,6 +37,8 @@ export const createTask = (taskName, listId, userId, password) => {
      },
      body: JSON.stringify({
        name: taskName,
+       notes: taskNotes,
+       dueDateTimeUtc: taskDueDateTimeUtc,
        listId: listId
        // TODO -
      })
