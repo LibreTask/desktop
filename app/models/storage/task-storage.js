@@ -46,25 +46,6 @@ export async function getAllTasks() {
   return taskMap
 }
 
-export async function getTasksByListId(listId) {
-  // TODO - look into "design doc" for map queries
-  function map(doc) {
-
-    if (doc.type === 'task' && doc.listd === listId ) {
-      emit(doc)
-    }
-  }
-
-  let tasks = await db.query(map)
-
-  let taskMap = {}
-  for (let task of tasks.rows) {
-    taskMap[task.id] = _endoraFormat(task)
-  }
-
-  return taskMap
-}
-
 export function createOrUpdateTasks(tasks) {
 
   for (let task of tasks) {

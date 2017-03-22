@@ -78,8 +78,8 @@ class MultiTaskPage extends Component {
   }
 
   componentDidMount() {
-    this._setRightNavButtonIfNecessary()
-    this.props.setNavbarTitle(this._getHeaderName())
+    this.props.setNavbarTitle('Tasks')
+    this.props.setFarRightNavButton(AppConstants.CREATE_NAVBAR_BUTTON)
   }
 
   componentWillUnmount() {
@@ -87,50 +87,15 @@ class MultiTaskPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // updated props could mean a new header name; so we set it here
-    this.props.setNavbarTitle(this._getHeaderName())
-    this._setRightNavButtonIfNecessary()
+
+    console.log("next props, nav action: " + nextProps.navAction)
 
     // consume any actions triggered via the Navbar
-    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
-      let listId = this._getListId()
-      hashHistory.push(`/list/${listId}/edit`)
+    if (nextProps.navAction === NavbarActions.CREATE_NAV_ACTION) {
+      this.props.removeFarRightNavButton() // remove before transition
       this.props.setNavAction(undefined)
+      hashHistory.push('/task/create')
     }
-  }
-
-  _setRightNavButtonIfNecessary() {
-    let listId = this._getListId()
-
-    // only display edit list when an actual list has been selected
-    if (listId !== AppConstants.ALL_TASKS_IDENTIFIER) {
-      this.props.setFarRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
-    } else {
-      this.props.removeFarRightNavButton()
-    }
-  }
-
-  _getListId()  {
-
-    return (this.props.router.params && this.props.router.params.listId)
-      ? this.props.router.params.listId
-      : AppConstants.ALL_TASKS_IDENTIFIER;
-  }
-
-  _getHeaderName() {
-    let myListId = this._getListId()
-
-    if (myListId === AppConstants.ALL_TASKS_IDENTIFIER) {
-      return "All Tasks"
-    } else {
-      for (let listId in this.props.lists) {
-        if (myListId === listId) {
-          return this.props.lists[myListId].name
-        }
-      }
-    }
-
-    return "Error!" // TODO - fix this case
   }
 
   _sortTasksByDateAndInsertHeaders(tasks)  {
@@ -304,6 +269,7 @@ class MultiTaskPage extends Component {
           }
           onClick={
             (event) => {
+
               this.props.removeFarRightNavButton() // remove before transition
               hashHistory.push(`/task/${task.id}`)
             }
@@ -359,27 +325,7 @@ class MultiTaskPage extends Component {
     )
   }
 
-  _renderCreateTaskFooter() {
-
-    return (
-      <ListItem
-        style={styles.footer}
-        key={'create-task-item'}
-        primaryText="Create Task"
-        onTouchTap={(event) => {
-
-          let listId = this._getListId()
-
-          this.props.removeFarRightNavButton() // remove before transition
-          hashHistory.push(`/task/create/${listId}`)
-        }}>
-      </ListItem>
-    )
-  }
-
   _getTasksToDisplay() {
-    let myListId = this._getListId()
-
     let tasks = []
 
     for (let taskId in this.props.tasks) {
@@ -395,10 +341,7 @@ class MultiTaskPage extends Component {
         continue;
       }
 
-      if (myListId === AppConstants.ALL_TASKS_IDENTIFIER
-          || myListId === task.listId) {
-        tasks.push(task)
-      }
+      tasks.push(task)
     }
 
     return this._sortTasksByDateAndInsertHeaders(tasks)
@@ -406,36 +349,17 @@ class MultiTaskPage extends Component {
 
   _renderTasks() {
     let listItems = []
-    let myListId = this._getListId()
     let tasksToDisplay = this._getTasksToDisplay()
 
     for (let task of tasksToDisplay) {
       listItems.push(this._renderRow(task))
     }
 
-    // add create task footer; if a specific list is selected
-    if (myListId !== AppConstants.ALL_TASKS_IDENTIFIER) {
-      listItems.push(this._renderCreateTaskFooter())
-    }
-
-    // if no tasks exist, and no list selected, display
-    // text so that the screen is not blank
-    if (myListId === AppConstants.ALL_TASKS_IDENTIFIER
-      && tasksToDisplay.length === 0) {
-
-        // TODO - consider adding a more accessible way to create a task
-        // for this scenario, like a link, etc
-
-        return (
-          <div style={styles.emptyListText}>
-            Navigate to a new or existing list, then create a task.
-          </div>
-        )
-    }
-
-    return <List>
-        {listItems}
+    return (
+      <List>
+          {listItems}
       </List>
+    )
   }
 
   render() {
@@ -450,10 +374,8 @@ class MultiTaskPage extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
-  lists: state.entities.lists,
   tasks: state.entities.tasks,
   navAction: state.ui.navbar.navAction
-  // TODO - currently selected list id
 })
 
 const mapDispatchToProps = {

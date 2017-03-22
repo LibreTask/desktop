@@ -6,14 +6,12 @@
 import { invoke, constructAuthHeader } from '../../middleware/api'
 
 import * as TaskStorage from '../storage/task-storage'
-import * as ListStorage from '../storage/list-storage'
 import * as ProfileStorage from '../storage/profile-storage'
 
 // TODO - move this method to general-purpose file
 async function getState() {
 
   let tasks = {}
-  let lists = {}
   let profile = {}
   let isLoggedIn = false
 
@@ -27,15 +25,6 @@ async function getState() {
   console.dir(tasks)
 
   try {
-    let listsHash = await ListStorage.getAllLists()
-    var listIds = Object.keys(listsHash)
-    lists = listIds.map(function(id) { return listsHash[id]; })
-  } catch (err) { /* ignore */ }
-
-  console.log('lists, within state...')
-  console.dir(lists)
-
-  try {
     profile = await ProfileStorage.getMyProfile()
   } catch (err) { /* ignore */ }
 
@@ -45,8 +34,7 @@ async function getState() {
 
   return {
     entities: {
-      tasks: tasks,
-      lists: lists
+      tasks: tasks
     },
     user: {
       profile: profile,
@@ -92,11 +80,6 @@ export const sync = async () => {
 
     console.log("abc response...")
     console.dir(response)
-
-    if (response.state.entities.lists
-        && response.state.entities.lists.length > 0) {
-      ListStorage.createOrUpdateLists(response.state.entities.lists)
-    }
 
     if (response.state.entities.tasks
         && response.state.entities.tasks.length > 0) {

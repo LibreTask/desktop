@@ -38,93 +38,6 @@ const styles = {
     minHeight: '100%',
     backgroundColor: 'white',
   },
-  listsSubmenuItem: {
-    marginTop: 15,
-    marginBottom: 15,
-    fontSize: '80%',
-    fontWeight: 'normal'
-  },
-  listItems: {
-    marginLeft: 20,
-  },
-  listsChevronContainer: {
-    marginRight: 10,
-  },
-  listsChevron: {
-    width: 20,
-    height: 20,
-    marginBottom: 5
-  }
-}
-
-function _constructListsDropdown(props) {
-  let listsArrowImage =
-      props.sideMenuListsViewIsCollapsed
-      ? <FaChevronRight style={styles.listsChevron}/>
-      : <FaChevronDown style={styles.listsChevron}/>;
-
-    let listsMenuItems = [];
-
-    if (!props.sideMenuListsViewIsCollapsed) {
-
-      for (let listId in props.lists) {
-
-        let list = props.lists[listId]
-
-        listsMenuItems.push(
-          <div
-            key={`list-view-${list.id}`}
-            style={styles.listsSubmenuItem}
-            onClick={()=>{
-
-              props.closeSideMenu()
-
-              // navigate to tasks view for this list
-              hashHistory.replace(`/tasks/${list.id}`)
-            }}>
-            <span className={'sideMenuItem'}>
-              {list.name}
-            </span>
-          </div>
-        )
-      }
-
-      listsMenuItems.push(
-        <div
-          key={'create-list-view'}
-          style={{
-            ...styles.listsSubmenuItem,
-            ...{color: AppStyles.linkColor}
-          }}
-          onClick={()=>{
-            props.closeSideMenu()
-            hashHistory.push('/list/create')
-          }}>
-
-          <span className={'sideMenuItem'}>
-            Create List
-          </span>
-        </div>
-      )
-    }
-
-    return <div
-      key={'lists-dropdown-view'}
-      style={styles.sidebarLink}
-      onClick={()=>props.toggleListsView()}>
-
-      <span style={styles.listsChevronContainer}>
-        {listsArrowImage}
-      </span>
-
-      <span className={'sideMenuItem'}>
-        Lists
-      </span>
-
-      <div style={styles.listItems}>
-        {listsMenuItems}
-      </div>
-    </div>
 }
 
 const SideMenu = (props) => {
@@ -139,18 +52,16 @@ const SideMenu = (props) => {
       onClick={
       () =>  {
           props.closeSideMenu()
-          hashHistory.replace('/')
+          hashHistory.replace('/tasks')
       }
     }>
 
     <span className={'sideMenuItem'}>
-      All Tasks
+      Tasks
     </span>
 
     </div>,
   ];
-
-  sideMenuItems = sideMenuItems.concat(_constructListsDropdown(props))
 
   sideMenuItems.push(
     <div
@@ -231,17 +142,14 @@ SideMenu.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  sideMenuListsViewIsCollapsed: state.ui.sideMenu.isListsViewCollapsed,
   sideMenuIsOpen: state.ui.sideMenu.isOpen,
   loginDialogIsOpen: state.ui.logindialog.isOpen,
   logoutDialogIsOpen: state.ui.logoutdialog.isLopen,
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
-  lists: state.entities.lists
 })
 
 const mapDispatchToProps = {
-  toggleListsView: SideMenuActions.toggleListsView,
   toggleSideMenu: SideMenuActions.toggle,
   closeSideMenu: SideMenuActions.close,
   toggleLoginDialog: LoginDialogActions.toggle,

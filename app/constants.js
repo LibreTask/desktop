@@ -10,12 +10,11 @@ const CONSTANTS = {
   WEBSITE_LINK: 'https://algernon.io',
   SOURCE_CODE_LINK: 'https://github.com/AlgernonLabs/mobile',
 
-  ALL_TASKS_IDENTIFIER: 'ALL_TASKS_IDENTIFIER',
-
   APP_NAME: 'Algernon',
 
   // TODO - move these button constants to more appropriate location
   EDIT_NAVBAR_BUTTON: 'EDIT_NAVBAR_BUTTON',
+  CREATE_NAVBAR_BUTTON: 'CREATE_NAVBAR_BUTTON',
   DELETE_NAVBAR_BUTTON: 'DELETE_NAVBAR_BUTTON',
   SAVE_NAVBAR_BUTTON: 'SAVE_NAVBAR_BUTTON',
   BACK_NAVBAR_BUTTON: 'BACK_NAVBAR_BUTTON',

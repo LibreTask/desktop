@@ -6,11 +6,12 @@
 export const EDIT_NAV_ACTION = 'EDIT_NAV_ACTION'
 export const DELETE_NAV_ACTION = 'DELETE_NAV_ACTION'
 export const SAVE_NAV_ACTION = 'SAVE_NAV_ACTION'
+export const CREATE_NAV_ACTION = 'CREATE_NAV_ACTION'
 
 /*
  This is used when the navbar should communicate an action to children
- components. For example, if a user has clicked an "Edit List" or "Delete Task"
- button on the navbar, then the navAction could be "EDIT_LIST_NAV_ACTION" or
+ components. For example, if a user has clicked an "Edit Task" or "Delete Task"
+ button on the navbar, then the navAction could be "EDIT_TASK_NAV_ACTION" or
  "DELETE_TASK_NAV_ACTION", respectively. Then child components would consume
  this state, perform some action, and set navAction back to undefined.
 

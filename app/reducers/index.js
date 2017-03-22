@@ -12,7 +12,6 @@ import logindialog from './ui/logindialog'
 import logoutdialog from './ui/logoutdialog'
 
 import userReducer from './user'
-import listsReducer from './entities/lists'
 import tasksReducer from './entities/tasks'
 import storeItemsReducer from './entities/storeitems'
 
@@ -27,7 +26,6 @@ const uiReducer = combineReducers({
 
 const entitiesReducer = combineReducers({
   tasks: tasksReducer,
-  lists: listsReducer,
   storeItems: storeItemsReducer
 })
 

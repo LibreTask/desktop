@@ -155,7 +155,7 @@ class Profile extends Component {
     this.props.deleteProfile()
     ProfileStorage.deleteProfile()
 
-    hashHistory.replace('/') // navigate to main on deletion
+    hashHistory.replace('/tasks') // navigate to main on deletion
   }
 
   _onAccountUpgrade = () => {

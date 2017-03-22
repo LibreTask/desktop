@@ -23,6 +23,7 @@ const FaArrowLeft = require('react-icons/lib/fa/arrow-left')
 const FaFloppyO = require('react-icons/lib/fa/floppy-o')
 const FaTrashO = require('react-icons/lib/fa/trash-o')
 const FaEdit = require('react-icons/lib/fa/edit')
+const FaPlus = require('react-icons/lib/fa/plus')
 
 import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -35,7 +36,6 @@ import * as LogoutDialogActions from '../actions/logoutdialog'
 
 import * as UserActions from '../actions/entities/user'
 import * as TaskActions from '../actions/entities/task'
-import * as ListActions from '../actions/entities/list'
 
 import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
@@ -194,6 +194,10 @@ class App extends Component {
       === AppConstants.SAVE_NAVBAR_BUTTON) {
         mediumRightNavIcon = <FaFloppyO/>
         navbarAction = NavbarActions.SAVE_NAV_ACTION
+    } else if (this.props.mediumRightNavButton
+        === AppConstants.CREATE_NAVBAR_BUTTON) {
+        mediumRightNavIcon = <FaPlus/>
+        navbarAction = NavbarActions.CREATE_NAV_ACTION
     } else {
       return; // no navbutton set; return nothing
     }
@@ -226,6 +230,10 @@ class App extends Component {
       === AppConstants.SAVE_NAVBAR_BUTTON) {
         farRightNavIcon = <FaFloppyO/>
         navbarAction = NavbarActions.SAVE_NAV_ACTION
+    } else if (this.props.farRightNavButton
+        === AppConstants.CREATE_NAVBAR_BUTTON) {
+        farRightNavIcon = <FaPlus/>
+        navbarAction = NavbarActions.CREATE_NAV_ACTION
     } else {
       return; // no navbutton set; return nothing
     }
@@ -330,10 +338,9 @@ class App extends Component {
             // remove profile and all entities
             this.props.deleteProfile()
             this.props.deleteAllTasks()
-            this.props.deleteAllLists()
             ProfileStorage.logout()
 
-            hashHistory.replace('/')
+            hashHistory.replace('/tasks')
         }}
       />,
     ];
@@ -404,7 +411,6 @@ const mapDispatchToProps = {
   toggleLogoutDialog: LogoutDialogActions.toggle,
   closeLogoutDialog: LogoutDialogActions.toggle,
   deleteProfile: UserActions.deleteProfile,
-  deleteAllLists: ListActions.deleteAllLists,
   deleteAllTasks: TaskActions.deleteAllTasks,
   startSync: SyncActions.startSync,
   stopSync: SyncActions.stopSync,

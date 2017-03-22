@@ -53,8 +53,7 @@ class SingleTaskPage extends Component {
       // TODO - we keep these references in case props are updated
         // eg: when this exact task is deleted
         // but how can we do this cleaner?
-      task: this._getTask(),
-      list: this._getList()
+      task: this._getTask()
     }
   }
 
@@ -62,7 +61,7 @@ class SingleTaskPage extends Component {
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
     this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
-    this.props.setNavbarTitle(this.state.task.name)
+    this.props.setNavbarTitle('Task')
   }
 
   componentWillUnmount() {
@@ -84,13 +83,9 @@ class SingleTaskPage extends Component {
   }
 
   _getTask = () => {
+
     let id = this.props.router.params.taskId;
     return this.props.tasks[id]
-  }
-
-  _getList = () => {
-    let task = this._getTask()
-    return this.props.lists[task.listId]
   }
 
   /*
@@ -130,7 +125,8 @@ class SingleTaskPage extends Component {
   _deleteTaskLocallyAndRedirect = (task) => {
     TaskStorage.deleteTaskByTaskId(task.id)
     this.props.deleteTask(task.id)
-    hashHistory.replace(`/tasks/${task.listId}`)
+    //hashHistory.replace('/tasks')
+    hashHistory.goBack()
   }
 
   _renderRecurringFrequency = () => {
@@ -163,7 +159,6 @@ class SingleTaskPage extends Component {
     */
 
     let task = this.state.task
-    let list = this.state.list
 
     const actions = [
       <FlatButton
@@ -198,11 +193,11 @@ class SingleTaskPage extends Component {
           </Dialog>
 
           <div style={styles.header}>
-            List
+            Name
           </div>
 
           <div style={styles.taskFont}>
-            {list.name}
+            {task.name}
           </div>
 
           <Divider style={styles.divider}/>
@@ -237,7 +232,6 @@ class SingleTaskPage extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
-  lists: state.entities.lists,
   tasks: state.entities.tasks,
   navAction: state.ui.navbar.navAction
 })

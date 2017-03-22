@@ -97,7 +97,7 @@ class Login extends Component {
          this.props.createOrUpdateProfile(profile)
          ProfileStorage.createOrUpdateProfile(profile)
 
-         hashHistory.replace('/') // navigate to main on successful login
+         hashHistory.replace('/tasks') // navigate to main on successful login
        })
        .catch( error => {
 

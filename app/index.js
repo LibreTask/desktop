@@ -18,7 +18,6 @@ import AppConstants from './constants'
 
 import * as MetaStorage from './models/storage/meta-storage'
 import * as TaskStorage from './models/storage/task-storage'
-import * as ListStorage from './models/storage/list-storage'
 import * as ProfileStorage from './models/storage/profile-storage'
 
 /*
@@ -42,16 +41,11 @@ MetaStorage.getWindowSize()
 async function getInitialState() {
 
   let tasks = {}
-  let lists = {}
   let profile = {}
   let isLoggedIn = false
 
   try {
     tasks = await TaskStorage.getAllTasks()
-  } catch (err) { /* ignore */ }
-
-  try {
-    lists = await ListStorage.getAllLists()
   } catch (err) { /* ignore */ }
 
   try {
@@ -64,8 +58,7 @@ async function getInitialState() {
 
   return {
     entities: {
-      tasks: tasks,
-      lists: lists
+      tasks: tasks
     },
     user: {
       profile: profile,

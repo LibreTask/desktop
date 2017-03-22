@@ -55,7 +55,6 @@ class EditTask extends Component {
       isUpdating: false,
       deleteTaskDialogIsOpen: false,
 
-      listDialogIsOpen: false,
       recurringFrequencyDialogIsOpen: false,
 
       // TODO - we keep these references in case props are updated
@@ -64,7 +63,6 @@ class EditTask extends Component {
 
       // copy objects, so that editing does not modify originals
       editedTask: Object.assign({}, this._getTask()),
-      editedList: Object.assign({}, this._getList()),
 
       nameValidationError: '',
       notesValidationError: ''
@@ -75,7 +73,7 @@ class EditTask extends Component {
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
     this.props.setMediumRightNavButton(AppConstants.SAVE_NAVBAR_BUTTON)
     this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
-    this.props.setNavbarTitle('Edit List')
+    this.props.setNavbarTitle('Edit Task')
   }
 
   componentWillUnmount() {
@@ -99,11 +97,6 @@ class EditTask extends Component {
   _getTask = () => {
     let id = this.props.router.params.taskId;
     return this.props.tasks[id]
-  }
-
-  _getList = () => {
-    let task = this._getTask()
-    return this.props.lists[task.listId]
   }
 
   _onEditTask = () => {
@@ -147,7 +140,7 @@ class EditTask extends Component {
 
           TaskStorage.createOrUpdateTask(task)
           this.props.createOrUpdateTask(task)
-          hashHistory.replace(`/tasks/${task.listId}`)
+          hashHistory.replace('/tasks')
          })
          .catch( error => {
 
@@ -214,72 +207,7 @@ class EditTask extends Component {
   _deleteTaskLocallyAndRedirect = (task) => {
     TaskStorage.deleteTaskByTaskId(task.id)
     this.props.deleteTask(task.id)
-    hashHistory.replace(`/tasks/${task.listId}`)
-  }
-
-  _renderListDialog = () => {
-    let radios = [];
-    let initialIndex = 1;
-    let currentIndex = 1;
-
-    for (let listId in this.props.lists) {
-
-      let list = this.props.lists[listId]
-
-      radios.push(<RadioButton
-        key={list.id}
-        value={currentIndex}
-        label={list.name}
-        style={styles.radioButton} />)
-
-      if (list.id === this.state.editedTask.listId) {
-        initialIndex = currentIndex; // found the task's parent list
-      }
-
-      currentIndex += 1;
-    }
-
-    const actions = [
-      <FlatButton
-        label="Close"
-        primary={true}
-        onTouchTap={() => {
-          this.setState({listDialogIsOpen: false})
-        }}
-      />,
-      <FlatButton
-        label="Update"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => {
-          this.setState({listDialogIsOpen: false})
-        }}
-      />,
-    ]
-
-    return (
-      <Dialog
-          title="List"
-          actions={actions}
-          modal={false}
-          open={this.state.listDialogIsOpen}
-          onRequestClose={() => {
-            this.setState({listDialogIsOpen: false})
-          }}
-          autoScrollBodyContent={true}
-        >
-          <RadioButtonGroup
-            name="lists"
-            valueSelected={initialIndex}
-            onChange={(event, value) => {
-              let task = this.state.editedTask
-              task.listId = Object.keys(this.props.lists)[value]
-              this.setState({task: task})
-            }}>
-            {radios}
-          </RadioButtonGroup>
-        </Dialog>
-    )
+    hashHistory.replace('/tasks')
   }
 
   _renderRecurringFrequencyDialog = () => {
@@ -411,7 +339,6 @@ class EditTask extends Component {
     // TODO - add other task attributes here as well
 
     let task = this.state.editedTask
-    let list = this.state.editedList
 
     const actions = [
       <FlatButton
@@ -462,30 +389,12 @@ class EditTask extends Component {
               (event, name) => {
 
                 // update our reference to task
-                let list = this.state.editedTask
                 task.name = name
 
                 this.setState({task: task})
               }
             }
           />
-
-          <br/>
-
-          <TextField
-            style={{
-              ...styles.textField,
-              ...AppStyles.centeredElement
-            }}
-            hintText="List"
-            floatingLabelText="List"
-            type="text"
-            value={this.state.editedList.name || ''}
-            onClick={() => {
-              this.setState({listDialogIsOpen: true})
-            }}
-          />
-          {this._renderListDialog()}
 
           <br/>
 
@@ -503,8 +412,7 @@ class EditTask extends Component {
             onChange={
               (event, notes) => {
 
-                // update our reference to list
-                let list = this.state.editedTask
+                // update our reference to task
                 task.notes = notes
 
                 this.setState({task: task})
@@ -534,7 +442,6 @@ class EditTask extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
-  lists: state.entities.lists,
   tasks: state.entities.tasks,
   navAction: state.ui.navbar.navAction
 })
