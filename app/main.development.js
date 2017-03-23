@@ -102,46 +102,6 @@ app.on('ready', async () => {
     })
   }
 
-    const InputMenu = Menu.buildFromTemplate([{
-          label: 'Undo',
-          role: 'undo',
-      }, {
-          label: 'Redo',
-          role: 'redo',
-      }, {
-          type: 'separator',
-      }, {
-          label: 'Cut',
-          role: 'cut',
-      }, {
-          label: 'Copy',
-          role: 'copy',
-      }, {
-          label: 'Paste',
-          role: 'paste',
-      }, {
-          type: 'separator',
-      }, {
-          label: 'Select all',
-          role: 'selectall',
-      },
-  ]);
-
-  document.body.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      let node = e.target;
-
-      while (node) {
-          if (node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
-              InputMenu.popup(remote.getCurrentWindow());
-              break;
-          }
-          node = node.parentNode;
-      }
-  });
-
   if (process.platform === 'darwin') {
     template = [{
       label: AppConstants.APP_NAME,
@@ -153,6 +113,17 @@ app.on('ready', async () => {
         }
       }]
     }, {
+      label: "Edit",
+      submenu: [
+          { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+          { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+          { type: "separator" },
+          { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+          { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+      ]},
+    {
       label: 'View',
       submenu: [{
         label: 'Reload',

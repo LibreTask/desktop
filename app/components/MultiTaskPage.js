@@ -17,6 +17,7 @@ const FaChevronRight = require('react-icons/lib/fa/chevron-right')
 const FaChevronDown = require('react-icons/lib/fa/chevron-down')
 
 import * as NavbarActions from '../actions/navbar'
+import * as TaskViewActions from '../actions/taskview'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
@@ -37,7 +38,7 @@ const styles = {
   },
   listItemHeader: {
     color: 'black',
-    fontSize: '110%',
+    fontSize: '100%',
     fontWeight: 'bold'
   },
   completedTask: {
@@ -69,11 +70,6 @@ class MultiTaskPage extends Component {
     this.state = {
       willFocusSubscription: null,
       isRefreshing: false,
-      todaysTasksCollapsed: false, // TODO only initially display todays
-      tomorrowsTasksCollapsed: false,
-      futureTasksCollapsed: false,
-      overdueTasksCollapsed: false,
-      tasksWithNoDateCollapsed: false,
     }
   }
 
@@ -88,14 +84,17 @@ class MultiTaskPage extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    console.log("next props, nav action: " + nextProps.navAction)
-
     // consume any actions triggered via the Navbar
     if (nextProps.navAction === NavbarActions.CREATE_NAV_ACTION) {
       this.props.removeFarRightNavButton() // remove before transition
       this.props.setNavAction(undefined)
       hashHistory.push('/task/create')
     }
+  }
+
+  // TODO - clean up this sloppy logic / indirection; should not need a function
+  _viewIsCollapsed(view) {
+    return this.props.taskCategories[view].isCollapsed
   }
 
   _sortTasksByDateAndInsertHeaders(tasks)  {
@@ -182,27 +181,27 @@ class MultiTaskPage extends Component {
 
 
     if (task.displayCategory === 'No Date'
-          && this.state.tasksWithNoDateCollapsed) {
+          && this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)) {
       return false
     }
 
     if (task.displayCategory === 'Today'
-          && this.state.todaysTasksCollapsed) {
+          && this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)) {
       return false
     }
 
     if (task.displayCategory === 'Tomorrow'
-          && this.state.tomorrowsTasksCollapsed) {
+          && this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)) {
       return false
     }
 
     if (task.displayCategory === 'Future'
-          && this.state.futureTasksCollapsed) {
+          && this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)) {
       return false
     }
 
     if (task.displayCategory === 'Overdue'
-          && this.state.overdueTasksCollapsed) {
+          && this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)) {
       return false
     }
 
@@ -211,15 +210,15 @@ class MultiTaskPage extends Component {
 
   _isHeaderCurrentlyCollapsed(header) {
     if (header.name === 'No Date') {
-      return this.state.tasksWithNoDateCollapsed
+      return this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)
     } else if (header.name === 'Today') {
-      return this.state.todaysTasksCollapsed
+      return this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)
     } else if (header.name === 'Tomorrow') {
-      return this.state.tomorrowsTasksCollapsed
+      return this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)
     } else if (header.name === 'Future') {
-      return this.state.futureTasksCollapsed
+      return this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)
     } else if (header.name === 'Overdue') {
-      return this.state.overdueTasksCollapsed
+      return this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)
     } else {
       return false // TODO - what here?
     }
@@ -296,30 +295,17 @@ class MultiTaskPage extends Component {
         leftIcon={listsArrowImage}
         primaryText={header.name}
         onTouchTap={ () => {
-          let stateUpdate = {}
-
           if (header.name === 'No Date') {
-            stateUpdate = {
-              tasksWithNoDateCollapsed: !this.state.tasksWithNoDateCollapsed
-            }
+            this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE)
           } else if (header.name === 'Today') {
-            stateUpdate = {
-              todaysTasksCollapsed: !this.state.todaysTasksCollapsed
-            }
+            this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS)
           } else if (header.name === 'Tomorrow') {
-            stateUpdate = {
-              tomorrowsTasksCollapsed: !this.state.tomorrowsTasksCollapsed
-            }
+            this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS)
           } else if (header.name === 'Future') {
-            stateUpdate = {
-              futureTasksCollapsed: !this.state.futureTasksCollapsed
-            }
+            this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS)
           } else if (header.name === 'Overdue') {
-            stateUpdate = {
-              overdueTasksCollapsed: !this.state.overdueTasksCollapsed
-            }
+            this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS)
           }
-          this.setState(stateUpdate)
         }} >
       </ListItem>
     )
@@ -375,10 +361,14 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
   profile: state.user.profile,
   tasks: state.entities.tasks,
-  navAction: state.ui.navbar.navAction
+  navAction: state.ui.navbar.navAction,
+  taskCategories: state.ui.taskview,
 })
 
 const mapDispatchToProps = {
+  collapseTaskView: TaskViewActions.collapseCategory,
+  showTaskView: TaskViewActions.showCategory,
+  toggleTaskView: TaskViewActions.toggleCategory,
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,

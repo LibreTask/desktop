@@ -171,7 +171,7 @@ class CreateTask extends Component {
         <TextField
           multiLine={true}
           style={AppStyles.centeredElement}
-          errorText={this.state.nameValidationError}
+          errorText={this.state.notesValidationError}
           floatingLabelText="Notes"
           type="text"
           onChange={
