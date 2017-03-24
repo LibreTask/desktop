@@ -49,6 +49,7 @@ const styles = {
     margin: 'auto',
     paddingLeft: 30,
     paddingRight: 30,
+    paddingBottom: 10,
     minWidth: '300px',
     bottom: 0,
     left: 0,
@@ -197,8 +198,8 @@ class CreateTask extends Component {
     maxDate.setFullYear(maxDate.getFullYear() + 10)
 
     const selectedDate =
-      this.state.editedTask.dueDateTimeUtc
-      ? new Date(this.state.editedTask.dueDateTimeUtc)
+      this.state.selectedDate
+      ? new Date(this.state.selectedDate)
       : undefined
 
     return (
