@@ -291,20 +291,20 @@ class EditTask extends Component {
     const maxDate = new Date()
     maxDate.setFullYear(maxDate.getFullYear() + 10)
 
-    const defaultDate =
+    const selectedDate =
       this.state.editedTask.dueDateTimeUtc
       ? new Date(this.state.editedTask.dueDateTimeUtc)
-      : minDate
+      : undefined
 
     return (
       <DatePicker
         textFieldStyle={AppStyles.centeredElement}
         floatingLabelText="Due Date"
-        defaultDate={defaultDate}
         autoOk={false}
         minDate={minDate}
         maxDate={maxDate}
         container="inline"
+        value={selectedDate}
         disableYearSelection={false}
         onChange={(skip, selectedDate) => {
             let task = this.state.editedTask

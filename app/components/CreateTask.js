@@ -196,21 +196,21 @@ class CreateTask extends Component {
     const maxDate = new Date()
     maxDate.setFullYear(maxDate.getFullYear() + 10)
 
-    const defaultDate =
-      this.selectedDate
-      ? new Date(this.selectedDate)
-      : minDate
+    const selectedDate =
+      this.state.editedTask.dueDateTimeUtc
+      ? new Date(this.state.editedTask.dueDateTimeUtc)
+      : undefined
 
     return (
       <span>
         <DatePicker
           textFieldStyle={AppStyles.centeredElement}
           floatingLabelText="Due Date"
-          defaultDate={defaultDate}
           autoOk={false}
           minDate={minDate}
           maxDate={maxDate}
           container="inline"
+          value={selectedDate}
           disableYearSelection={false}
           onChange={(skip, selectedDate) => {
               this.setState({selectedDate: selectedDate})
