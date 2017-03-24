@@ -291,7 +291,13 @@ class App extends Component {
       transitions: this.state.transitions,
       onSetOpen: this._onSetOpen,
       styles: {
-        marginTop: -62
+        marginTop: -62, // display sidebar content below nav/header
+
+        // must be passed in with 'sidebar' as key
+        // https://github.com/balloob/react-sidebar#styles
+        sidebar: {
+          overflowY: 'hidden' // disable scroll for sidebar
+        }
       }
     }
 

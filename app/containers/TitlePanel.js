@@ -20,13 +20,17 @@ const styles = {
   header: {
     backgroundColor: AppStyles.mainColor,
     color: 'white',
-    padding: '16px',
+    paddingTop: '16px',
+    paddingBottom: '16px',
     fontSize: '1.2em',
     position: 'fixed',
     width: '100%',
     top: 0,
     height: 30,
   },
+  headerText: {
+    marginLeft: 16
+  }
 }
 
 const TitlePanel = (props) => {
@@ -37,7 +41,10 @@ const TitlePanel = (props) => {
   return (
     <div style={rootStyle}>
       <div style={styles.header}>
-        {props.title}
+
+        <div style={styles.headerText}>
+          {props.title}
+        </div>
 
       </div>
 
