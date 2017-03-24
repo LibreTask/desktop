@@ -33,7 +33,7 @@ const styles = {
     cursor: 'pointer'
   },
   content: {
-    marginTop: 60,
+    marginTop: 50,
     padding: '16px',
     minHeight: '100%',
     backgroundColor: 'white',

@@ -20,9 +20,9 @@ const styles = {
   header: {
     backgroundColor: AppStyles.mainColor,
     color: 'white',
-    paddingTop: '16px',
-    paddingBottom: '16px',
-    fontSize: '1.2em',
+    paddingTop: '12px',
+    paddingBottom: '12px',
+    fontSize: '1.1em',
     position: 'fixed',
     width: '100%',
     top: 0,

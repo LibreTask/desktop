@@ -27,18 +27,13 @@ import AppConstants from '../constants'
 import AppStyles from '../styles'
 
 const styles = {
-  footer: {
-    textAlign: 'center',
-    fontSize: '100%',
-    color: AppStyles.linkColor
-  },
   listItem: {
     color: 'black',
-    fontSize: '100%'
+    fontSize: '90%'
   },
   listItemHeader: {
     color: 'black',
-    fontSize: '100%',
+    fontSize: '90%',
     fontWeight: 'bold'
   },
   completedTask: {
