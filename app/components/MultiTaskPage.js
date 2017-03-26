@@ -170,49 +170,16 @@ class MultiTaskPage extends Component {
       todaysTasks, tomorrowsTasks, futureTasks, overdueTasks)
   }
 
-  _shouldRenderTask(task) {
-
-    // TODO - hide if older than today and already completed
-
-
-    if (task.displayCategory === 'No Date'
-          && this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)) {
-      return false
-    }
-
-    if (task.displayCategory === 'Today'
-          && this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)) {
-      return false
-    }
-
-    if (task.displayCategory === 'Tomorrow'
-          && this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)) {
-      return false
-    }
-
-    if (task.displayCategory === 'Future'
-          && this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)) {
-      return false
-    }
-
-    if (task.displayCategory === 'Overdue'
-          && this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)) {
-      return false
-    }
-
-    return true
-  }
-
-  _isHeaderCurrentlyCollapsed(header) {
-    if (header.name === 'No Date') {
+  _isHeaderCurrentlyCollapsed(category) {
+    if (category === 'No Date') {
       return this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)
-    } else if (header.name === 'Today') {
+    } else if (category === 'Today') {
       return this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)
-    } else if (header.name === 'Tomorrow') {
+    } else if (category === 'Tomorrow') {
       return this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)
-    } else if (header.name === 'Future') {
+    } else if (category === 'Future') {
       return this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)
-    } else if (header.name === 'Overdue') {
+    } else if (category === 'Overdue') {
       return this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)
     } else {
       return false // TODO - what here?
@@ -231,7 +198,7 @@ class MultiTaskPage extends Component {
 
   _renderTask(task) {
 
-    if (this._shouldRenderTask(task)) {
+    if (!this._isHeaderCurrentlyCollapsed(task.displayCategory)) {
 
       let listItemStyle =
         task.isCompleted
@@ -254,6 +221,7 @@ class MultiTaskPage extends Component {
                 completion status.
               */
               task.isCompleted = !task.isCompleted
+              task.completionDateTimeUtc = (new Date()).getTime()
 
               TaskStorage.createOrUpdateTask(task)
               this.props.createOrUpdateTask(task)
@@ -279,7 +247,7 @@ class MultiTaskPage extends Component {
   _renderHeader(header) {
 
     let listsArrowImage =
-        this._isHeaderCurrentlyCollapsed(header)
+        this._isHeaderCurrentlyCollapsed(header.name)
         ? <FaChevronRight/>
         : <FaChevronDown/>;
 
@@ -314,12 +282,15 @@ class MultiTaskPage extends Component {
 
       if (!task) continue;
 
-      if (!task.dueDateTimeUtc && task.isCompleted) continue;
+      if (task.isCompleted) {
 
-      // do not display completed task older than yesterday
-      if (new Date(task.dueDateTimeUtc) < DateUtils.yesterday()
-        && task.isCompleted) {
-        continue;
+        // continue if, for some reason, we do not have the date recorded
+        if (!task.completionDateTimeUtc) continue;
+
+        // only display completed tasks for one day
+        if (new Date(task.completionDateTimeUtc) < DateUtils.yesterday()) {
+          continue;
+        }
       }
 
       tasks.push(task)
