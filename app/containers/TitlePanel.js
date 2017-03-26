@@ -19,6 +19,7 @@ const styles = {
   */
   header: {
     backgroundColor: AppStyles.mainColor,
+    borderBottom: '1px solid grey',
     color: 'white',
     paddingTop: '12px',
     paddingBottom: '12px',

@@ -291,7 +291,7 @@ class App extends Component {
       transitions: this.state.transitions,
       onSetOpen: this._onSetOpen,
       styles: {
-        marginTop: -52, // display sidebar content below nav/header
+        marginTop: -53, // display sidebar content below nav/header
 
         // must be passed in with 'sidebar' as key
         // https://github.com/balloob/react-sidebar#styles

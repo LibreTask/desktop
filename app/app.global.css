@@ -10,7 +10,7 @@
  That means Header.height + Header.paddingBottom + Header.paddingTop
 */
 #root > [data-reactroot] {
-  margin-top: 52;
+  margin-top: 53;
   overflow: visible !important;
 }
 
@@ -19,5 +19,5 @@
  displayed at the top of the screen.
 */
 .custom-sidebar-class {
-  margin-top: -52;
+  margin-top: -53;
 }
