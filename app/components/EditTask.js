@@ -39,6 +39,13 @@ const styles = {
   },
   successText: {
     color: 'green'
+  },
+  clearText: {
+    color: 'red',
+    fontSize: '90%',
+    paddingTop: 10,
+    paddingBottom: 10,
+    cursor: 'pointer'
   }
 }
 
@@ -296,22 +303,37 @@ class EditTask extends Component {
       ? new Date(this.state.editedTask.dueDateTimeUtc)
       : undefined
 
+    let clearDateButton = (
+      <div
+        style={styles.clearText}
+        onClick={() => {
+          let task = this.state.editedTask
+          task.dueDateTimeUtc = undefined // unset the date
+          this.setState({task: task})
+        }}>
+        Clear Due Date
+      </div>
+    )
+
     return (
-      <DatePicker
-        textFieldStyle={AppStyles.centeredElement}
-        floatingLabelText="Due Date"
-        autoOk={false}
-        minDate={minDate}
-        maxDate={maxDate}
-        container="inline"
-        value={selectedDate}
-        disableYearSelection={false}
-        onChange={(skip, selectedDate) => {
-            let task = this.state.editedTask
-            task.dueDateTimeUtc = selectedDate
-            this.setState({task: task})
-        }}
-      />
+      <span>
+        <DatePicker
+          textFieldStyle={AppStyles.centeredElement}
+          floatingLabelText="Due Date"
+          autoOk={false}
+          minDate={minDate}
+          maxDate={maxDate}
+          container="inline"
+          value={selectedDate}
+          disableYearSelection={false}
+          onChange={(skip, selectedDate) => {
+              let task = this.state.editedTask
+              task.dueDateTimeUtc = selectedDate
+              this.setState({task: task})
+          }}
+        />
+        {selectedDate ? clearDateButton : <span/>}
+      </span>
     )
   }
 

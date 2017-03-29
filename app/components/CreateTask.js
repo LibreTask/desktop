@@ -54,6 +54,13 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  clearText: {
+    color: 'red',
+    fontSize: '90%',
+    paddingTop: 10,
+    paddingBottom: 10,
+    cursor: 'pointer'
   }
 }
 
@@ -202,6 +209,16 @@ class CreateTask extends Component {
       ? new Date(this.state.selectedDate)
       : undefined
 
+    let clearDateButton = (
+      <div
+        style={styles.clearText}
+        onClick={() => {
+          this.setState({selectedDate: undefined}) // unset the date
+        }}>
+        Clear Due Date
+      </div>
+    )
+
     return (
       <span>
         <DatePicker
@@ -218,6 +235,7 @@ class CreateTask extends Component {
           }}
         />
         <br/>
+        {this.state.selectedDate ? clearDateButton : <span/>}
       </span>
     )
   }
