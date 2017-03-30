@@ -11,7 +11,6 @@ import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import MenuItem from 'material-ui/MenuItem'
-import DatePicker from 'material-ui/DatePicker'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 
 import * as NavbarActions from '../actions/navbar'
@@ -19,6 +18,9 @@ import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
+
+import { SingleDatePicker } from 'react-dates'
+import moment from 'moment'
 
 import AppConstants from '../constants'
 import AppStyles from '../styles'
@@ -39,13 +41,6 @@ const styles = {
   },
   successText: {
     color: 'green'
-  },
-  clearText: {
-    color: 'red',
-    fontSize: '90%',
-    paddingTop: 10,
-    paddingBottom: 10,
-    cursor: 'pointer'
   }
 }
 
@@ -72,7 +67,8 @@ class SingleTaskPage extends Component {
       editedTask: Object.assign({}, this._getTask()),
 
       nameValidationError: '',
-      notesValidationError: ''
+      notesValidationError: '',
+      datePickerIsFocused: false
     }
   }
 
@@ -294,46 +290,29 @@ class SingleTaskPage extends Component {
   }
 
   _datePicker = () => {
-    const minDate = new Date()
-    const maxDate = new Date()
-    maxDate.setFullYear(maxDate.getFullYear() + 10)
 
     const selectedDate =
       this.state.editedTask.dueDateTimeUtc
-      ? new Date(this.state.editedTask.dueDateTimeUtc)
+      ? moment(this.state.editedTask.dueDateTimeUtc)
       : undefined
 
-    let clearDateButton = (
-      <div
-        style={styles.clearText}
-        onClick={() => {
-          let task = this.state.editedTask
-          task.dueDateTimeUtc = undefined // unset the date
-          this.setState({task: task})
-        }}>
-        Clear Due Date
-      </div>
-    )
-
     return (
-      <span>
-        <DatePicker
-          textFieldStyle={AppStyles.centeredElement}
-          floatingLabelText="Due Date"
-          autoOk={false}
-          minDate={minDate}
-          maxDate={maxDate}
-          container="inline"
-          value={selectedDate}
-          disableYearSelection={false}
-          onChange={(skip, selectedDate) => {
-              let task = this.state.editedTask
-              task.dueDateTimeUtc = selectedDate
-              this.setState({task: task})
-          }}
+      <SingleDatePicker
+        withFullScreenPortal={true}
+        reopenPickerOnClearDate={false}
+        showClearDate={true}
+        numberOfMonths={1}
+        date={selectedDate}
+        onDateChange={(selectedDate) => {
+            let task = this.state.editedTask
+            task.dueDateTimeUtc = selectedDate
+            this.setState({editedTask: task})
+        }}
+        focused={this.state.datePickerIsFocused}
+        onFocusChange={({focused}) =>  {
+          this.setState({ datePickerIsFocused: focused })
+        }}
         />
-        {selectedDate ? clearDateButton : <span/>}
-      </span>
     )
   }
 

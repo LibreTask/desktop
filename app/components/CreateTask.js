@@ -10,13 +10,15 @@ import { hashHistory } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import IconButton from 'material-ui/IconButton'
-import DatePicker from 'material-ui/DatePicker'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
+
+import { SingleDatePicker } from 'react-dates'
+import moment from 'moment'
 
 import Validator from 'validator'
 
@@ -54,13 +56,6 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
-  },
-  clearText: {
-    color: 'red',
-    fontSize: '90%',
-    paddingTop: 10,
-    paddingBottom: 10,
-    cursor: 'pointer'
   }
 }
 
@@ -78,7 +73,8 @@ class CreateTask extends Component {
       nameValidationError: '',
       notesValidationError: '',
       notesIconSelected: false,
-      calendarIconSelected: false
+      calendarIconSelected: false,
+      datePickerIsFocused: false
     }
   }
 
@@ -200,43 +196,26 @@ class CreateTask extends Component {
       return <span/>
     }
 
-    const minDate = new Date()
-    const maxDate = new Date()
-    maxDate.setFullYear(maxDate.getFullYear() + 10)
-
     const selectedDate =
       this.state.selectedDate
-      ? new Date(this.state.selectedDate)
+      ? moment(this.state.selectedDate)
       : undefined
 
-    let clearDateButton = (
-      <div
-        style={styles.clearText}
-        onClick={() => {
-          this.setState({selectedDate: undefined}) // unset the date
-        }}>
-        Clear Due Date
-      </div>
-    )
-
     return (
-      <span>
-        <DatePicker
-          textFieldStyle={AppStyles.centeredElement}
-          floatingLabelText="Due Date"
-          autoOk={false}
-          minDate={minDate}
-          maxDate={maxDate}
-          container="inline"
-          value={selectedDate}
-          disableYearSelection={false}
-          onChange={(skip, selectedDate) => {
-              this.setState({selectedDate: selectedDate})
-          }}
+      <SingleDatePicker
+        withFullScreenPortal={true}
+        reopenPickerOnClearDate={false}
+        showClearDate={true}
+        numberOfMonths={1}
+        date={selectedDate}
+        onDateChange={(selectedDate) => {
+          this.setState({selectedDate: selectedDate})
+        }}
+        focused={this.state.datePickerIsFocused}
+        onFocusChange={({focused}) =>  {
+          this.setState({ datePickerIsFocused: focused })
+        }}
         />
-        <br/>
-        {this.state.selectedDate ? clearDateButton : <span/>}
-      </span>
     )
   }
 
