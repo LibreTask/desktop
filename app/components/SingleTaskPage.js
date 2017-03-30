@@ -7,10 +7,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
-import Divider from 'material-ui/Divider'
 import Dialog from 'material-ui/Dialog'
-import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField'
+import MenuItem from 'material-ui/MenuItem'
+import DatePicker from 'material-ui/DatePicker'
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 
 import * as NavbarActions from '../actions/navbar'
 import * as TaskActions from '../actions/entities/task'
@@ -18,25 +20,32 @@ import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
-import dateFormat from 'dateformat'
-
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
+import Validator from 'validator'
+
 const styles = {
-  header: {
-    fontSize: '110%',
-    fontWeight: 'bold'
+  radioButton: {
+    marginTop: 12,
   },
-  taskFont: {
+  textField: {
+    marginHorizontal: 12,
     fontSize: '100%',
-    whiteSpace: 'pre-wrap',
-    marginTop: 10,
-    marginBottom: 10
+    width: '100%'
   },
-  divider: {
-    marginTop: 10,
-    marginBottom: 10
+  errorText: {
+    color: 'red'
+  },
+  successText: {
+    color: 'green'
+  },
+  clearText: {
+    color: 'red',
+    fontSize: '90%',
+    paddingTop: 10,
+    paddingBottom: 10,
+    cursor: 'pointer'
   }
 }
 
@@ -47,21 +56,31 @@ class SingleTaskPage extends Component {
 
     this.state = {
       deleteError: '',
+      updateError: '',
+      updateSuccess: '',
       isDeleting: false,
+      isUpdating: false,
       deleteTaskDialogIsOpen: false,
+
+      recurringFrequencyDialogIsOpen: false,
 
       // TODO - we keep these references in case props are updated
         // eg: when this exact task is deleted
         // but how can we do this cleaner?
-      task: this._getTask()
+
+      // copy objects, so that editing does not modify originals
+      editedTask: Object.assign({}, this._getTask()),
+
+      nameValidationError: '',
+      notesValidationError: ''
     }
   }
 
   componentDidMount() {
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON)
-    this.props.setMediumRightNavButton(AppConstants.EDIT_NAVBAR_BUTTON)
+    this.props.setMediumRightNavButton(AppConstants.SAVE_NAVBAR_BUTTON)
     this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
-    this.props.setNavbarTitle('Task')
+    this.props.setNavbarTitle('Edit Task')
   }
 
   componentWillUnmount() {
@@ -73,8 +92,8 @@ class SingleTaskPage extends Component {
   componentWillReceiveProps(nextProps) {
 
     // consume any actions triggered via the Navbar
-    if (nextProps.navAction === NavbarActions.EDIT_NAV_ACTION) {
-      hashHistory.push(`/task/${this.state.task.id}/edit`)
+    if (nextProps.navAction === NavbarActions.SAVE_NAV_ACTION) {
+      this._onEditTask()
       this.props.setNavAction(undefined)
     } else if (nextProps.navAction === NavbarActions.DELETE_NAV_ACTION) {
       this.setState({deleteTaskDialogIsOpen: true })
@@ -83,9 +102,78 @@ class SingleTaskPage extends Component {
   }
 
   _getTask = () => {
-
     let id = this.props.router.params.taskId;
     return this.props.tasks[id]
+  }
+
+  _onEditTask = () => {
+    let task = this.state.editedTask
+
+    let nameValidationError = ''
+    let notesValidationError = ''
+
+    let updatedName = task.name || ''
+    let updatedNotes = task.notes || ''
+
+    if (!Validator.isLength(updatedName, {min: 2, max: 100})) {
+      nameValidationError = 'Name must be between 2 and 100 characters'
+    }
+
+    if (!Validator.isLength(updatedNotes, {min: 0, max: 5000})) {
+      notesValidationError = 'Notes must be between 0 and 5000 characters'
+    }
+
+    if (nameValidationError || notesValidationError) {
+      this.setState({
+        nameValidationError: nameValidationError,
+        notesValidationError: notesValidationError
+      })
+
+      return; // validation failed; cannot updated task
+    }
+
+    if (UserController.canAccessNetwork(this.props.profile)) {
+      this.setState({
+        isUpdating: true,
+        nameValidationError: '',
+        notesValidationError: ''
+      }, () => {
+
+        let userId = this.props.profile.id
+        let pw = this.props.profile.password
+
+        TaskController.updateTask(task, userId, pw)
+        .then( response => {
+
+          TaskStorage.createOrUpdateTask(task)
+          this.props.createOrUpdateTask(task)
+          hashHistory.replace('/tasks')
+         })
+         .catch( error => {
+
+            if (error.name === 'NoConnection') {
+              this._updateTaskLocally(task)
+            } else {
+              this.setState({
+                updateError: error.message,
+                isUpdating: false
+              })
+            }
+         })
+      })
+    } else {
+      this._updateTaskLocally(task)
+    }
+  }
+
+  _updateTaskLocally = (task) => {
+    TaskStorage.createOrUpdateTask(task)
+    this.props.createOrUpdateTask(task)
+
+    this.setState({updateSuccess: 'Successfully updated'})
+
+    // erase update success text after 1.5 seconds
+    setTimeout(() => this.setState({updateSuccess: ''}), 1500)
   }
 
   /*
@@ -93,7 +181,8 @@ class SingleTaskPage extends Component {
     dialog has been displayed.
   */
   _onDeleteTask = () => {
-    let task = this.state.task
+
+    let task = this.state.editedTask
 
     if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState({isDeleting: true}, () => {
@@ -108,7 +197,7 @@ class SingleTaskPage extends Component {
          .catch( error => {
 
            if (error.name === 'NoConnection') {
-            this._deleteTaskLocallyAndRedirect(task)
+             this._deleteTaskLocallyAndRedirect(task)
            } else {
              this.setState({
                deleteError: error.message,
@@ -125,21 +214,127 @@ class SingleTaskPage extends Component {
   _deleteTaskLocallyAndRedirect = (task) => {
     TaskStorage.deleteTaskByTaskId(task.id)
     this.props.deleteTask(task.id)
-    //hashHistory.replace('/tasks')
-    hashHistory.goBack()
+    hashHistory.replace('/tasks')
   }
 
-  _renderRecurringFrequency = () => {
-    let frequencyToHumanReadable = {
-      'EVERYDAY': 'Everyday',
-      'ONCE': 'Once'
+  _renderRecurringFrequencyDialog = () => {
+
+    let frequencyToIndex = {
+      'EVERYDAY': 0,
+      'ONCE': 1
     }
 
-    let frequency = this.state.task.recurringFrequency
+    let indexToFrequency = {
+      0: 'EVERYDAY',
+      1: 'ONCE'
+    }
 
-    return (frequency in frequencyToHumanReadable)
-      ? frequencyToHumanReadable[frequency]
-      : 'Currently unspecified'
+    let defaultFrequency = 'ONCE'
+    let defaultIndex = frequencyToIndex[defaultFrequency]
+
+    let radios = [
+      <RadioButton
+        key='EVERYDAY'
+        value={0}
+        label='Everyday'
+        style={styles.radioButton} />,
+      <RadioButton
+        key='ONCE'
+        value={1}
+        label='Once'
+        style={styles.radioButton} />
+
+      // TODO - expand these options
+    ];
+
+    const actions = [
+      <FlatButton
+        label="Close"
+        onTouchTap={() => {
+          this.setState({recurringFrequencyDialogIsOpen: false})
+        }}
+      />,
+      <FlatButton
+        label="Update"
+        onTouchTap={() => {
+          this.setState({recurringFrequencyDialogIsOpen: false})
+        }}
+      />,
+    ]
+
+    let recurringFrequency = this.state.editedTask.recurringFrequency
+
+    let initialIndex = (recurringFrequency in frequencyToIndex)
+      ? frequencyToIndex[recurringFrequency]
+      : defaultIndex
+
+    return (
+      <Dialog
+          title="Recurring Frequency"
+          actions={actions}
+          modal={false}
+          open={this.state.recurringFrequencyDialogIsOpen}
+          onRequestClose={() => {
+            this.setState({recurringFrequencyDialogIsOpen: false})
+          }}
+          autoScrollBodyContent={true}
+        >
+          <RadioButtonGroup
+            name="recurring_frequencies"
+            valueSelected={initialIndex}
+            onChange={(event, value) => {
+              let task = this.state.editedTask
+              task.recurringFrequency = indexToFrequency[value]
+              this.setState({task: task})
+            }}>
+            {radios}
+          </RadioButtonGroup>
+        </Dialog>
+    )
+  }
+
+  _datePicker = () => {
+    const minDate = new Date()
+    const maxDate = new Date()
+    maxDate.setFullYear(maxDate.getFullYear() + 10)
+
+    const selectedDate =
+      this.state.editedTask.dueDateTimeUtc
+      ? new Date(this.state.editedTask.dueDateTimeUtc)
+      : undefined
+
+    let clearDateButton = (
+      <div
+        style={styles.clearText}
+        onClick={() => {
+          let task = this.state.editedTask
+          task.dueDateTimeUtc = undefined // unset the date
+          this.setState({task: task})
+        }}>
+        Clear Due Date
+      </div>
+    )
+
+    return (
+      <span>
+        <DatePicker
+          textFieldStyle={AppStyles.centeredElement}
+          floatingLabelText="Due Date"
+          autoOk={false}
+          minDate={minDate}
+          maxDate={maxDate}
+          container="inline"
+          value={selectedDate}
+          disableYearSelection={false}
+          onChange={(skip, selectedDate) => {
+              let task = this.state.editedTask
+              task.dueDateTimeUtc = selectedDate
+              this.setState({task: task})
+          }}
+        />
+        {selectedDate ? clearDateButton : <span/>}
+      </span>
+    )
   }
 
   render = () => {
@@ -147,18 +342,25 @@ class SingleTaskPage extends Component {
     /*
     TODO - implement recurring frequency
 
-    <Divider style={styles.divider}/>
 
-    <div style={styles.header}>
-      Recurring Frequency
-    </div>
+            <TextField
+              style={styles.textField}
+              hintText="Recurring Frequency"
+              floatingLabelText="Recurring Frequency"
+              type="text"
+              value={task.recurringFrequency || ''}
+              onClick={() => {
+                this.setState({recurringFrequencyDialogIsOpen: true})
+              }}
+            />
+            {this._renderRecurringFrequencyDialog()}
 
-    <div style={styles.taskFont}>
-      { this._renderRecurringFrequency()}
-    </div>
+            <br/>
     */
 
-    let task = this.state.task
+    // TODO - add other task attributes here as well
+
+    let task = this.state.editedTask
 
     const actions = [
       <FlatButton
@@ -176,12 +378,14 @@ class SingleTaskPage extends Component {
       />,
     ];
 
+    // TODO - consider scrollable dialog instead of dropdown
+
     return (
       <div style={AppStyles.mainWindow}>
 
         <div style={AppStyles.centeredWindow}>
           <Dialog
-            title={'Task Deletion'}
+            title="Delete Task"
             actions={actions}
             modal={false}
             open={this.state.deleteTaskDialogIsOpen}
@@ -192,36 +396,64 @@ class SingleTaskPage extends Component {
             Are you sure you want to delete this task?
           </Dialog>
 
-          <div style={styles.header}>
-            Name
-          </div>
+          <TextField
+            style={{
+              ...styles.textField,
+              ...AppStyles.centeredElement
+            }}
+            multiLine={true}
+            hintText="Name Field"
+            floatingLabelText="Name"
+            errorText={this.state.nameValidationError}
+            type="text"
+            value={task.name || ''}
+            onChange={
+              (event, name) => {
 
-          <div style={styles.taskFont}>
-            {task.name}
-          </div>
+                // update our reference to task
+                task.name = name
 
-          <Divider style={styles.divider}/>
-
-          <div style={styles.header}>
-            Notes
-          </div>
-
-          <div style={styles.taskFont}>
-            {task.notes || 'No notes yet'}
-          </div>
-
-          <Divider style={styles.divider}/>
-
-          <div style={styles.header}>
-            Due Date
-          </div>
-
-          <div style={styles.taskFont}>
-            {
-              task.dueDateTimeUtc
-              ? dateFormat(task.dueDateTimeUtc, 'mmmm d')
-              : 'No due date yet'
+                this.setState({task: task})
+              }
             }
+          />
+
+          <br/>
+
+          <TextField
+            multiLine={true}
+            style={{
+              ...styles.textField,
+              ...AppStyles.centeredElement
+            }}
+            hintText="Notes Field"
+            floatingLabelText="Notes"
+            errorText={this.state.notesValidationError}
+            type="text"
+            value={task.notes || ''}
+            onChange={
+              (event, notes) => {
+
+                // update our reference to task
+                task.notes = notes
+
+                this.setState({task: task})
+              }
+            }
+          />
+
+          <br/>
+
+          {this._datePicker()}
+
+          <br/>
+
+          <div style={styles.errorText}>
+            {this.state.updateError}
+          </div>
+
+          <div style={styles.successText}>
+            {this.state.updateSuccess}
           </div>
         </div>
       </div>

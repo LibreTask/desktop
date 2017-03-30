@@ -9,7 +9,6 @@ import App from './containers/App'
 
 import About from './components/About'
 import CreateTask from './components/CreateTask'
-import EditTask from './components/EditTask'
 import Login from './components/Login'
 import MultiTaskPage from './components/MultiTaskPage'
 import Profile from './components/Profile'
@@ -38,7 +37,6 @@ export default (
     <Route path="/tasks" component={MultiTaskPage} />
     <Route path="/about" component={About} />
     <Route path="/task/create" component={CreateTask} />
-    <Route path="/task/:taskId/edit" component={EditTask} />
     <Route path="/task/:taskId" component={SingleTaskPage} />
     <Route path="/login" component={Login} />
     <Route path="/profile" component={Profile} />
