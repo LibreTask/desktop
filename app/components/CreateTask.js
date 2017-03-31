@@ -56,6 +56,11 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  datePicker: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    width: '100%'
   }
 }
 
@@ -202,20 +207,24 @@ class CreateTask extends Component {
       : undefined
 
     return (
-      <SingleDatePicker
-        withFullScreenPortal={true}
-        reopenPickerOnClearDate={false}
-        showClearDate={true}
-        numberOfMonths={1}
-        date={selectedDate}
-        onDateChange={(selectedDate) => {
-          this.setState({selectedDate: selectedDate})
-        }}
-        focused={this.state.datePickerIsFocused}
-        onFocusChange={({focused}) =>  {
-          this.setState({ datePickerIsFocused: focused })
-        }}
-        />
+      <div style={styles.datePicker}>
+
+        <SingleDatePicker
+          placeholder='Due Date'
+          withFullScreenPortal={true}
+          reopenPickerOnClearDate={false}
+          showClearDate={true}
+          numberOfMonths={1}
+          date={selectedDate}
+          onDateChange={(selectedDate) => {
+            this.setState({selectedDate: selectedDate})
+          }}
+          focused={this.state.datePickerIsFocused}
+          onFocusChange={({focused}) =>  {
+            this.setState({ datePickerIsFocused: focused })
+          }}
+          />
+      </div>
     )
   }
 

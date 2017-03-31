@@ -41,6 +41,11 @@ const styles = {
   },
   successText: {
     color: 'green'
+  },
+  datePicker: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    width: '100%'
   }
 }
 
@@ -297,22 +302,24 @@ class SingleTaskPage extends Component {
       : undefined
 
     return (
-      <SingleDatePicker
-        withFullScreenPortal={true}
-        reopenPickerOnClearDate={false}
-        showClearDate={true}
-        numberOfMonths={1}
-        date={selectedDate}
-        onDateChange={(selectedDate) => {
-            let task = this.state.editedTask
-            task.dueDateTimeUtc = selectedDate
-            this.setState({editedTask: task})
-        }}
-        focused={this.state.datePickerIsFocused}
-        onFocusChange={({focused}) =>  {
-          this.setState({ datePickerIsFocused: focused })
-        }}
-        />
+      <div style={styles.datePicker}>
+        <SingleDatePicker
+          withFullScreenPortal={true}
+          reopenPickerOnClearDate={false}
+          showClearDate={true}
+          numberOfMonths={1}
+          date={selectedDate}
+          onDateChange={(selectedDate) => {
+              let task = this.state.editedTask
+              task.dueDateTimeUtc = selectedDate
+              this.setState({editedTask: task})
+          }}
+          focused={this.state.datePickerIsFocused}
+          onFocusChange={({focused}) =>  {
+            this.setState({ datePickerIsFocused: focused })
+          }}
+          />
+      </div>
     )
   }
 

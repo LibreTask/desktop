@@ -7,6 +7,32 @@
 @import "~react-dates/lib/css/_datepicker.css";
 
 /*
+  To meet Algernon's requirements, I have copy-pasted the styling from
+  react-dates (below) and modified where necessary. Any updates to the
+  react-dates version will likely require modifications to this overridden CSS.
+*/
+.SingleDatePickerInput__clear-date {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  float: right; /* MODIFICATION: float right */
+  line-height: normal;
+  overflow: visible;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 10px;
+  margin: 7px 10px 0 5px; /* MODIFICATION: 7px top margin */
+}
+
+.SingleDatePicker {
+  position: relative;
+  display: inline-block;
+  width: 100%; /* MODIFICATION: 100% width */
+}
+
+/*
  HACK: this margin-top is meant to be exactly the height of the header.
  That means Header.height + Header.paddingBottom + Header.paddingTop
 */
