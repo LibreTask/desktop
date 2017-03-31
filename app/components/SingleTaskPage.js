@@ -388,7 +388,7 @@ class SingleTaskPage extends Component {
               ...AppStyles.centeredElement
             }}
             multiLine={true}
-            hintText="Name Field"
+            hintText="Name"
             floatingLabelText="Name"
             errorText={this.state.nameValidationError}
             type="text"
@@ -412,7 +412,7 @@ class SingleTaskPage extends Component {
               ...styles.textField,
               ...AppStyles.centeredElement
             }}
-            hintText="Notes Field"
+            hintText="Notes"
             floatingLabelText="Notes"
             errorText={this.state.notesValidationError}
             type="text"

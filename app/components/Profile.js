@@ -273,7 +273,7 @@ class Profile extends Component {
               ...styles.input,
               ...AppStyles.centeredElement
             }}
-            hintText="Name Field"
+            hintText="Name"
             floatingLabelText="Name"
             errorText={this.state.nameValidationError}
             type="text"
