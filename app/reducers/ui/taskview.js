@@ -11,14 +11,17 @@ import {
   TOMORROWS_TASKS,
   FUTURE_TASKS,
   OVERDUE_TASKS,
-  TASKS_WITH_NO_DATE
+  TASKS_WITH_NO_DATE,
+  TOGGLE_SHOW_COMPLETED_TASKS
 } from '../../actions/taskview'
 import {
   updateObject,
   createReducer,
 } from '../reducer-utils'
 
-const initialState = {}
+const initialState = {
+  showCompletedTasks: true // default to true
+}
 initialState[TODAYS_TASKS] = { isCollapsed: false }
 initialState[TOMORROWS_TASKS] = { isCollapsed: true }
 initialState[FUTURE_TASKS] = { isCollapsed: true }
@@ -41,6 +44,10 @@ export default function taskviewReducer(state = initialState, action) {
         isCollapsed: !state[action.category].isCollapsed
       }
       return updateObject(state, toggledCategory)
+    case TOGGLE_SHOW_COMPLETED_TASKS:
+      return updateObject(state, {
+        showCompletedTasks: !state.showCompletedTasks
+      })
     default:
       return state
   }

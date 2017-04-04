@@ -70,10 +70,12 @@ class MultiTaskPage extends Component {
 
   componentDidMount() {
     this.props.setNavbarTitle('Tasks')
-    this.props.setFarRightNavButton(AppConstants.CREATE_NAVBAR_BUTTON)
+    this.props.setMediumRightNavButton(AppConstants.CREATE_NAVBAR_BUTTON)
+    this.props.setFarRightNavButton(AppConstants.MULTITASK_NAV_DROPDOWN)
   }
 
   componentWillUnmount() {
+    this.props.removeMediumRightNavButton()
     this.props.removeFarRightNavButton()
   }
 
@@ -81,7 +83,10 @@ class MultiTaskPage extends Component {
 
     // consume any actions triggered via the Navbar
     if (nextProps.navAction === NavbarActions.CREATE_NAV_ACTION) {
-      this.props.removeFarRightNavButton() // remove before transition
+      // remove before transition
+      this.props.removeMediumRightNavButton()
+      this.props.removeFarRightNavButton()
+
       this.props.setNavAction(undefined)
       hashHistory.push('/task/create')
     }
@@ -232,7 +237,10 @@ class MultiTaskPage extends Component {
           onClick={
             (event) => {
 
-              this.props.removeFarRightNavButton() // remove before transition
+              // remove before transition
+              this.props.removeMediumRightNavButton()
+              this.props.removeFarRightNavButton()
+
               hashHistory.push(`/task/${task.id}`)
             }
           }
@@ -287,10 +295,14 @@ class MultiTaskPage extends Component {
         // continue if, for some reason, we do not have the date recorded
         if (!task.completionDateTimeUtc) continue;
 
-        // only display completed tasks for one day
+        // only display completed tasks less than one day ago
         if (new Date(task.completionDateTimeUtc) < DateUtils.yesterday()) {
           continue;
         }
+
+        // do not display the completed task, unless the
+        // showCompletedTasks flag is set to true
+        if (!this.props.showCompletedTasks) continue;
       }
 
       tasks.push(task)
@@ -329,12 +341,15 @@ const mapStateToProps = (state) => ({
   tasks: state.entities.tasks,
   navAction: state.ui.navbar.navAction,
   taskCategories: state.ui.taskview,
+  showCompletedTasks: state.ui.taskview.showCompletedTasks
 })
 
 const mapDispatchToProps = {
   collapseTaskView: TaskViewActions.collapseCategory,
   showTaskView: TaskViewActions.showCategory,
   toggleTaskView: TaskViewActions.toggleCategory,
+  setMediumRightNavButton: NavbarActions.setMediumRightNavButton,
+  removeMediumRightNavButton: NavbarActions.removeMediumRightNavButton,
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,

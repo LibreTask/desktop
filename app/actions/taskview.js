@@ -7,11 +7,19 @@ export const COLLAPSE_CATEGORY = 'COLLAPSE_CATEGORY'
 export const SHOW_CATEGORY = 'SHOW_CATEGORY'
 export const TOGGLE_CATEGORY = 'TOGGLE_CATEGORY'
 
+export const TOGGLE_SHOW_COMPLETED_TASKS = 'TOGGLE_SHOW_COMPLETED_TASKS'
+
 export const TODAYS_TASKS = 'TODAYS_TASKS'
 export const TOMORROWS_TASKS = 'TOMORROWS_TASKS'
 export const FUTURE_TASKS = 'FUTURE_TASKS'
 export const OVERDUE_TASKS = 'OVERDUE_TASKS'
 export const TASKS_WITH_NO_DATE = 'TASKS_WITH_NO_DATE'
+
+export const toggleShowCompletedTasks = () => {
+  return {
+    type: TOGGLE_SHOW_COMPLETED_TASKS
+  }
+}
 
 export const collapseCategory = (category) => {
   return alterCategory(COLLAPSE_CATEGORY, category)

@@ -10,6 +10,9 @@ import { connect } from 'react-redux'
 import TitlePanel from './TitlePanel'
 import SideMenu from './SideMenu'
 
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -33,6 +36,7 @@ import * as SideMenuActions from '../actions/sidemenu'
 import * as NavbarActions from '../actions/navbar'
 import * as LoginDialogActions from '../actions/logindialog'
 import * as LogoutDialogActions from '../actions/logoutdialog'
+import * as TaskViewActions from '../actions/taskview'
 
 import * as UserActions from '../actions/entities/user'
 import * as TaskActions from '../actions/entities/task'
@@ -215,6 +219,29 @@ class App extends Component {
   }
 
   _constructFarRightNavButton() {
+
+    // TODO - move this component to its own module
+    if (this.props.farRightNavButton === AppConstants.MULTITASK_NAV_DROPDOWN) {
+      return (
+        <IconMenu
+          style={{
+            ...styles.farRightNavButton,
+            ...{padding: 0}
+          }}
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+          targetOrigin={{horizontal: 'right', vertical: 'top'}}>
+           <MenuItem
+             style={{fontSize: '80%'}}
+             checked={this.props.showCompletedTasks}
+             primaryText="Show Completed"
+             onTouchTap={() => {
+               this.props.toggleShowCompletedTasks()
+             }}/>
+        </IconMenu>
+      )
+    }
+
     let farRightNavIcon
     let navbarAction
 
@@ -406,7 +433,8 @@ const mapStateToProps = (state) => ({
   mediumRightNavTransitionLocation:
     state.ui.navbar.mediumRightTransitionLocation,
   farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
-  isSyncing: state.sync.isSyncing
+  isSyncing: state.sync.isSyncing,
+  showCompletedTasks: state.ui.taskview.showCompletedTasks
 })
 
 const mapDispatchToProps = {
@@ -421,7 +449,8 @@ const mapDispatchToProps = {
   startSync: SyncActions.startSync,
   stopSync: SyncActions.stopSync,
   sync: SyncActions.sync,
-  setNavAction: NavbarActions.setNavAction
+  setNavAction: NavbarActions.setNavAction,
+  toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
