@@ -30,6 +30,8 @@ function humanReadableError(error) {
       return 'That user does not exist'
     } else if (jsonError.errorCode === ErrorCodes.EMAIL_IS_ALREADY_USED) {
       return 'That email is already used'
+    } else if (jsonError.errorCode === ErrorCodes.INVALID_LOGIN) {
+      return 'Either email or password is invalid'
     } else {
       return 'Something went wrong, please try again later'
     }
