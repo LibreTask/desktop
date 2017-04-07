@@ -38,6 +38,11 @@ const styles = {
   createTaskButtonLabel: {
     textTransform: 'none',
   },
+  textField: {
+    marginHorizontal: 12,
+    fontSize: '100%',
+    width: '100%'
+  },
   mediumIcon: {
     width: 30,
     height: 30,
@@ -47,7 +52,7 @@ const styles = {
     color: 'green'
   },
   floatingFooter: {
-    position: 'fixed',
+    position: 'relative',
     margin: 'auto',
     paddingLeft: 30,
     paddingRight: 30,
@@ -61,6 +66,9 @@ const styles = {
     paddingTop: 10,
     paddingBottom: 10,
     width: '100%'
+  },
+  mainContent: {
+    paddingBottom: 20 // padding between content and footer
   }
 }
 
@@ -180,7 +188,10 @@ class CreateTask extends Component {
         <TextField
           multiLine={true}
           rows={this._noteRowsToDisplay()}
-          style={AppStyles.centeredElement}
+          style={{
+            ...styles.textField,
+            ...AppStyles.centeredElement
+          }}
           errorText={this.state.notesValidationError}
           floatingLabelText="Notes"
           type="text"
@@ -288,7 +299,10 @@ class CreateTask extends Component {
     return (
       <div style={AppStyles.mainWindow}>
 
-        <div style={AppStyles.centeredWindow}>
+        <div style={{
+          ...AppStyles.centeredWindow,
+          ...styles.mainContent
+        }}>
 
           <TextField
             multiLine={true}
