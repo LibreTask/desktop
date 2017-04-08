@@ -21,6 +21,8 @@ import AppConstants from '../constants'
 import AppStyles from '../styles'
 import Validator from 'validator'
 
+const shell = require('electron').shell;
+
 const styles = {
   input: {
     fontSize: '120%'
@@ -191,48 +193,11 @@ class Profile extends Component {
   }
 
   _onAccountUpgrade = () => {
-    let profile = this.props.profile
-
-    UserController.upgradeAccount(profile)
-    .then( response => {
-
-      profile.currentPlan = 'premium'
-
-      this.props.createOrUpdateProfile(profile)
-      ProfileStorage.createOrUpdateProfile(profile)
-     })
-     .catch( error => {
-
-         // TODO - properly set `loginError`
-
-         this.setState({
-           updateError: 'An error occurred',
-           isUpdatingProfile: false
-         })
-     })
+    hashHistory.replace('/premium-tour')
   }
 
   _onAccountDowngrade = () => {
-
-    let profile = this.props.profile
-
-    UserController.downgradeAccount(profile)
-    .then( response => {
-
-      profile.currentPlan = 'basic'
-
-      this.props.createOrUpdateProfile(profile)
-      ProfileStorage.createOrUpdateProfile(profile)
-     })
-     .catch( error => {
-
-         // TODO - properly set `loginError`
-
-         this.setState({
-           updateError: 'An error occurred',
-           isUpdatingProfile: false
-         })
-     })
+    shell.openExternal(AppConstants.ACCOUNT_DOWNGRADE_LINK)
   }
 
   _accountStatusButton = () => {
@@ -247,7 +212,7 @@ class Profile extends Component {
           }}
           backgroundColor={AppStyles.buttonColor}
           labelStyle={styles.profileButtonLabel}
-          label="Downgrade"
+          label="Cancel Premium"
           onTouchTap={this._onAccountDowngrade}
          />
      )
@@ -260,7 +225,7 @@ class Profile extends Component {
           }}
           backgroundColor={AppStyles.buttonColor}
           labelStyle={styles.profileButtonLabel}
-          label="Upgrade"
+          label="Learn about Premium"
           onTouchTap={this._onAccountUpgrade}
          />
        )

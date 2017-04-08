@@ -95,38 +95,3 @@ export const fetchProfile = (userId, password) => {
 
   return invoke(request)
 }
-
-export const upgradeAccount = (profile) => {
-
-  const request = {
-    endpoint: `user/upgrade-account`,
-    method: 'POST',
-     headers: {
-       'Accept': 'application/json',
-       'Content-Type': 'application/json',
-       'Authorization': constructAuthHeader(profile.id, profile.password)
-     },
-     body: JSON.stringify({
-       id: profile.id,
-     })
-  }
-
-  return invoke(request)
-}
-
-export const downgradeAccount = (profile) => {
-  const request = {
-    endpoint: `user/downgrade-account`,
-    method: 'POST',
-     headers: {
-       'Accept': 'application/json',
-       'Content-Type': 'application/json',
-       'Authorization': constructAuthHeader(profile.id, profile.password)
-     },
-     body: JSON.stringify({
-       id: profile.id,
-     })
-  }
-
-  return invoke(request)
-}
