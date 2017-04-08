@@ -32,7 +32,17 @@ const styles = {
   spacer: {
     marginTop: 10,
     marginBottom: 10
-  }
+  },
+  profileButtonLabel: {
+    textTransform: 'none',
+    fontSize: '100%'
+  },
+  errorText: {
+    color: 'red'
+  },
+  successText: {
+    color: 'green'
+  },
 }
 
 class Profile extends Component {
@@ -42,6 +52,7 @@ class Profile extends Component {
 
     this.state = {
       updateError: '',
+      updateSuccess: '',
       isUpdatingProfile: false,
       currentEmail: this.props.profile.email,
       currentName: this.props.profile.name,
@@ -52,7 +63,26 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    this.props.setMediumRightNavButton(AppConstants.SAVE_NAVBAR_BUTTON)
+    this.props.setFarRightNavButton(AppConstants.DELETE_NAVBAR_BUTTON)
     this.props.setNavbarTitle('Profile')
+  }
+
+  componentWillUnmount() {
+    this.props.removeMediumRightNavButton()
+    this.props.removeFarRightNavButton()
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    // consume any actions triggered via the Navbar
+    if (nextProps.navAction === NavbarActions.SAVE_NAV_ACTION) {
+      this._onProfileUpdate()
+      this.props.setNavAction(undefined)
+    } else if (nextProps.navAction === NavbarActions.DELETE_NAV_ACTION) {
+      this.setState({deleteProfileDialogIsOpen: true })
+      this.props.setNavAction(undefined)
+    }
   }
 
   _onProfileUpdate = () => {
@@ -97,13 +127,7 @@ class Profile extends Component {
          // TODO - handle PW in more secure way
          profile.password = this.props.profile.password
 
-         this.props.createOrUpdateProfile(profile)
-         ProfileStorage.createOrUpdateProfile(profile)
-
-         // TODO - toast success
-
-         this.setState({isUpdatingProfile: false})
-
+         this._updateProfileLocally(profile)
        })
        .catch( error => {
 
@@ -122,6 +146,14 @@ class Profile extends Component {
   _updateProfileLocally = (profile) => {
     this.props.createOrUpdateProfile(profile)
     ProfileStorage.createOrUpdateProfile(profile)
+
+    this.setState({
+      isUpdatingProfile: false,
+      updateSuccess: 'Successfully updated'
+    }, () => {
+      // erase update success text after 1.5 seconds
+      setTimeout(() => this.setState({updateSuccess: ''}), 1500)
+    })
   }
 
   /*
@@ -213,7 +245,8 @@ class Profile extends Component {
             ...styles.button,
             ...AppStyles.centeredElement
           }}
-          labelColor={AppStyles.linkColor}
+          backgroundColor={AppStyles.buttonColor}
+          labelStyle={styles.profileButtonLabel}
           label="Downgrade"
           onTouchTap={this._onAccountDowngrade}
          />
@@ -225,7 +258,8 @@ class Profile extends Component {
             ...styles.button,
             ...AppStyles.centeredElement
           }}
-          labelColor={AppStyles.linkColor}
+          backgroundColor={AppStyles.buttonColor}
+          labelStyle={styles.profileButtonLabel}
           label="Upgrade"
           onTouchTap={this._onAccountUpgrade}
          />
@@ -306,34 +340,16 @@ class Profile extends Component {
 
           <div style={styles.spacer}/>
 
-          <div>
-            <RaisedButton
-              style={{
-                ...styles.button,
-                ...AppStyles.centeredElement
-              }}
-              labelColor={AppStyles.linkColor}
-              label="Update"
-              onTouchTap={this._onProfileUpdate}
-             />
+          {this._accountStatusButton()}
 
-             <div style={styles.spacer}/>
+          <div style={styles.spacer}/>
 
-             <RaisedButton
-               style={{
-                 ...styles.button,
-                 ...AppStyles.centeredElement
-               }}
-               labelColor={AppStyles.linkColor}
-               label="Delete"
-               onTouchTap={()=>{
-                 this.setState({deleteProfileDialogIsOpen: true })
-               }}
-              />
+          <div style={styles.errorText}>
+            {this.state.updateError}
+          </div>
 
-              <div style={styles.spacer}/>
-
-              {this._accountStatusButton()}
+          <div style={styles.successText}>
+            {this.state.updateSuccess}
           </div>
         </div>
       </div>
@@ -343,13 +359,20 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile
+  profile: state.user.profile,
+  navAction: state.ui.navbar.navAction
 })
 
 const mapDispatchToProps = {
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
   setNavbarTitle: NavbarActions.setNavbarTitle,
+  setNavbarTitle: NavbarActions.setNavbarTitle,
+  setNavAction: NavbarActions.setNavAction,
+  setMediumRightNavButton: NavbarActions.setMediumRightNavButton,
+  removeMediumRightNavButton: NavbarActions.removeMediumRightNavButton,
+  setFarRightNavButton: NavbarActions.setFarRightNavButton,
+  removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

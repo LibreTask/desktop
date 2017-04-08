@@ -7,6 +7,7 @@ const STYLES = {
   mainColor: '#C66666',
   linkColor: '#19198C',
   hoverColor: '#615FFE',
+  buttonColor: '#eaebed', // minutely off-white
   mainWindow: {
     color: '#000000',
     width: '85%',

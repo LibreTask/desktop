@@ -37,6 +37,7 @@ const styles = {
   },
   createTaskButtonLabel: {
     textTransform: 'none',
+    fontSize: '120%'
   },
   textField: {
     marginHorizontal: 12,
@@ -330,6 +331,7 @@ class CreateTask extends Component {
 
         <div style={styles.floatingFooter}>
           <RaisedButton
+            backgroundColor={AppStyles.buttonColor}
             style={{
               ...AppStyles.centeredElement,
               ...styles.button
