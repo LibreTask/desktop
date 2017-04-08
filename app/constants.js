@@ -4,8 +4,8 @@
  */
 
 const CONSTANTS = {
-  ACCOUNT_UPGRADE_LINK: 'https://www.algernon.io/upgrade',
-  ACCOUNT_DOWNGRADE_LINK: 'https://www.algernon.io/downgrade',
+  ACCOUNT_UPGRADE_LINK: 'https://www.algernon.io/profile/upgrade',
+  ACCOUNT_DOWNGRADE_LINK: 'https://www.algernon.io/profile/downgrade',
   PASSWORD_RESET_LINK: 'https://login.uber.com/forgot-password',
   PRODUCT_PRIVACY_LINK: 'https://www.algernon.io/privacy',
   PRODUCT_TERMS_LINK: 'https://www.algernon.io/terms',

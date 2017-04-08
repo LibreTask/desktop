@@ -63,6 +63,7 @@
     "pouchdb-browser": "^6.1.2",
     "pouchdb-upsert": "^2.1.0",
     "react": "^15.4.1",
+    "react-addons-shallow-compare": "^15.5.1",
     "react-dates": "^8.2.1",
     "react-dom": "^15.4.1",
     "react-sidebar": "^2.2.1",
