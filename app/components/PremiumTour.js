@@ -109,7 +109,7 @@ class PremiumTour extends Component {
 
           <form
             id="checkout-form"
-            action="https://algernon.io/api/v1/client/user/upgrade-account"
+            action="https://algernon.io/api/v1/user/upgrade-account"
             method="POST"/>
         </div>
       </div>
