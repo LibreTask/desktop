@@ -141,6 +141,19 @@ class App extends Component {
       // register intervalId so we can cancel later
       this.props.startSync(intervalId)
     }
+
+    setInterval(() => {
+      /*
+        This is intended to update the TaskView once per day, at midnight
+
+        TODO - refine this approach
+      */
+      let date = (new Date()).getDate()
+
+      if (date !== this.props.lastTaskViewRefreshDate) {
+        this.props.refreshTaskView(true)
+      }
+    }, AppConstants.TASKVIEW_REFRESH_CHECK_INTERVAL_MILLIS)
   }
 
   componentWillUnmount() {
@@ -434,7 +447,8 @@ const mapStateToProps = (state) => ({
     state.ui.navbar.mediumRightTransitionLocation,
   farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
   isSyncing: state.sync.isSyncing,
-  showCompletedTasks: state.ui.taskview.showCompletedTasks
+  showCompletedTasks: state.ui.taskview.showCompletedTasks,
+  lastTaskViewRefreshDate: state.ui.taskview.lastTaskViewRefreshDate
 })
 
 const mapDispatchToProps = {
@@ -450,7 +464,8 @@ const mapDispatchToProps = {
   stopSync: SyncActions.stopSync,
   sync: SyncActions.sync,
   setNavAction: NavbarActions.setNavAction,
-  toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks
+  toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks,
+  refreshTaskView: TaskViewActions.refreshTaskView
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

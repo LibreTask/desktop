@@ -12,7 +12,8 @@ import {
   FUTURE_TASKS,
   OVERDUE_TASKS,
   TASKS_WITH_NO_DATE,
-  TOGGLE_SHOW_COMPLETED_TASKS
+  TOGGLE_SHOW_COMPLETED_TASKS,
+  REFRESH_TASK_VIEW
 } from '../../actions/taskview'
 import {
   updateObject,
@@ -20,7 +21,9 @@ import {
 } from '../reducer-utils'
 
 const initialState = {
-  showCompletedTasks: true // default to true
+  showCompletedTasks: true, // default to true
+  shouldRefreshTaskView: false,
+  lastTaskViewRefreshDate: undefined
 }
 initialState[TODAYS_TASKS] = { isCollapsed: false }
 initialState[TOMORROWS_TASKS] = { isCollapsed: true }
@@ -30,6 +33,11 @@ initialState[TASKS_WITH_NO_DATE] = { isCollapsed: true }
 
 export default function taskviewReducer(state = initialState, action) {
   switch (action.type) {
+    case REFRESH_TASK_VIEW:
+      return updateObject(state, {
+        shouldRefreshTaskView: action.shouldRefreshTaskView,
+        lastTaskViewRefreshDate: action.refreshDate
+      })
     case COLLAPSE_CATEGORY:
       let collapsedCategory = {}
       collapsedCategory[action.category] = { isCollapsed: true }

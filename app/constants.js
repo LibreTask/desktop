@@ -25,7 +25,11 @@ const CONSTANTS = {
   INITIAL_WINDOW_HEIGHT: 445,
   INITIAL_WINDOW_WIDTH: 420,
 
-  SYNC_INTERVAL_MILLIS: 30 * 1000
+  SYNC_INTERVAL_MILLIS: 30 * 1000,
+
+  // check each minute whether the taskview should be updated
+  // note this is primarily used to update the TaskView at midnight
+  TASKVIEW_REFRESH_CHECK_INTERVAL_MILLIS: 60 * 1000
 }
 
 module.exports = CONSTANTS;

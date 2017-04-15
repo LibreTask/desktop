@@ -90,6 +90,11 @@ class MultiTaskPage extends Component {
       this.props.setNavAction(undefined)
       hashHistory.push('/task/create')
     }
+
+    if (nextProps.shouldRefreshTaskView) {
+      this.setState(this.state) // this triggers a refresh
+      this.props.refreshTaskView(false) // set to false, after refresh
+    }
   }
 
   // TODO - clean up this sloppy logic / indirection; should not need a function
@@ -102,7 +107,8 @@ class MultiTaskPage extends Component {
     // TODO - fix the hacky date logic in this method
 
     const today = new Date()
-    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+    const tomorrow = new Date(today.getFullYear(),
+      today.getMonth(), today.getDate() + 1)
 
     let todaysTasks = []
     let tomorrowsTasks = []
@@ -122,7 +128,7 @@ class MultiTaskPage extends Component {
       } else if (taskDate.toDateString() === today.toDateString()) {
         task.displayCategory = 'Today'
         todaysTasks.push(task)
-      } else if (taskDate.toDateString() == tomorrow.toDateString()) {
+      } else if (taskDate.toDateString() === tomorrow.toDateString()) {
         task.displayCategory = 'Tomorrow'
         tomorrowsTasks.push(task)
       } else if (taskDate.getTime() > tomorrow.getTime()) {
@@ -341,10 +347,12 @@ const mapStateToProps = (state) => ({
   tasks: state.entities.tasks,
   navAction: state.ui.navbar.navAction,
   taskCategories: state.ui.taskview,
-  showCompletedTasks: state.ui.taskview.showCompletedTasks
+  showCompletedTasks: state.ui.taskview.showCompletedTasks,
+  shouldRefreshTaskView: state.ui.taskview.shouldRefreshTaskView
 })
 
 const mapDispatchToProps = {
+  refreshTaskView: TaskViewActions.refreshTaskView,
   collapseTaskView: TaskViewActions.collapseCategory,
   showTaskView: TaskViewActions.showCategory,
   toggleTaskView: TaskViewActions.toggleCategory,
