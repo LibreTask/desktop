@@ -31,6 +31,11 @@ const styles = {
     color: 'black',
     fontSize: '90%'
   },
+  createTaskListItem: {
+    color: AppStyles.linkColor,
+    fontSize: '110%',
+    textAlign: 'center'
+  },
   listItemHeader: {
     color: 'black',
     fontSize: '90%',
@@ -323,6 +328,22 @@ class MultiTaskPage extends Component {
 
     for (let task of tasksToDisplay) {
       listItems.push(this._renderRow(task))
+    }
+
+    // if no tasks exist, prompt user to create one
+    if (!listItems.length) {
+      listItems.push(
+        <ListItem
+          style={styles.createTaskListItem}
+          key={'create-task-list-item'}
+          onClick={
+            (event) => {
+              hashHistory.push('/task/create')
+            }
+          }
+          primaryText={'Create Task'}
+        />
+      )
     }
 
     return (

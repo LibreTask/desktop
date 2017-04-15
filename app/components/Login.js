@@ -118,7 +118,7 @@ class Login extends Component {
             multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.emailValidationError}
-            hintText="Email Field"
+            hintText="Email"
             floatingLabelText="Email"
             type="email"
             onChange={
@@ -132,7 +132,7 @@ class Login extends Component {
             multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.passwordValidationError}
-            hintText="Password Field"
+            hintText="Password"
             floatingLabelText="Password"
             type="password"
             onChange={
