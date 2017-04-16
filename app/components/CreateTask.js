@@ -55,8 +55,6 @@ const styles = {
   floatingFooter: {
     position: 'relative',
     margin: 'auto',
-    paddingLeft: 30,
-    paddingRight: 30,
     paddingBottom: 10,
     minWidth: '300px',
     bottom: 0,
