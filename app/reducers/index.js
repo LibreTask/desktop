@@ -14,7 +14,6 @@ import taskview from './ui/taskview'
 
 import userReducer from './user'
 import tasksReducer from './entities/tasks'
-import storeItemsReducer from './entities/storeitems'
 
 import syncReducer from './sync'
 
@@ -28,7 +27,6 @@ const uiReducer = combineReducers({
 
 const entitiesReducer = combineReducers({
   tasks: tasksReducer,
-  storeItems: storeItemsReducer
 })
 
 const appReducer = combineReducers({

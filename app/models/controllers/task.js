@@ -93,23 +93,3 @@ export const fetchTask = (taskId, userId, password) => {
 
   return invoke(request)
 }
-
-export const fetchTasksByAttributes = (attributes, userId, password) => {
-
-  let query = `userId=${userId}&`;
-
-  // TODO - use additional atributes as well
-
-  const request = {
-    endpoint: `task/get-by-attributes/${query}`,
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': constructAuthHeader(userId, password)
-    },
-  }
-
-  return invoke(request)
-    .then( response => response.tasks)
-}
