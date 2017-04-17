@@ -153,6 +153,10 @@ class App extends Component {
         .then(response => {
 
           if (response.profile) {
+
+            // TODO - fix the way passwords are handled
+            response.profile.password = password
+
             this.props.createOrUpdateProfile(response.profile)
             ProfileStorage.createOrUpdateProfile(response.profile)
           }
