@@ -185,7 +185,7 @@ class Profile extends Component {
     })
   }
 
-  _deleteProfileocallyAndRedirect = () => {
+  _deleteProfileLocallyAndRedirect = () => {
     this.props.deleteProfile()
     ProfileStorage.deleteProfile()
 
@@ -203,7 +203,8 @@ class Profile extends Component {
   _accountStatusButton = () => {
     let accountStatusButton;
 
-    if (this.props.profile.currentPlan === 'premium') {
+    if (this.props.profile
+      && this.props.profile.currentPlan === 'premium') {
       accountStatusButton = (
         <RaisedButton
           style={{
