@@ -81,16 +81,13 @@ export const deleteProfile = (profile) => {
 export const fetchProfile = (userId, password) => {
 
   const request = {
-    endpoint: `user/get-by-id/${userId}`,
+    endpoint: `user/get-profile-by-id/id=${userId}`,
     method: 'GET',
      headers: {
        'Accept': 'application/json',
        'Content-Type': 'application/json',
+       'Authorization': constructAuthHeader(userId, password)
      },
-     body: JSON.stringify({
-       id: userId,
-       password: password,
-     })
   }
 
   return invoke(request)

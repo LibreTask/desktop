@@ -127,8 +127,7 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-
+  _startTaskSync = () => {
     if (!this.props.isSyncing) {
       let intervalId = setInterval( () => {
 
@@ -141,7 +140,32 @@ class App extends Component {
       // register intervalId so we can cancel later
       this.props.startSync(intervalId)
     }
+  }
 
+  _startProfileSync = () => {
+    setInterval(() => {
+
+      if (this.props.isLoggedIn) {
+        let id = this.props.profile.id
+        let password = this.props.profile.password
+
+        UserController.fetchProfile(id, password)
+        .then(response => {
+
+          if (response.profile) {
+            this.props.createOrUpdateProfile(response.profile)
+            ProfileStorage.createOrUpdateProfile(response.profile)
+          }
+        })
+        .catch(err => {
+          // TODO -
+        })
+      }
+
+    }, AppConstants.SYNC_INTERVAL_MILLIS)
+  }
+
+  _startUIRefreshCheck = () => {
     setInterval(() => {
       /*
         This is intended to update the TaskView once per day, at midnight
@@ -154,6 +178,12 @@ class App extends Component {
         this.props.refreshTaskView(true)
       }
     }, AppConstants.TASKVIEW_REFRESH_CHECK_INTERVAL_MILLIS)
+  }
+
+  componentDidMount() {
+    this._startTaskSync()
+    this._startProfileSync()
+    this._startUIRefreshCheck()
   }
 
   componentWillUnmount() {
@@ -458,6 +488,7 @@ const mapDispatchToProps = {
   closeLoginDialog: LoginDialogActions.close,
   toggleLogoutDialog: LogoutDialogActions.toggle,
   closeLogoutDialog: LogoutDialogActions.toggle,
+  createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
   deleteAllTasks: TaskActions.deleteAllTasks,
   startSync: SyncActions.startSync,

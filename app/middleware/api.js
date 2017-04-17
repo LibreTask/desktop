@@ -57,9 +57,8 @@ export function invoke(request) {
   }
 
   return rp(options)
-  .then( response => JSON.parse(response))
+  .then( response => JSON.parse(response) )
   .catch(error => {
-
     if (error.error && error.error.code === 'ECONNREFUSED') {
       throw new NoConnection()
     } else {
