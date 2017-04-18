@@ -18,9 +18,15 @@ const shell = require('electron').shell;
 
 const styles = {
   textField: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: '90%',
+  },
+  titleText: {
+    marginTop: 5,
+    marginBottom: 5,
     fontSize: '100%',
+    fontWeight: 'bold'
   },
   linkText: {
     fontSize: '90%',
@@ -41,7 +47,7 @@ class About extends Component {
       <div style={AppStyles.mainWindow}>
 
         <div style={AppStyles.centeredWindow}>
-          <h4>Algernon</h4>
+          <div style={styles.titleText}>Algernon</div>
 
           <div style={styles.textField}>
             Organize your goals, track your progress, and have updates seamlessly sync across all of your devices.

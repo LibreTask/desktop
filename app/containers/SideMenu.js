@@ -20,7 +20,7 @@ import AppStyles from '../styles'
 
 const styles = {
   sidebar: {
-    width: 256,
+    width: 220,
     height: '100%',
     top: 0,
   },
@@ -117,10 +117,11 @@ const SideMenu = (props) => {
     </div>
   )
 
-  let welcomeText = "Hello!"
+  let welcomeText =""/*= "Hello!"
   if (props.isLoggedIn && props.profile && props.profile.name) {
     welcomeText = `Hello, ${props.profile.name}!`
   }
+  */
 
   return (
     <TitlePanel
