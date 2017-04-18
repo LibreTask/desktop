@@ -4,7 +4,7 @@
  */
 
 const STYLES = {
-  mainColor: '#C66666',
+  mainColor: '#3436a5',
   linkColor: '#19198C',
   hoverColor: '#615FFE',
   buttonColor: '#eaebed', // minutely off-white
