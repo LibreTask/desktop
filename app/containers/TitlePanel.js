@@ -18,6 +18,7 @@ const styles = {
    also need to be changed.
   */
   header: {
+    zIndex: 100, // sidemenu/titlepanel should take precedence
     backgroundColor: AppStyles.mainColor,
     borderBottom: '1px solid black',
     color: 'white',

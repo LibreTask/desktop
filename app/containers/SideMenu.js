@@ -23,6 +23,7 @@ const styles = {
     width: 220,
     height: '100%',
     top: 0,
+    zIndex: 100 // sidemenu/titlepanel should take precedence
   },
   sidebarLink: {
     display: 'block',
