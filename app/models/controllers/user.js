@@ -92,3 +92,58 @@ export const fetchProfile = (userId, password) => {
 
   return invoke(request)
 }
+
+import * as ProfileStorage from '../storage/profile-storage'
+
+// TODO - move this method to general-purpose file
+async function getState() {
+
+  let profile = undefined
+  let isLoggedIn = false
+
+  try {
+    profile = await ProfileStorage.getMyProfile()
+  } catch (err) { /* ignore */ }
+
+  try {
+    isLoggedIn = await ProfileStorage.isLoggedIn()
+  } catch (err) { /* ignore */ }
+
+  return {
+    user: {
+      profile: profile,
+      isLoggedIn: isLoggedIn
+    }
+  }
+}
+
+export const syncUser = async () => {
+
+  const state = await getState()
+
+  console.log("state...")
+  console.dir(state)
+
+  if (!state.user.isLoggedIn) {
+    return;
+  }
+
+  const userId = state.user.profile.id
+  const password = state.user.profile.password
+
+  fetchProfile(userId, password)
+  .then( response => {
+
+    if (response.profile) {
+
+      // TODO - refine password management scheme
+      response.profile.password = password
+      ProfileStorage.createOrUpdateProfile(response.profile)
+    }
+
+    return response
+  })
+  .catch( err => {
+    // TODO
+  })
+}

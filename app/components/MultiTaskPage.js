@@ -16,8 +16,8 @@ import Checkbox from 'material-ui/Checkbox'
 const FaChevronRight = require('react-icons/lib/fa/chevron-right')
 const FaChevronDown = require('react-icons/lib/fa/chevron-down')
 
-import * as NavbarActions from '../actions/navbar'
-import * as TaskViewActions from '../actions/taskview'
+import * as NavbarActions from '../actions/ui/navbar'
+import * as TaskViewActions from '../actions/ui/taskview'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
@@ -59,19 +59,6 @@ const muiTheme = getMuiTheme({
 })
 
 class MultiTaskPage extends Component {
-
-  constructor(props) {
-    super(props)
-
-    let millis = new Date()
-    millis = millis.getTime()
-
-    // initial state
-    this.state = {
-      willFocusSubscription: null,
-      isRefreshing: false,
-    }
-  }
 
   componentDidMount() {
     this.props.setNavbarTitle('Tasks')
@@ -363,9 +350,9 @@ class MultiTaskPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile,
-  tasks: state.entities.tasks,
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile,
+  tasks: state.entities.task.tasks,
   navAction: state.ui.navbar.navAction,
   taskCategories: state.ui.taskview,
   showCompletedTasks: state.ui.taskview.showCompletedTasks,

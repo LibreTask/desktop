@@ -45,6 +45,9 @@
  HACK: same as data-reactroot, but inverted so that the sidebar is always
  displayed at the top of the screen.
 */
-.custom-sidebar-class {
+div > .custom-sidebar-class {
   margin-top: -53;
+
+  /* sidebar should take precedence over everything */
+  z-index: 2000 !important;
 }

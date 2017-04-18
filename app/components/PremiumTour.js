@@ -13,7 +13,7 @@ import Divider from 'material-ui/Divider'
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
-import * as NavbarActions from '../actions/navbar'
+import * as NavbarActions from '../actions/ui/navbar'
 
 const styles = {
   leftTextField: {
@@ -118,8 +118,8 @@ class PremiumTour extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile,
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile,
 })
 
 const mapDispatchToProps = {

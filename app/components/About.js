@@ -12,7 +12,7 @@ import Divider from 'material-ui/Divider'
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
-import * as NavbarActions from '../actions/navbar'
+import * as NavbarActions from '../actions/ui/navbar'
 
 const shell = require('electron').shell;
 

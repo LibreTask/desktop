@@ -93,3 +93,87 @@ export const fetchTask = (taskId, userId, password) => {
 
   return invoke(request)
 }
+
+import * as TaskStorage from '../storage/task-storage'
+import * as ProfileStorage from '../storage/profile-storage'
+
+// TODO - move this method to general-purpose file
+async function getState() {
+
+  let tasks = []
+  let profile = undefined
+  let isLoggedIn = false
+
+  try {
+    tasks = await TaskStorage.getAllTasks()
+  } catch (err) { /* ignore */ }
+
+
+  try {
+    profile = await ProfileStorage.getMyProfile()
+  } catch (err) { /* ignore */ }
+
+  try {
+    isLoggedIn = await ProfileStorage.isLoggedIn()
+  } catch (err) { /* ignore */ }
+
+  return {
+    user: {
+      profile: profile,
+      isLoggedIn: isLoggedIn
+    },
+    tasks: tasks
+  }
+}
+
+export const syncTasks = async () => {
+
+  const state = await getState()
+
+  console.log("state...")
+  console.dir(state)
+
+  if (!state.user.isLoggedIn) {
+    return;
+  }
+
+  const userId = state.user.profile.id
+  const password = state.user.profile.password
+
+  const request = {
+    endpoint: 'sync/client-state',
+    method: 'POST',
+     headers: {
+       'Accept': 'application/json',
+       'Content-Type': 'application/json',
+       'Authorization': constructAuthHeader(userId, password)
+     },
+     body: JSON.stringify({
+       myState: state
+     })
+  }
+
+  console.log('request...')
+  console.dir(request)
+
+  return invoke(request)
+  .then( response => {
+
+    // TODO - log / inspect object / persist if necessary
+
+    console.log("abc response...")
+    console.dir(response)
+
+    if (response.state.entities.tasks
+        && response.state.entities.tasks.length > 0) {
+      TaskStorage.createOrUpdateTasks(response.state.entities.tasks)
+    }
+
+    console.log('after profile update storage...')
+
+    /**
+     * The response should contain a list attribute
+     */
+    return response
+  })
+}

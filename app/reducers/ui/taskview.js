@@ -14,7 +14,7 @@ import {
   TASKS_WITH_NO_DATE,
   TOGGLE_SHOW_COMPLETED_TASKS,
   REFRESH_TASK_VIEW
-} from '../../actions/taskview'
+} from '../../actions/ui/taskview'
 import {
   updateObject,
   createReducer,

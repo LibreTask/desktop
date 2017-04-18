@@ -12,7 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 
-import * as NavbarActions from '../actions/navbar'
+import * as NavbarActions from '../actions/ui/navbar'
 import * as UserActions from '../actions/entities/user'
 import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
@@ -324,8 +324,8 @@ class Profile extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile,
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile,
   navAction: state.ui.navbar.navAction
 })
 

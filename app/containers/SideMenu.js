@@ -12,9 +12,9 @@ const FaChevronDown = require('react-icons/lib/fa/chevron-down')
 
 import TitlePanel from './TitlePanel'
 
-import * as SideMenuActions from '../actions/sidemenu'
-import * as LoginDialogActions from '../actions/logindialog'
-import * as LogoutDialogActions from '../actions/logoutdialog'
+import * as SideMenuActions from '../actions/ui/sidemenu'
+import * as LoginDialogActions from '../actions/ui/logindialog'
+import * as LogoutDialogActions from '../actions/ui/logoutdialog'
 
 import AppStyles from '../styles'
 
@@ -23,7 +23,7 @@ const styles = {
     width: 220,
     height: '100%',
     top: 0,
-    zIndex: 100 // sidemenu/titlepanel should take precedence
+    zIndex: 10000 // sidemenu should take precedence over everything
   },
   sidebarLink: {
     display: 'block',
@@ -147,8 +147,8 @@ const mapStateToProps = (state) => ({
   sideMenuIsOpen: state.ui.sideMenu.isOpen,
   loginDialogIsOpen: state.ui.logindialog.isOpen,
   logoutDialogIsOpen: state.ui.logoutdialog.isLopen,
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile,
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile,
 })
 
 const mapDispatchToProps = {

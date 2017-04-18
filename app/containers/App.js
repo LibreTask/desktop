@@ -32,18 +32,17 @@ import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import * as SideMenuActions from '../actions/sidemenu'
-import * as NavbarActions from '../actions/navbar'
-import * as LoginDialogActions from '../actions/logindialog'
-import * as LogoutDialogActions from '../actions/logoutdialog'
-import * as TaskViewActions from '../actions/taskview'
+import * as SideMenuActions from '../actions/ui/sidemenu'
+import * as NavbarActions from '../actions/ui/navbar'
+import * as LoginDialogActions from '../actions/ui/logindialog'
+import * as LogoutDialogActions from '../actions/ui/logoutdialog'
+import * as TaskViewActions from '../actions/ui/taskview'
 
 import * as UserActions from '../actions/entities/user'
 import * as TaskActions from '../actions/entities/task'
 
 import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
-import * as SyncActions from '../actions/sync'
 
 let Sidebar = require('react-sidebar').default;
 
@@ -128,45 +127,34 @@ class App extends Component {
   }
 
   _startTaskSync = () => {
-    if (!this.props.isSyncing) {
+    if (!this.props.isSyncingTasks) {
       let intervalId = setInterval( () => {
 
+        // TODO - move canAccessNetwork into syncTasks (otherwise,
+        // we have an outdated reference to `this`)
         if (UserController.canAccessNetwork(this.props.profile)) {
-          this.props.sync()
+          this.props.syncTasks()
         }
 
       }, AppConstants.SYNC_INTERVAL_MILLIS)
 
       // register intervalId so we can cancel later
-      this.props.startSync(intervalId)
+      this.props.startTaskSync(intervalId)
     }
   }
 
   _startProfileSync = () => {
-    setInterval(() => {
 
-      if (this.props.isLoggedIn) {
-        let id = this.props.profile.id
-        let password = this.props.profile.password
+    if (!this.props.isSyncingUser) {
+      let intervalId = setInterval( () => {
 
-        UserController.fetchProfile(id, password)
-        .then(response => {
+        this.props.syncUser()
 
-          if (response.profile) {
+      }, AppConstants.SYNC_INTERVAL_MILLIS)
 
-            // TODO - fix the way passwords are handled
-            response.profile.password = password
-
-            this.props.createOrUpdateProfile(response.profile)
-            ProfileStorage.createOrUpdateProfile(response.profile)
-          }
-        })
-        .catch(err => {
-          // TODO -
-        })
-      }
-
-    }, AppConstants.SYNC_INTERVAL_MILLIS)
+      // register intervalId so we can cancel later
+      this.props.startUserSync(intervalId)
+    }
   }
 
   _startUIRefreshCheck = () => {
@@ -471,8 +459,8 @@ const mapStateToProps = (state) => ({
   sideMenuIsOpen: state.ui.sideMenu.isOpen,
   loginDialogIsOpen: state.ui.logindialog.isOpen,
   logoutDialogIsOpen: state.ui.logoutdialog.isOpen,
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile,
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile,
   navbarTitle: state.ui.navbar.title,
   mediumRightNavButton: state.ui.navbar.mediumRightButton,
   farRightNavButton: state.ui.navbar.farRightButton,
@@ -480,7 +468,8 @@ const mapStateToProps = (state) => ({
   mediumRightNavTransitionLocation:
     state.ui.navbar.mediumRightTransitionLocation,
   farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
-  isSyncing: state.sync.isSyncing,
+  isSyncingTasks: state.entities.task.isSyncing,
+  isSyncingUser: state.entities.user.isSyncing,
   showCompletedTasks: state.ui.taskview.showCompletedTasks,
   lastTaskViewRefreshDate: state.ui.taskview.lastTaskViewRefreshDate
 })
@@ -494,10 +483,13 @@ const mapDispatchToProps = {
   closeLogoutDialog: LogoutDialogActions.toggle,
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
+  startUserSync: UserActions.startUserSync,
+  stopUserSync: UserActions.stopUserSync,
+  syncUser: UserActions.syncUser,
   deleteAllTasks: TaskActions.deleteAllTasks,
-  startSync: SyncActions.startSync,
-  stopSync: SyncActions.stopSync,
-  sync: SyncActions.sync,
+  startTaskSync: TaskActions.startTaskSync,
+  stopTaskSync: TaskActions.stopTaskSync,
+  syncTasks: TaskActions.syncTasks,
   setNavAction: NavbarActions.setNavAction,
   toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks,
   refreshTaskView: TaskViewActions.refreshTaskView

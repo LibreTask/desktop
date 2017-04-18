@@ -11,7 +11,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import IconButton from 'material-ui/IconButton'
 
-import * as NavbarActions from '../actions/navbar'
+import * as NavbarActions from '../actions/ui/navbar'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
@@ -348,8 +348,8 @@ class CreateTask extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile
 })
 
 const mapDispatchToProps = {

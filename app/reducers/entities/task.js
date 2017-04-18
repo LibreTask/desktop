@@ -8,9 +8,11 @@ import {
   CREATE_OR_UPDATE_TASK,
   CREATE_OR_UPDATE_TASKS,
   DELETE_ALL_TASKS,
-  DELETE_TASK
+  DELETE_TASK,
+  START_TASK_SYNC,
+  END_TASK_SYNC,
+  SYNC_TASKS
 } from '../../actions/entities/task'
-import { SYNC } from '../../actions/sync'
 import {
   updateObject,
   createReducer,
@@ -18,12 +20,30 @@ import {
 
 import * as _ from 'lodash'
 
+function startTaskSync(state, action) {
+  return updateObject(state, {
+    isSyncing: true,
+    intervalId: action.intervalId
+  })
+}
+
+function endTaskSync(state, action) {
+  clearInterval(state.intervalId) // TODO - is this the best place to do it?
+
+  return updateObject(state, {
+    isSyncing: false,
+    intervalId: undefined
+  })
+}
+
 function deleteAllTasks(state, action) {
-  return {}
+  return updateObject(state, {
+    tasks: { /* all tasks are deleted */ }
+  })
 }
 
 function deleteTask(state, action) {
-  let remainingTasks = _.filter(state, function(task) {
+  let remainingTasks = _.filter(state.tasks, function(task) {
     return task.id !== action.taskId // filter out taskId
   })
 
@@ -32,15 +52,23 @@ function deleteTask(state, action) {
     taskMap[task.id] = task
   })
 
-  return taskMap
+  return updateObject(state,
+    {
+      tasks: updateObject(state.tasks, taskMap)
+    }
+  )
 }
 
 function addTasks(state, action) {
   let normalizedTasks = {}
   _.forEach(action.tasks, (task) => {
-    normalizedTasks[task.id] = task;
+    normalizedTasks[task.id] = task
   })
-  return updateObject(state, normalizedTasks)
+  return updateObject(state,
+    {
+      tasks: updateObject(state.tasks, normalizedTasks)
+    }
+  )
 }
 
 function addTask(state, action) {
@@ -50,29 +78,49 @@ function addTask(state, action) {
 function addNormalizedTask(state, normalizedTask) {
 
   let updatedTaskEntry = {}
-  updatedTaskEntry[normalizedTask.id] = normalizedTask;
+  updatedTaskEntry[normalizedTask.id] = normalizedTask
 
-  return updateObject(state, updatedTaskEntry)
+  return updateObject(state,
+    {
+      tasks: updateObject(state.tasks, updatedTaskEntry)
+    }
+  )
 }
 
 function syncTasks(state, action) {
 
   return (action.tasks && action.tasks.length > 0)
     ? addTasks(state, action)
-    : state;
+    : state
 }
 
 const initialState = {
-  // taskId: {public task attributes}
+  tasks: {
+    // taskId: {public task attributes}
+  },
+  isSyncing: false,
+  intervalId: undefined // used to cancel sync
 }
 
 function tasksReducer(state = initialState, action) {
   switch(action.type) {
 
     /*
+      TODO - doc
+    */
+    case START_TASK_SYNC:
+      return startTaskSync(state, action)
+
+    /*
+      TODO - doc
+    */
+    case END_TASK_SYNC:
+      return endTaskSync(state, action)
+
+    /*
      TODO - doc
     */
-    case SYNC:
+    case SYNC_TASKS:
       return syncTasks(state, action)
 
     /*
@@ -100,8 +148,8 @@ function tasksReducer(state = initialState, action) {
       return deleteTask(state, action)
 
     default:
-      return state;
+      return state
   }
 }
 
-export default tasksReducer;
+export default tasksReducer

@@ -6,10 +6,28 @@
 import { combineReducers } from 'redux'
 import {
   CREATE_OR_UPDATE_PROFILE,
-  DELETE_PROFILE
-} from '../actions/entities/user'
-import { SYNC } from '../actions/sync'
-import { updateObject, createReducer } from './reducer-utils'
+  DELETE_PROFILE,
+  START_USER_SYNC,
+  END_USER_SYNC,
+  SYNC_USER
+} from '../../actions/entities/user'
+import { updateObject, createReducer } from './../reducer-utils'
+
+function startUserSync(state, action) {
+  return updateObject(state, {
+    isSyncing: true,
+    intervalId: action.intervalId
+  })
+}
+
+function endUserSync(state, action) {
+  clearInterval(state.intervalId) // TODO - is this the best place to do it?
+
+  return updateObject(state, {
+    isSyncing: false,
+    intervalId: undefined
+  })
+}
 
 function deleteProfile(state, action) {
   return updateObject(state, {
@@ -20,39 +38,47 @@ function deleteProfile(state, action) {
 
 function addProfile(state, action) {
 
-  console.log('add profile...')
-  console.dir(action)
-
   return updateObject(state, {
     profile: action.profile,
     isLoggedIn: action.isLoggedIn
   })
 }
 
-function syncProfile(state, action) {
-
-  console.log("SYNC PROFILE!")
-  console.dir(action)
+function syncUser(state, action) {
 
   // if an update to profile is available, update, otherwise, ignore
   return (action.profile)
     ? addProfile(state, {profile: action.profile, isLoggedIn: true})
-    : state;
+    : state
 }
 
 const initialState = {
   profile: undefined,
-  isLoggedIn: false
+  isLoggedIn: false,
+  isSyncing: false,
+  intervalId: undefined // used to cancel sync
 }
 
 function userReducer(state = initialState, action) {
   switch (action.type) {
 
     /*
+      TODO - doc
+    */
+    case START_USER_SYNC:
+      return startUserSync(state, action)
+
+    /*
+      TODO - doc
+    */
+    case END_USER_SYNC:
+      return endUserSync(state, action)
+
+    /*
      TODO - doc
     */
-    case SYNC:
-      return syncProfile(state, action)
+    case SYNC_USER:
+      return syncUser(state, action)
 
     /*
       TODO - doc
@@ -67,7 +93,7 @@ function userReducer(state = initialState, action) {
       return deleteProfile(state, action)
 
     default:
-      return state;
+      return state
   }
 }
 

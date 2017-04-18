@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
-import * as NavbarActions from '../actions/navbar'
+import * as NavbarActions from '../actions/ui/navbar'
 import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
 import * as UserActions from '../actions/entities/user'

@@ -11,9 +11,9 @@ import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import MenuItem from 'material-ui/MenuItem'
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 
-import * as NavbarActions from '../actions/navbar'
+import * as NavbarActions from '../actions/ui/navbar'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
@@ -460,9 +460,9 @@ class SingleTaskPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.user.isLoggedIn,
-  profile: state.user.profile,
-  tasks: state.entities.tasks,
+  isLoggedIn: state.entities.user.isLoggedIn,
+  profile: state.entities.user.profile,
+  tasks: state.entities.task.tasks,
   navAction: state.ui.navbar.navAction
 })
 

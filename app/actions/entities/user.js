@@ -20,3 +20,49 @@ export const deleteProfile = () => {
     type: DELETE_PROFILE
   }
 }
+
+export const START_USER_SYNC = 'START_USER_SYNC'
+
+export const startUserSync = (intervalId) => {
+
+  return {
+    type: START_USER_SYNC,
+    intervalId: intervalId
+  }
+}
+
+export const END_USER_SYNC = 'END_USER_SYNC'
+
+export const endUserSync = () => {
+
+  return {
+    type: END_USER_SYNC,
+  }
+}
+
+import * as UserController from '../../models/controllers/user'
+
+export const SYNC_USER = 'SYNC_USER'
+
+export const syncUser = () => {
+
+  return function(dispatch) {
+
+    UserController.syncUser()
+    .then( response => {
+
+      if (response.profile) {
+        let syncAction = {
+          type: SYNC_PROFILE,
+          profile: response.profile
+        }
+
+        dispatch(syncAction)
+      }
+    })
+    .catch( error => {
+      console.log('sync profile error....')
+      console.dir(error)
+    })
+  }
+}

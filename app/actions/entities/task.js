@@ -37,3 +37,47 @@ export const deleteAllTasks = () => {
     type: DELETE_ALL_TASKS
   }
 }
+
+export const START_TASK_SYNC = 'START_TASK_SYNC'
+
+export const startTaskSync = (intervalId) => {
+
+  return {
+    type: START_TASK_SYNC,
+    intervalId: intervalId
+  }
+}
+
+export const END_TASK_SYNC = 'END_TASK_SYNC'
+
+export const endTaskSync = () => {
+
+  return {
+    type: END_TASK_SYNC,
+  }
+}
+
+import * as TaskController from '../../models/controllers/task'
+
+export const SYNC_TASKS = 'SYNC_TASKS'
+
+export const syncTasks = () => {
+
+  return function(dispatch) {
+
+    return TaskController.syncTasks()
+    .then( response => {
+
+      let syncAction = {
+        type: SYNC,
+        tasks: response.tasks
+      }
+
+      dispatch(syncAction)
+    })
+    .catch( error => {
+      console.log('sync error....')
+      console.dir(error)
+    })
+  }
+}

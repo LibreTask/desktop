@@ -58,12 +58,14 @@ async function getInitialState() {
 
   return {
     entities: {
-      tasks: tasks
+      task: {
+        tasks: tasks
+      },
+      user: {
+        profile: profile,
+        isLoggedIn: isLoggedIn,
+      }
     },
-    user: {
-      profile: profile,
-      isLoggedIn: isLoggedIn
-    }
   }
 }
 

@@ -11,6 +11,8 @@ const styles = {
   root: {
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontWeight: 300,
+    // titlepanel should take precedence over everything except sidemenu
+    zIndex: 100,
   },
 
   /*
@@ -18,7 +20,8 @@ const styles = {
    also need to be changed.
   */
   header: {
-    zIndex: 100, // sidemenu/titlepanel should take precedence
+    // titlepanel should take precedence over everything except sidemenu
+    zIndex: 100,
     backgroundColor: AppStyles.mainColor,
     borderBottom: '1px solid black',
     color: 'white',

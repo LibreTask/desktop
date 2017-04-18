@@ -12,10 +12,8 @@ import logindialog from './ui/logindialog'
 import logoutdialog from './ui/logoutdialog'
 import taskview from './ui/taskview'
 
-import userReducer from './user'
-import tasksReducer from './entities/tasks'
-
-import syncReducer from './sync'
+import userReducer from './entities/user'
+import taskReducer from './entities/task'
 
 const uiReducer = combineReducers({
   logindialog,
@@ -26,14 +24,13 @@ const uiReducer = combineReducers({
 })
 
 const entitiesReducer = combineReducers({
-  tasks: tasksReducer,
+  task: taskReducer,
+  user: userReducer
 })
 
 const appReducer = combineReducers({
   ui: uiReducer,
   entities: entitiesReducer,
-  user: userReducer,
-  sync: syncReducer,
   routing
 })
 
