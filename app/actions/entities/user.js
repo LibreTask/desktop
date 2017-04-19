@@ -48,6 +48,8 @@ export const syncUser = () => {
 
   return function(dispatch) {
 
+    // TODO - only sync if logged in
+
     UserController.syncUser()
     .then( response => {
 

@@ -48,6 +48,6 @@
 div > .custom-sidebar-class {
   margin-top: -53;
 
-  /* sidebar should take precedence over everything */
+  /* sidebar should take precedence over everything, except dialogs */
   z-index: 2000 !important;
 }

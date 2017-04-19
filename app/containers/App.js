@@ -47,6 +47,7 @@ import * as ProfileStorage from '../models/storage/profile-storage'
 let Sidebar = require('react-sidebar').default;
 
 import AppConstants from '../constants'
+import AppStyles from '../styles'
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -422,6 +423,7 @@ class App extends Component {
             <div>
               <div>
                 <Dialog
+                  style={AppStyles.dialog}
                   title="Login"
                   actions={loginActions}
                   modal={false}
@@ -433,6 +435,7 @@ class App extends Component {
                   You must be logged in before you can completed this action.
                 </Dialog>
                 <Dialog
+                  style={AppStyles.dialog}
                   title="Logout"
                   actions={logoutActions}
                   modal={false}

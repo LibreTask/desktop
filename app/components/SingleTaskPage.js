@@ -271,6 +271,7 @@ class SingleTaskPage extends Component {
 
     return (
       <Dialog
+          style={AppStyles.dialog}
           title="Recurring Frequency"
           actions={actions}
           modal={false}
@@ -382,6 +383,7 @@ class SingleTaskPage extends Component {
 
         <div style={AppStyles.centeredWindow}>
           <Dialog
+            style={AppStyles.dialog}
             title="Delete Task"
             actions={actions}
             modal={false}

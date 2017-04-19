@@ -257,6 +257,7 @@ class Profile extends Component {
       <div style={AppStyles.mainWindow}>
         <div style={AppStyles.centeredWindow}>
           <Dialog
+            style={AppStyles.dialog}
             title="Profile Deletion"
             actions={actions}
             modal={false}

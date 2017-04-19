@@ -23,7 +23,9 @@ const styles = {
     width: 220,
     height: '100%',
     top: 0,
-    zIndex: 10000 // sidemenu should take precedence over everything
+
+    // sidemenu should take precedence over everything, except dialogs
+    zIndex: 10000
   },
   sidebarLink: {
     display: 'block',

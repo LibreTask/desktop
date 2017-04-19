@@ -23,6 +23,9 @@ const STYLES = {
     margin: 'auto',
     width: '100%',
     minWidth: '300px',
+  },
+  dialog: {
+    zIndex: 999999999 // dialogs have precedence over everything
   }
 }
 
