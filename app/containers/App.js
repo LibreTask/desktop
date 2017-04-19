@@ -180,7 +180,8 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this.props.stopSync()
+    this.props.stopTaskSync()
+    this.props.stopUserSync()
   }
 
   _onSetOpen = (open) => {
