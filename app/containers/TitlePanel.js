@@ -27,7 +27,7 @@ const styles = {
     color: 'white',
     paddingTop: '12px',
     paddingBottom: '12px',
-    fontSize: '1.1em',
+    fontSize: '1.3em',
     position: 'fixed',
     width: '100%',
     top: 0,
