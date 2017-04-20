@@ -140,17 +140,16 @@ export const syncTasks = async () => {
   const userId = state.user.profile.id
   const password = state.user.profile.password
 
+  // TODO - pass in (and store) the actual date
+
   const request = {
-    endpoint: 'sync/client-state',
-    method: 'POST',
+    endpoint: 'task/sync-tasks-after-timestamp/timestamp=2017-04-20',
+    method: 'GET',
      headers: {
        'Accept': 'application/json',
        'Content-Type': 'application/json',
        'Authorization': constructAuthHeader(userId, password)
-     },
-     body: JSON.stringify({
-       myState: state
-     })
+     }
   }
 
   console.log('request...')
@@ -175,5 +174,9 @@ export const syncTasks = async () => {
      * The response should contain a list attribute
      */
     return response
+  })
+  .catch(err => {
+    console.log("task err...")
+    console.dir(err)
   })
 }

@@ -52,11 +52,7 @@ function deleteTask(state, action) {
     taskMap[task.id] = task
   })
 
-  return updateObject(state,
-    {
-      tasks: updateObject(state.tasks, taskMap)
-    }
-  )
+  return updateObject(state, { tasks: taskMap })
 }
 
 function addTasks(state, action) {

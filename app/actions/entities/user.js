@@ -55,7 +55,7 @@ export const syncUser = () => {
 
       if (response.profile) {
         let syncAction = {
-          type: SYNC_PROFILE,
+          type: SYNC_USER,
           profile: response.profile
         }
 

@@ -121,9 +121,6 @@ export const syncUser = async () => {
 
   const state = await getState()
 
-  console.log("state...")
-  console.dir(state)
-
   if (!state.user.isLoggedIn) {
     return;
   }
@@ -131,7 +128,7 @@ export const syncUser = async () => {
   const userId = state.user.profile.id
   const password = state.user.profile.password
 
-  fetchProfile(userId, password)
+  return fetchProfile(userId, password)
   .then( response => {
 
     if (response.profile) {
@@ -145,5 +142,7 @@ export const syncUser = async () => {
   })
   .catch( err => {
     // TODO
+    console.log("user err...")
+    console.dir(err)
   })
 }
