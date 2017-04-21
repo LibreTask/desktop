@@ -46,25 +46,33 @@ export const SYNC_USER = 'SYNC_USER'
 
 export const syncUser = () => {
 
-  return function(dispatch) {
+  return function(dispatch, getState) {
 
-    // TODO - only sync if logged in
+    console.log('sync user state...')
+    console.dir(getState())
 
-    UserController.syncUser()
-    .then( response => {
+    // only sync is the user is logged in
+    if (getState().entities.user.isLoggedIn) {
 
-      if (response.profile) {
-        let syncAction = {
-          type: SYNC_USER,
-          profile: response.profile
+      let currentSyncDateTimeUtc = new Date() // TODO - refine
+
+      UserController.syncUser()
+      .then( response => {
+
+        if (response.profile) {
+          let syncAction = {
+            type: SYNC_USER,
+            profile: response.profile,
+            lastSuccessfulSyncDateTimeUtc: currentSyncDateTimeUtc
+          }
+
+          dispatch(syncAction)
         }
-
-        dispatch(syncAction)
-      }
-    })
-    .catch( error => {
-      console.log('sync profile error....')
-      console.dir(error)
-    })
+      })
+      .catch( error => {
+        console.log('sync profile error....')
+        console.dir(error)
+      })
+    }
   }
 }

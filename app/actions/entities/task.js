@@ -58,26 +58,46 @@ export const endTaskSync = () => {
 }
 
 import * as TaskController from '../../models/controllers/task'
+import * as UserController from '../../models/controllers/user'
+import DateUtils from '../../utils/date-utils'
 
 export const SYNC_TASKS = 'SYNC_TASKS'
 
 export const syncTasks = () => {
 
-  return function(dispatch) {
+  return function(dispatch, getState) {
 
-    return TaskController.syncTasks()
-    .then( response => {
+    console.log('sync task state...')
+    console.dir(getState())
 
-      let syncAction = {
-        type: SYNC,
-        tasks: response.tasks
-      }
+    let profile = getState().entities.user.profile
 
-      dispatch(syncAction)
-    })
-    .catch( error => {
-      console.log('sync error....')
-      console.dir(error)
-    })
+    // only sync if the user can access the network
+    if (UserController.canAccessNetwork(profile)) {
+
+      // if no successful sync has been recorded, sync entire last month
+      let lastSuccessfulSyncDateTimeUtc =
+        getState().entities.task.lastSuccessfulSyncDateTimeUtc
+        || DateUtils.lastMonth() // TODO - refine approach
+
+      let currentSyncDateTimeUtc = new Date() // TODO - refine
+
+      // sync all new updates
+      return TaskController.syncTasks(lastSuccessfulSyncDateTimeUtc)
+      .then( response => {
+
+        let syncAction = {
+          type: SYNC_TASKS,
+          tasks: response.tasks,
+          lastSuccessfulSyncDateTimeUtc: currentSyncDateTimeUtc
+        }
+
+        dispatch(syncAction)
+      })
+      .catch( error => {
+        console.log('sync error....')
+        console.dir(error)
+      })
+    }
   }
 }

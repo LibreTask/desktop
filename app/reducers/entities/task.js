@@ -62,7 +62,7 @@ function addTasks(state, action) {
   })
   return updateObject(state,
     {
-      tasks: updateObject(state.tasks, normalizedTasks)
+      tasks: updateObject(state.tasks, normalizedTasks),
     }
   )
 }
@@ -85,8 +85,12 @@ function addNormalizedTask(state, normalizedTask) {
 
 function syncTasks(state, action) {
 
+  let updatedState = updateObject(state, {
+    lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
+  })
+
   return (action.tasks && action.tasks.length > 0)
-    ? addTasks(state, action)
+    ? addTasks(updatedState, action)
     : state
 }
 
@@ -95,7 +99,8 @@ const initialState = {
     // taskId: {public task attributes}
   },
   isSyncing: false,
-  intervalId: undefined // used to cancel sync
+  intervalId: undefined, // used to cancel sync
+  lastSuccessfulSyncDateTimeUtc: undefined
 }
 
 function tasksReducer(state = initialState, action) {

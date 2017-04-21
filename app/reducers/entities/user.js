@@ -36,19 +36,14 @@ function deleteProfile(state, action) {
   }) // on delete profile, wipe everything
 }
 
-function addProfile(state, action) {
-
-  return updateObject(state, {
-    profile: action.profile,
-    isLoggedIn: action.isLoggedIn
-  })
-}
-
 function syncUser(state, action) {
 
   // if an update to profile is available, update, otherwise, ignore
   return (action.profile)
-    ? addProfile(state, {profile: action.profile, isLoggedIn: true})
+    ? updateObject(state, {
+      profile: action.profile,
+      lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
+    })
     : state
 }
 
@@ -56,7 +51,8 @@ const initialState = {
   profile: undefined,
   isLoggedIn: false,
   isSyncing: false,
-  intervalId: undefined // used to cancel sync
+  lastSuccessfulSyncDateTimeUtc: undefined,
+  intervalId: undefined, // used to cancel sync
 }
 
 function userReducer(state = initialState, action) {

@@ -130,13 +130,7 @@ class App extends Component {
   _startTaskSync = () => {
     if (!this.props.isSyncingTasks) {
       let intervalId = setInterval( () => {
-
-        // TODO - move canAccessNetwork into syncTasks (otherwise,
-        // we have an outdated reference to `this`)
-        if (UserController.canAccessNetwork(this.props.profile)) {
           this.props.syncTasks()
-        }
-
       }, AppConstants.SYNC_INTERVAL_MILLIS)
 
       // register intervalId so we can cancel later
@@ -148,9 +142,7 @@ class App extends Component {
 
     if (!this.props.isSyncingUser) {
       let intervalId = setInterval( () => {
-
         this.props.syncUser()
-
       }, AppConstants.SYNC_INTERVAL_MILLIS)
 
       // register intervalId so we can cancel later

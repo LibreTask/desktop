@@ -84,7 +84,7 @@ class MultiTaskPage extends Component {
     }
 
     if (nextProps.shouldRefreshTaskView) {
-      this.setState(this.state) // this triggers a refresh
+      this.forceUpdate() // this triggers a refresh
       this.props.refreshTaskView(false) // set to false, after refresh
     }
   }

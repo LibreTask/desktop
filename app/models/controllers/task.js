@@ -126,7 +126,7 @@ async function getState() {
   }
 }
 
-export const syncTasks = async () => {
+export const syncTasks = async (lastSuccessfulSyncDateTimeUtc) => {
 
   const state = await getState()
 
@@ -142,8 +142,11 @@ export const syncTasks = async () => {
 
   // TODO - pass in (and store) the actual date
 
+  const endpoint =
+   `task/sync-tasks-after-timestamp/timestamp=${lastSuccessfulSyncDateTimeUtc}`
+
   const request = {
-    endpoint: 'task/sync-tasks-after-timestamp/timestamp=2017-04-20',
+    endpoint: endpoint,
     method: 'GET',
      headers: {
        'Accept': 'application/json',
@@ -151,9 +154,6 @@ export const syncTasks = async () => {
        'Authorization': constructAuthHeader(userId, password)
      }
   }
-
-  console.log('request...')
-  console.dir(request)
 
   return invoke(request)
   .then( response => {
@@ -163,16 +163,14 @@ export const syncTasks = async () => {
     console.log("abc response...")
     console.dir(response)
 
-    if (response.state.entities.tasks
-        && response.state.entities.tasks.length > 0) {
+    /*
+
+    if (response.tasks && response.length > 0) {
       TaskStorage.createOrUpdateTasks(response.state.entities.tasks)
     }
 
-    console.log('after profile update storage...')
+    */
 
-    /**
-     * The response should contain a list attribute
-     */
     return response
   })
   .catch(err => {
