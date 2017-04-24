@@ -65,7 +65,10 @@ export const updateTask = (task, userId, password) => {
 export const deleteTask = (taskId, userId, password) => {
   const request = {
     endpoint: `task/delete`,
-    method: 'DELETE',
+
+    // POST because we do not immediately delete the TASK.
+    // The deletion must first be synced to all of the User's devices.
+    method: 'POST',
      headers: {
        'Accept': 'application/json',
        'Content-Type': 'application/json',

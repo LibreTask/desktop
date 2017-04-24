@@ -145,10 +145,7 @@ class SingleTaskPage extends Component {
 
         TaskController.updateTask(task, userId, pw)
         .then( response => {
-
-          TaskStorage.createOrUpdateTask(task)
-          this.props.createOrUpdateTask(task)
-          hashHistory.replace('/tasks')
+          this._updateTaskLocally(task)
          })
          .catch( error => {
 

@@ -217,19 +217,35 @@ class MultiTaskPage extends Component {
               checked={task.isCompleted}
               onClick={(event) => {
 
-              /*
-                We must use `onClick`, rather than `onCheck`, so that we can
-                stop event propagation. That means we do not have access to
-                the checked status, so we simply invert the task's current
-                completion status.
-              */
-              task.isCompleted = !task.isCompleted
-              task.completionDateTimeUtc = (new Date()).getTime()
+                /*
+                  We must use `onClick`, rather than `onCheck`, so that we can
+                  stop event propagation. That means we do not have access to
+                  the checked status, so we simply invert the task's current
+                  completion status.
+                */
+                event.stopPropagation()
 
-              TaskStorage.createOrUpdateTask(task)
-              this.props.createOrUpdateTask(task)
+                task.isCompleted = !task.isCompleted
+                task.completionDateTimeUtc = (new Date()).getTime()
 
-              event.stopPropagation()
+                let userId = this.props.profile.id
+                let pw = this.props.profile.password
+
+                TaskController.updateTask(task, userId, pw)
+                .then( response => {
+                  this._updateTaskLocally(task)
+                 })
+                 .catch( error => {
+
+                    if (error.name === 'NoConnection') {
+                      this._updateTaskLocally(task)
+                    } else {
+                      this.setState({
+                        updateError: error.message,
+                        isUpdating: false
+                      })
+                    }
+                 })
             }}/>
           }
           onClick={
@@ -248,6 +264,11 @@ class MultiTaskPage extends Component {
     }
 
     return <div key={`empty-task-list-item-${task.id}`}></div>
+  }
+
+  _updateTaskLocally = (task) => {
+    TaskStorage.createOrUpdateTask(task)
+    this.props.createOrUpdateTask(task)
   }
 
   _renderHeader(header) {
@@ -287,6 +308,8 @@ class MultiTaskPage extends Component {
       let task = this.props.tasks[taskId]
 
       if (!task) continue;
+
+      if (task.isDeleted) continue; // do not display deleted tasks
 
       if (task.isCompleted) {
 
