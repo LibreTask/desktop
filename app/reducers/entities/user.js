@@ -36,15 +36,28 @@ function deleteProfile(state, action) {
   }) // on delete profile, wipe everything
 }
 
+function addProfile(state, action) {
+
+  return updateObject(state, {
+    profile: action.profile,
+    isLoggedIn: action.isLoggedIn
+  })
+}
+
+/*
+  Always update lastSuccessfulSyncDateTimeUtc, because it is assumed that
+  this reducer is ONLY invoked after a successful sync.
+*/
 function syncUser(state, action) {
+
+  let updatedState = updateObject(state, {
+    lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
+  })
 
   // if an update to profile is available, update, otherwise, ignore
   return (action.profile)
-    ? updateObject(state, {
-      profile: action.profile,
-      lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
-    })
-    : state
+    ? updateObject(state, { profile: action.profile })
+    : updateState
 }
 
 const initialState = {

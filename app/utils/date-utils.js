@@ -13,6 +13,11 @@ const DateUtils = {
     let date = new Date()
     date.setMonth(date.getMonth()-1)
     return date
+  },
+  fiveMinutesAgo: function() {
+    let date = new Date()
+    date.setMinutes(date.getMinutes()-5)
+    return date
   }
 }
 

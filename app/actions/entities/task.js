@@ -80,8 +80,6 @@ export const syncTasks = () => {
         getState().entities.task.lastSuccessfulSyncDateTimeUtc
         || DateUtils.lastMonth() // TODO - refine approach
 
-      let currentSyncDateTimeUtc = new Date() // TODO - refine
-
       // sync all new updates
       return TaskController.syncTasks(lastSuccessfulSyncDateTimeUtc)
       .then( response => {
@@ -89,9 +87,15 @@ export const syncTasks = () => {
         let syncAction = {
           type: SYNC_TASKS,
           tasks: response.tasks,
-          lastSuccessfulSyncDateTimeUtc: currentSyncDateTimeUtc
+
+          // set 'lastSync' time as five minutes ago, to provide small buffer
+          lastSuccessfulSyncDateTimeUtc: DateUtils.fiveMinutesAgo()
         }
 
+        // After the Sync, let the reducer handle what Tasks to
+        // update/create/delete. Here are are simply passing all
+        // the sync data to the Reducer, without performing any
+        // logic on it.
         dispatch(syncAction)
       })
       .catch( error => {

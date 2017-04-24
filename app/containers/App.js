@@ -156,6 +156,8 @@ class App extends Component {
         This is intended to update the TaskView once per day, at midnight
 
         TODO - refine this approach
+
+        TODO - will we have a stale reference to `this`
       */
       let date = (new Date()).getDate()
 

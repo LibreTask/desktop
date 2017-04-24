@@ -137,13 +137,16 @@ export const syncTasks = async (lastSuccessfulSyncDateTimeUtc) => {
     return;
   }
 
+  // TODO - refine
+  const isoDateTimeUtc = lastSuccessfulSyncDateTimeUtc.toISOString()
+
   const userId = state.user.profile.id
   const password = state.user.profile.password
 
   // TODO - pass in (and store) the actual date
 
   const endpoint =
-   `task/sync-tasks-after-timestamp/timestamp=${lastSuccessfulSyncDateTimeUtc}`
+   `task/sync-tasks-after-timestamp/timestamp=${isoDateTimeUtc}`
 
   const request = {
     endpoint: endpoint,

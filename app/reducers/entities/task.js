@@ -83,6 +83,10 @@ function addNormalizedTask(state, normalizedTask) {
   )
 }
 
+/*
+  Always update lastSuccessfulSyncDateTimeUtc, because it is assumed that
+  this reducer is ONLY invoked after a successful sync.
+*/
 function syncTasks(state, action) {
 
   let updatedState = updateObject(state, {
@@ -91,7 +95,7 @@ function syncTasks(state, action) {
 
   return (action.tasks && action.tasks.length > 0)
     ? addTasks(updatedState, action)
-    : state
+    : updatedState
 }
 
 const initialState = {
