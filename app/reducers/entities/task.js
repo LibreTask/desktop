@@ -89,13 +89,57 @@ function addNormalizedTask(state, normalizedTask) {
 */
 function syncTasks(state, action) {
 
-  let updatedState = updateObject(state, {
-    lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
+  const syncedTasks = action.tasks
+  const existingTasks = state.tasks
+
+  console.log("synced tasks...")
+  console.dir(syncedTasks)
+
+  console.log("existing tasks...")
+  console.dir(existingTasks)
+
+  let tasksToCreateOrUpdate = []
+
+  _.forEach(syncedTasks, (syncedTask) => {
+
+    if (syncedTask.id in existingTasks) {
+
+      const syncedTaskUpdateDateTimeUtc = syncedTask.updatedAtDateTimeUtc
+      const existingTaskUpdateDateTimeUtc =
+        existingTasks[syncedTask.id].updatedAtDateTimeUtc
+
+        console.log("task id: " + syncedTask.id)
+
+        console.log("synced update: " + syncedTaskUpdateDateTimeUtc)
+        console.log("existing update: " + existingTaskUpdateDateTimeUtc)
+
+      console.log("equality: " + (syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc))
+
+      if (syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc) {
+        // synced task was updated more recently than the version on
+        // this device. so we must mark it for update/creation.
+        tasksToCreateOrUpdate.push(syncedTask)
+      } else {
+        // the version of the task on the client is the most up-to-date.
+        // we sent it to the server.
+
+        // TODO - handle this case, should we queue up?
+      }
+
+    } else {
+      // synced task does not already exist on this device.
+      // so we must mark it for update/creation.
+      tasksToCreateOrUpdate.push(syncedTask)
+    }
   })
 
-  return (action.tasks && action.tasks.length > 0)
-    ? addTasks(updatedState, action)
-    : updatedState
+  console.log("tasks to create or update...")
+  console.dir(tasksToCreateOrUpdate)
+
+  return addTasks(state, {
+    tasks: tasksToCreateOrUpdate,
+    lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
+  })
 }
 
 const initialState = {
