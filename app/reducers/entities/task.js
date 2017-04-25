@@ -5,6 +5,9 @@
 
 import { combineReducers } from 'redux'
 import {
+  PENDING_TASK_CREATE,
+  PENDING_TASK_UPDATE,
+  PENDING_TASK_DELETE,
   CREATE_OR_UPDATE_TASK,
   CREATE_OR_UPDATE_TASKS,
   DELETE_ALL_TASKS,
@@ -19,6 +22,35 @@ import {
 } from '../reducer-utils'
 
 import * as _ from 'lodash'
+
+function removeTask(tasks, taskId) {
+  let remainingTasks = _.filter(tasks, function(task) {
+    return task.id !== taskId // filter out taskId
+  })
+
+  return remainingTasks
+}
+
+function pendingTaskCreate(state, action) {
+  let newTaskEntry = {}
+  newTaskEntry[action.task.id] = action.task
+
+  let updatedPendingTaskActions = updateObject(state.pendingTaskActions, {
+    create: newTaskEntry
+  })
+
+  return updateObject(state, updatedPendingTaskActions)
+}
+
+function pendingTaskUpdate(state, action) {
+
+  return state // TODO
+}
+
+function pendingTaskDelete(state, action) {
+
+  return state // TODO
+}
 
 function startTaskSync(state, action) {
   return updateObject(state, {
@@ -43,9 +75,7 @@ function deleteAllTasks(state, action) {
 }
 
 function deleteTask(state, action) {
-  let remainingTasks = _.filter(state.tasks, function(task) {
-    return task.id !== action.taskId // filter out taskId
-  })
+  let remainingTasks = removeTask(state.tasks, action.taskId)
 
   let taskMap = {}
   _.forEach(remainingTasks, (task) => {
@@ -146,6 +176,17 @@ const initialState = {
   tasks: {
     // taskId: {public task attributes}
   },
+  pendingTaskActions: {
+    update: {
+      // taskId: {public task attributes}
+    },
+    delete: {
+      // taskId: {public task attributes}
+    },
+    create: {
+      // taskId: {public task attributes}
+    }
+  },
   isSyncing: false,
   intervalId: undefined, // used to cancel sync
   lastSuccessfulSyncDateTimeUtc: undefined
@@ -195,6 +236,24 @@ function tasksReducer(state = initialState, action) {
     */
     case DELETE_TASK:
       return deleteTask(state, action)
+
+    /*
+      TODO - doc
+    */
+    case PENDING_TASK_DELETE:
+      return pendingTaskDelete(state, action)
+
+    /*
+      TODO - doc
+    */
+    case PENDING_TASK_UPDATE:
+      return pendingTaskUpdate(state, action)
+
+    /*
+      TODO - doc
+    */
+    case PENDING_TASK_CREATE:
+      return pendingTaskCreate(state, action)
 
     default:
       return state

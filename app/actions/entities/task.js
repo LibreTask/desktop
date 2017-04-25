@@ -105,3 +105,36 @@ export const syncTasks = () => {
     }
   }
 }
+
+/******************************************************************************/
+
+/*
+Invoked when a task create/update/delete could not reach the server.
+Mark it as "pending" and wait until the next available submission opportunity.
+*/
+export const PENDING_TASK_CREATE = 'PENDING_TASK_CREATE'
+export const PENDING_TASK_UPDATE = 'PENDING_TASK_UPDATE'
+export const PENDING_TASK_DELETE = 'PENDING_TASK_DELETE'
+
+export const pendingTaskCreate = (task) => {
+ return {
+   type: PENDING_TASK_CREATE,
+   task: task,
+ }
+}
+
+export const pendingTaskUpdate = (task) => {
+ return {
+   type: PENDING_TASK_UPDATE,
+   tasks: tasks
+ }
+}
+
+export const pendingTaskDelete = (task) => {
+ return {
+   type: PENDING_TASK_DELETE,
+   task: task
+ }
+}
+
+/******************************************************************************/
