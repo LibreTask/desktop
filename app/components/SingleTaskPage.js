@@ -145,7 +145,8 @@ class SingleTaskPage extends Component {
 
         TaskController.updateTask(task, userId, pw)
         .then( response => {
-          this._updateTaskLocally(task)
+          // use the task in the reponse; it is the most up-to-date
+          this._updateTaskLocally(response.task)
          })
          .catch( error => {
 
@@ -190,7 +191,8 @@ class SingleTaskPage extends Component {
 
         TaskController.deleteTask(task.id, userId, pw)
         .then( response => {
-          this._deleteTaskLocallyAndRedirect(task)
+          // use the task in the reponse; it is the most up-to-date
+          this._deleteTaskLocallyAndRedirect(response.task)
          })
          .catch( error => {
 

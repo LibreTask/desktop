@@ -233,11 +233,13 @@ class MultiTaskPage extends Component {
 
                 TaskController.updateTask(task, userId, pw)
                 .then( response => {
-                  this._updateTaskLocally(task)
+                  // use the task in the reponse; it is the most up-to-date
+                  this._updateTaskLocally(response.task)
                  })
                  .catch( error => {
 
                     if (error.name === 'NoConnection') {
+                      task.updatedAtDateTimeUtc = new Date()
                       this._updateTaskLocally(task)
                     } else {
                       this.setState({
