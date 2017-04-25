@@ -108,6 +108,9 @@ export const syncTasks = () => {
 
 /******************************************************************************/
 
+// TODO - do not let the "pendingTask" object exceed a certain threshold.
+      // otherwise, the memory footprint has no upper boundary.
+
 /*
 Invoked when a task create/update/delete could not reach the server.
 Mark it as "pending" and wait until the next available submission opportunity.
