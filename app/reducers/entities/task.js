@@ -44,12 +44,50 @@ function pendingTaskCreate(state, action) {
 
 function pendingTaskUpdate(state, action) {
 
-  return state // TODO
+  let taskId = action.task.id
+
+  let updatedPendingTaskActions = undefined
+
+  // the task is already queued to be created; replace it
+  if (taskId in state.pendingTaskActions.create) {
+    updatedPendingTaskActions = updateObject(state.pendingTaskActions, {
+     create: action.task
+   })
+ }
+ // the task is already queued to be deleted; XXX it
+ else if (taskId in state.pendingTaskActions.delete) {
+   // TODO
+ }
+ // the task is not pending, or is only pending to be queued; queue new version
+ else {
+   updatedPendingTaskActions = updateObject(state.pendingTaskActions, {
+     update: newTaskEntry
+   })
+ }
+
+  return updateObject(state, updatedPendingTaskActions)
 }
 
 function pendingTaskDelete(state, action) {
 
-  return state // TODO
+  let taskId = action.task.id
+
+  let updatedPendingTaskActions = undefined
+
+  // the task is already queued to be created; XXX it
+  if (taskId in state.pendingTaskActions.create) {
+     // TODO
+   }
+   // the task is already queued to be updated; XXX it
+   else if (taskId in state.pendingTaskActions.update) {
+     // TODO
+   }
+   else {
+     /* the task is already queued to be deleted; do nothing */
+     updatedPendingTaskActions = state.pendingTaskActions
+   }
+
+   return updateObject(state, updatedPendingTaskActions)
 }
 
 function startTaskSync(state, action) {
