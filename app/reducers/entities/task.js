@@ -112,11 +112,14 @@ function pendingTaskDelete(state, action) {
      }
    }
    /*
-    The task is already queued to be updated; queue it for deletion anyways,
+    If the task is not queued to be deleted, queue it now.
+
+    If the task is already queued to be updated; queue it for deletion anyways,
     because the backend design is such that deletes and updates do not conflict
     with each other.
    */
-   else if (taskId in state.pendingTaskActions.update) {
+   else if (!(taskId in state.pendingTaskActions.delete)
+      || (taskId in state.pendingTaskActions.update)) {
     let queuedDeletes =
       updateObject(state.pendingTaskActions.delete, newTaskEntry)
 
@@ -126,8 +129,8 @@ function pendingTaskDelete(state, action) {
       create: state.pendingTaskActions.create
     }
    }
+   // the task is already queued to be deleted; do nothing
    else {
-     /* the task is already queued to be deleted; do nothing */
      updatedPendingTaskActions = state.pendingTaskActions
    }
 
