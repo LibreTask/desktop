@@ -25,7 +25,8 @@ const CONSTANTS = {
   INITIAL_WINDOW_HEIGHT: 370,
   INITIAL_WINDOW_WIDTH: 350,
 
-  SYNC_INTERVAL_MILLIS: 30 * 1000,
+  SYNC_INTERVAL_MILLIS: 30 * 1000, // 30 seconds
+  QUEUED_TASK_SUBMISSION_INTERVAL_MILLIS: 60 * 1000, // 60 seconds
 
   // check each minute whether the taskview should be updated
   // note this is primarily used to update the TaskView at midnight

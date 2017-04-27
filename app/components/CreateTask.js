@@ -170,7 +170,7 @@ class CreateTask extends Component {
     let task = TaskController.constructTaskLocally(name, notes, dueDateTimeUtc)
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
-    this.props.pendingTaskCreate(task)
+    this.props.addPendingTaskCreate(task)
 
     // navigate to main on success
     hashHistory.replace('/tasks')
@@ -354,7 +354,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
-  pendingTaskCreate: TaskActions.pendingTaskCreate,
+  addPendingTaskCreate: TaskActions.addPendingTaskCreate,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton

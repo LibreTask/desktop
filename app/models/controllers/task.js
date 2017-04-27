@@ -32,6 +32,11 @@ export const constructTaskLocally = (taskName, taskNotes,
   }
 }
 
+export const createTaskFromQueue = (task, userId, password) => {
+  return createTask(task.name, task.notes, task.dueDateTimeUtc, userId,
+     password)
+}
+
 export const createTask = (taskName, taskNotes, taskDueDateTimeUtc,
    userId, password) => {
   const request = {
@@ -53,6 +58,10 @@ export const createTask = (taskName, taskNotes, taskDueDateTimeUtc,
   return invoke(request)
 }
 
+export const updateTaskFromQueue = (task, userId, password) => {
+  return updateTask(task, userId, password)
+}
+
 export const updateTask = (task, userId, password) => {
     const request = {
       endpoint: `task/update`,
@@ -68,6 +77,10 @@ export const updateTask = (task, userId, password) => {
     }
 
     return invoke(request)
+}
+
+export const deleteTaskFromQueue = (task, userId, password) => {
+  return deleteTask(task.id, userId, password)
 }
 
 export const deleteTask = (taskId, userId, password) => {

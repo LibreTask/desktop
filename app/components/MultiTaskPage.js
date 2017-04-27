@@ -286,7 +286,7 @@ class MultiTaskPage extends Component {
       task.updatedAtDateTimeUtc = new Date()
 
       // task is queued only when network could not be reached
-      this.props.pendingTaskUpdate(task)
+      this.props.addPendingTaskUpdate(task)
     }
 
     TaskStorage.createOrUpdateTask(task)
@@ -414,7 +414,7 @@ const mapDispatchToProps = {
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,
-  pendingTaskUpdate: TaskActions.pendingTaskUpdate,
+  addPendingTaskUpdate: TaskActions.addPendingTaskUpdate,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setNavAction: NavbarActions.setNavAction
 }

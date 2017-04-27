@@ -106,6 +106,113 @@ export const syncTasks = () => {
   }
 }
 
+export const START_QUEUED_TASK_SUBMIT = 'START_QUEUED_TASK_SUBMIT'
+
+export const startQueuedTaskSubmit = (intervalId) => {
+
+  return {
+    type: START_QUEUED_TASK_SUBMIT,
+    intervalId: intervalId
+  }
+}
+
+export const STOP_QUEUED_TASK_SUBMIT = 'STOP_QUEUED_TASK_SUBMIT'
+
+export const stopQueuedTaskSubmission = () => {
+
+  return {
+    type: STOP_QUEUED_TASK_SUBMIT,
+  }
+}
+
+export const submitQueuedTasks = () => {
+
+  return function(dispatch, getState) {
+
+    console.log('queued task submit state...')
+    console.dir(getState())
+
+    const profile = getState().entities.user.profile
+
+    // only submit queued tasks if the user can access the network
+    if (UserController.canAccessNetwork(profile)) {
+
+      const pendingTaskActions = getState().entities.task.pendingTaskActions
+      const userId = profile.id
+      const password = profile.password
+
+      console.log("pending create...")
+      console.dir(pendingTaskActions.create)
+
+      for (let taskId in pendingTaskActions.create) {
+
+        let task = pendingTaskActions.create[taskId]
+
+        TaskController.createTaskFromQueue(task, userId, password)
+        .then( response => {
+
+          // TODO - update ID?
+
+          dispatch({
+            type: REMOVE_PENDING_TASK_CREATE,
+            taskId: task.id
+          })
+        })
+        .catch( error => {
+          console.log('create task queue error....')
+          console.dir(error)
+        })
+      }
+
+      console.log("pending update...")
+      console.dir(pendingTaskActions.update)
+
+      for (let taskId in pendingTaskActions.update) {
+        let task = pendingTaskActions.update[taskId]
+
+        TaskController.updateTaskFromQueue(task, userId, password)
+        .then( response => {
+
+          // TODO - update ID?
+
+          dispatch({
+            type: REMOVE_PENDING_TASK_UPDATE,
+            taskId: task.id
+          })
+        })
+        .catch( error => {
+          console.log('update task queue error....')
+          console.dir(error)
+        })
+      }
+
+      console.log("pending delete...")
+      console.dir(pendingTaskActions.delete)
+
+      for (let taskId in pendingTaskActions.delete) {
+        let task = pendingTaskActions.delete[taskId]
+
+        TaskController.deleteTaskFromQueue(task, userId, password)
+        .then( response => {
+
+          // TODO - update ID?
+
+          dispatch({
+            type: REMOVE_PENDING_TASK_DELETE,
+            taskId: task.id
+          })
+        })
+        .catch( error => {
+          console.log('delete task queue error....')
+          console.dir(error)
+        })
+      }
+
+      return;
+    }
+  }
+}
+
 /******************************************************************************/
 
 // TODO - do not let the "pendingTask" object exceed a certain threshold.
@@ -115,28 +222,52 @@ export const syncTasks = () => {
 Invoked when a task create/update/delete could not reach the server.
 Mark it as "pending" and wait until the next available submission opportunity.
 */
-export const PENDING_TASK_CREATE = 'PENDING_TASK_CREATE'
-export const PENDING_TASK_UPDATE = 'PENDING_TASK_UPDATE'
-export const PENDING_TASK_DELETE = 'PENDING_TASK_DELETE'
+export const ADD_PENDING_TASK_CREATE = 'ADD_PENDING_TASK_CREATE'
+export const ADD_PENDING_TASK_UPDATE = 'ADD_PENDING_TASK_UPDATE'
+export const ADD_PENDING_TASK_DELETE = 'ADD_PENDING_TASK_DELETE'
+export const REMOVE_PENDING_TASK_CREATE = 'REMOVE_PENDING_TASK_CREATE'
+export const REMOVE_PENDING_TASK_UPDATE = 'REMOVE_PENDING_TASK_UPDATE'
+export const REMOVE_PENDING_TASK_DELETE = 'REMOVE_PENDING_TASK_DELETE'
 
-export const pendingTaskCreate = (task) => {
+export const addPendingTaskCreate = (task) => {
  return {
-   type: PENDING_TASK_CREATE,
+   type: ADD_PENDING_TASK_CREATE,
    task: task,
  }
 }
 
-export const pendingTaskUpdate = (task) => {
+export const addPendingTaskUpdate = (task) => {
  return {
-   type: PENDING_TASK_UPDATE,
+   type: ADD_PENDING_TASK_UPDATE,
    task: task
  }
 }
 
-export const pendingTaskDelete = (task) => {
+export const addPendingTaskDelete = (task) => {
  return {
-   type: PENDING_TASK_DELETE,
+   type: ADD_PENDING_TASK_DELETE,
    task: task
+ }
+}
+
+export const removePendingTaskCreate = (taskId) => {
+ return {
+   type: REMOVE_PENDING_TASK_CREATE,
+   taskId: taskId,
+ }
+}
+
+export const removePendingTaskUpdate = (taskId) => {
+ return {
+   type: REMOVE_PENDING_TASK_UPDATE,
+   taskId: taskId
+ }
+}
+
+export const removePendingTaskDelete = (taskId) => {
+ return {
+   type: REMOVE_PENDING_TASK_DELETE,
+   taskId: taskId
  }
 }
 

@@ -13,7 +13,8 @@ import {
   OVERDUE_TASKS,
   TASKS_WITH_NO_DATE,
   TOGGLE_SHOW_COMPLETED_TASKS,
-  REFRESH_TASK_VIEW
+  REFRESH_TASK_VIEW,
+  STOP_REFRESH_TASK_VIEW
 } from '../../actions/ui/taskview'
 import { updateObject } from '../reducer-utils'
 

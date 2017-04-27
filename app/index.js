@@ -72,8 +72,10 @@ async function getInitialState() {
           }
         },
         isSyncing: false,
-        intervalId: undefined, // used to cancel sync
-        lastSuccessfulSyncDateTimeUtc: undefined
+        syncIntervalId: undefined, // used to cancel sync
+        lastSuccessfulSyncDateTimeUtc: undefined,
+        isSubmittingQueuedTasks: false,
+        queuedTaskSubmitIntervalId: undefined
       },
       user: {
         profile: profile,

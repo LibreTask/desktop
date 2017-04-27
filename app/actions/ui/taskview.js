@@ -10,6 +10,7 @@ export const TOGGLE_CATEGORY = 'TOGGLE_CATEGORY'
 export const TOGGLE_SHOW_COMPLETED_TASKS = 'TOGGLE_SHOW_COMPLETED_TASKS'
 
 export const REFRESH_TASK_VIEW = 'REFRESH_TASK_VIEW'
+export const STOP_REFRESH_TASK_VIEW = 'END_REFRESH_TASK_VIEW'
 
 export const TODAYS_TASKS = 'TODAYS_TASKS'
 export const TOMORROWS_TASKS = 'TOMORROWS_TASKS'
@@ -26,6 +27,12 @@ export const refreshTaskView = (shouldRefresh) => {
     type: REFRESH_TASK_VIEW,
     shouldRefreshTaskView: shouldRefresh,
     refreshDate: (new Date()).getDate() // TODO - refine
+  }
+}
+
+export const stopTaskViewRefresh = () => {
+  return {
+    type: STOP_REFRESH_TASK_VIEW
   }
 }
 

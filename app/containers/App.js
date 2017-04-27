@@ -139,7 +139,6 @@ class App extends Component {
   }
 
   _startProfileSync = () => {
-
     if (!this.props.isSyncingUser) {
       let intervalId = setInterval( () => {
         this.props.syncUser()
@@ -147,6 +146,17 @@ class App extends Component {
 
       // register intervalId so we can cancel later
       this.props.startUserSync(intervalId)
+    }
+  }
+
+  _startSubmissionOfQueuedTasks = () => {
+    if (!this.props.isSubmittingQueuedTasks) {
+      let intervalId = setInterval( () => {
+        this.props.submitQueuedTasks()
+      }, AppConstants.QUEUED_TASK_SUBMISSION_INTERVAL_MILLIS)
+
+      // register intervalId so we can cancel later
+      this.props.startQueuedTaskSubmit(intervalId)
     }
   }
 
@@ -171,11 +181,14 @@ class App extends Component {
     this._startTaskSync()
     this._startProfileSync()
     this._startUIRefreshCheck()
+    this._startSubmissionOfQueuedTasks()
   }
 
   componentWillUnmount() {
     this.props.stopTaskSync()
+    this.props.stopQueuedTaskSubmission()
     this.props.stopUserSync()
+    this.props.stopTaskViewRefresh()
   }
 
   _onSetOpen = (open) => {
@@ -466,7 +479,8 @@ const mapStateToProps = (state) => ({
   mediumRightNavTransitionLocation:
     state.ui.navbar.mediumRightTransitionLocation,
   farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
-  isSyncingTasks: state.entities.task.isSyncing,
+  isSyncingTasks: state.entities.task.isSyncingTasks,
+  isSubmittingQueuedTasks: state.entities.task.isSubmittingQueuedTasks,
   isSyncingUser: state.entities.user.isSyncing,
   showCompletedTasks: state.ui.taskview.showCompletedTasks,
   lastTaskViewRefreshDate: state.ui.taskview.lastTaskViewRefreshDate
@@ -488,9 +502,13 @@ const mapDispatchToProps = {
   startTaskSync: TaskActions.startTaskSync,
   stopTaskSync: TaskActions.stopTaskSync,
   syncTasks: TaskActions.syncTasks,
+  submitQueuedTasks: TaskActions.submitQueuedTasks,
+  startQueuedTaskSubmit: TaskActions.startQueuedTaskSubmit,
+  stopQueuedTaskSubmission: TaskActions.stopQueuedTaskSubmission,
   setNavAction: NavbarActions.setNavAction,
   toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks,
-  refreshTaskView: TaskViewActions.refreshTaskView
+  refreshTaskView: TaskViewActions.refreshTaskView,
+  stopTaskViewRefresh: TaskViewActions.stopTaskViewRefresh
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

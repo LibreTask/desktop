@@ -173,7 +173,7 @@ class SingleTaskPage extends Component {
       task.updatedAtDateTimeUtc = new Date()
 
       // task is queued only when network could not be reached
-      this.props.pendingTaskUpdate(task)
+      this.props.addPendingTaskUpdate(task)
     }
 
     TaskStorage.createOrUpdateTask(task)
@@ -229,7 +229,7 @@ class SingleTaskPage extends Component {
       task.updatedAtDateTimeUtc = new Date()
 
       // task is queued only when network could not be reached
-      this.props.pendingTaskDelete(task)
+      this.props.addPendingTaskDelete(task)
     }
 
     TaskStorage.deleteTaskByTaskId(task.id)
@@ -490,8 +490,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
-  pendingTaskUpdate: TaskActions.pendingTaskUpdate,
-  pendingTaskDelete: TaskActions.pendingTaskDelete,
+  addPendingTaskUpdate: TaskActions.addPendingTaskUpdate,
+  addPendingTaskDelete: TaskActions.addPendingTaskDelete,
   deleteTask: TaskActions.deleteTask,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton,

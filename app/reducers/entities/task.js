@@ -5,9 +5,14 @@
 
 import { combineReducers } from 'redux'
 import {
-  PENDING_TASK_CREATE,
-  PENDING_TASK_UPDATE,
-  PENDING_TASK_DELETE,
+  ADD_PENDING_TASK_CREATE,
+  ADD_PENDING_TASK_UPDATE,
+  ADD_PENDING_TASK_DELETE,
+  REMOVE_PENDING_TASK_CREATE,
+  REMOVE_PENDING_TASK_UPDATE,
+  REMOVE_PENDING_TASK_DELETE,
+  START_QUEUED_TASK_SUBMIT,
+  STOP_QUEUED_TASK_SUBMIT,
   CREATE_OR_UPDATE_TASK,
   CREATE_OR_UPDATE_TASKS,
   DELETE_ALL_TASKS,
@@ -28,7 +33,7 @@ function removeTask(tasks, taskId) {
   return remainingTasks
 }
 
-function pendingTaskCreate(state, action) {
+function addPendingTaskCreate(state, action) {
   let newTaskEntry = {}
   newTaskEntry[action.task.id] = action.task
 
@@ -44,7 +49,7 @@ function pendingTaskCreate(state, action) {
   })
 }
 
-function pendingTaskUpdate(state, action) {
+function addPendingTaskUpdate(state, action) {
 
   let taskId = action.task.id
   let newTaskEntry = {}
@@ -88,7 +93,7 @@ function pendingTaskUpdate(state, action) {
   })
 }
 
-function pendingTaskDelete(state, action) {
+function addPendingTaskDelete(state, action) {
 
   let taskId = action.task.id
   let newTaskEntry = {}
@@ -139,10 +144,83 @@ function pendingTaskDelete(state, action) {
    })
 }
 
+function removePendingTaskCreate(state, action) {
+
+  let remainingTasks = removeTask(state.pendingTaskActions.create,
+     action.taskId)
+
+  let taskMap = {}
+  _.forEach(remainingTasks, (task) => {
+    taskMap[task.id] = task
+  })
+
+  return updateObject(state, {
+    pendingTaskActions: {
+      create: taskMap,
+      update: state.pendingTaskActions.update,
+      delete: state.pendingTaskActions.delete
+    }
+  })
+}
+
+function removePendingTaskUpdate(state, action) {
+
+  let remainingTasks = removeTask(state.pendingTaskActions.update,
+     action.taskId)
+
+  let taskMap = {}
+  _.forEach(remainingTasks, (task) => {
+    taskMap[task.id] = task
+  })
+
+  return updateObject(state, {
+    pendingTaskActions: {
+      update: taskMap,
+      create: state.pendingTaskActions.create,
+      delete: state.pendingTaskActions.delete
+    }
+  })
+}
+
+function removePendingTaskDelete(state, action) {
+
+  let remainingTasks = removeTask(state.pendingTaskActions.delete,
+     action.taskId)
+
+  let taskMap = {}
+  _.forEach(remainingTasks, (task) => {
+    taskMap[task.id] = task
+  })
+
+  return updateObject(state, {
+    pendingTaskActions: {
+      delete: taskMap,
+      create: state.pendingTaskActions.create,
+      update: state.pendingTaskActions.update
+    }
+  })
+}
+
+function startQueuedTaskSubmit(state, action) {
+  return updateObject(state, {
+    isSubmittingQueuedTasks: true,
+    queuedTaskSubmitIntervalId: action.intervalId
+  })
+}
+
+function stopQueuedTaskSubmission(state, action) {
+  clearInterval(state.intervalId) // TODO - is this the best place to do it?
+
+  return updateObject(state, {
+    isSubmittingQueuedTasks: false,
+    queuedTaskSubmitIntervalId: undefined
+  })
+}
+
 function startTaskSync(state, action) {
   return updateObject(state, {
     isSyncing: true,
-    intervalId: action.intervalId
+    syncIntervalId: action.intervalId
   })
 }
 
@@ -151,7 +229,7 @@ function endTaskSync(state, action) {
 
   return updateObject(state, {
     isSyncing: false,
-    intervalId: undefined
+    syncIntervalId: undefined
   })
 }
 
@@ -275,12 +353,26 @@ const initialState = {
     }
   },
   isSyncing: false,
-  intervalId: undefined, // used to cancel sync
-  lastSuccessfulSyncDateTimeUtc: undefined
+  syncIntervalId: undefined, // used to cancel sync
+  lastSuccessfulSyncDateTimeUtc: undefined,
+  isSubmittingQueuedTasks: false,
+  queuedTaskSubmitIntervalId: undefined
 }
 
 function tasksReducer(state = initialState, action) {
   switch(action.type) {
+
+    /*
+      TODO - doc
+    */
+    case START_QUEUED_TASK_SUBMIT:
+      return startQueuedTaskSubmit(state, action)
+
+    /*
+      TODO - doc
+    */
+    case STOP_QUEUED_TASK_SUBMIT:
+      return stopQueuedTaskSubmission(state, action)
 
     /*
       TODO - doc
@@ -327,20 +419,38 @@ function tasksReducer(state = initialState, action) {
     /*
       TODO - doc
     */
-    case PENDING_TASK_DELETE:
-      return pendingTaskDelete(state, action)
+    case ADD_PENDING_TASK_DELETE:
+      return addPendingTaskDelete(state, action)
 
     /*
       TODO - doc
     */
-    case PENDING_TASK_UPDATE:
-      return pendingTaskUpdate(state, action)
+    case ADD_PENDING_TASK_UPDATE:
+      return addPendingTaskUpdate(state, action)
 
     /*
       TODO - doc
     */
-    case PENDING_TASK_CREATE:
-      return pendingTaskCreate(state, action)
+    case ADD_PENDING_TASK_CREATE:
+      return addPendingTaskCreate(state, action)
+
+    /*
+      TODO - doc
+    */
+    case REMOVE_PENDING_TASK_DELETE:
+      return removePendingTaskDelete(state, action)
+
+    /*
+      TODO - doc
+    */
+    case REMOVE_PENDING_TASK_UPDATE:
+      return removePendingTaskUpdate(state, action)
+
+    /*
+      TODO - doc
+    */
+    case REMOVE_PENDING_TASK_CREATE:
+      return removePendingTaskCreate(state, action)
 
     default:
       return state
