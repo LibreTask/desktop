@@ -129,7 +129,7 @@ export const pendingTaskCreate = (task) => {
 export const pendingTaskUpdate = (task) => {
  return {
    type: PENDING_TASK_UPDATE,
-   tasks: tasks
+   task: task
  }
 }
 

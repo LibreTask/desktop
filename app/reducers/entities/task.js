@@ -16,10 +16,7 @@ import {
   END_TASK_SYNC,
   SYNC_TASKS
 } from '../../actions/entities/task'
-import {
-  updateObject,
-  createReducer,
-} from '../reducer-utils'
+import { updateObject } from '../reducer-utils'
 
 import * as _ from 'lodash'
 
@@ -35,59 +32,108 @@ function pendingTaskCreate(state, action) {
   let newTaskEntry = {}
   newTaskEntry[action.task.id] = action.task
 
-  let updatedPendingTaskActions = updateObject(state.pendingTaskActions, {
-    create: newTaskEntry
-  })
+  let queuedCreates =
+    updateObject(state.pendingTaskActions.create, newTaskEntry)
 
-  return updateObject(state, updatedPendingTaskActions)
+  return updateObject(state, {
+    pendingTaskActions: {
+      create: queuedCreates,
+      update: state.pendingTaskActions.update,
+      delete: state.pendingTaskActions.delete
+    }
+  })
 }
 
 function pendingTaskUpdate(state, action) {
 
   let taskId = action.task.id
+  let newTaskEntry = {}
+  newTaskEntry[taskId] = action.task
 
   let updatedPendingTaskActions = undefined
 
   // the task is already queued to be created; replace it
   if (taskId in state.pendingTaskActions.create) {
-    updatedPendingTaskActions = updateObject(state.pendingTaskActions, {
-     create: action.task
-   })
- }
- // the task is already queued to be deleted; XXX it
- else if (taskId in state.pendingTaskActions.delete) {
-   // TODO
- }
- // the task is not pending, or is only pending to be queued; queue new version
- else {
-   updatedPendingTaskActions = updateObject(state.pendingTaskActions, {
-     update: newTaskEntry
-   })
+   let queuedCreates =
+      updateObject(state.pendingTaskActions.create, newTaskEntry)
+
+   updatedPendingTaskActions = {
+     create: queuedCreates,
+     updated: state.pendingTaskActions.update,
+     delete: state.pendingTaskActions.delete
+   }
+ } else {
+
+   /*
+      This block handles the following cases:
+      1. The task is already queued to be deleted
+      2. The task is already queued to be updated
+      3. The task is not queued for anything
+
+      For all these scenarios, we want to queue an update.
+   */
+
+   let queuedUpdates =
+      updateObject(state.pendingTaskActions.update, newTaskEntry)
+
+   updatedPendingTaskActions = {
+     update: queuedUpdates,
+     create: state.pendingTaskActions.create,
+     delete: state.pendingTaskActions.delete
+   }
  }
 
-  return updateObject(state, updatedPendingTaskActions)
+  return updateObject(state, {
+    pendingTaskActions: updatedPendingTaskActions
+  })
 }
 
 function pendingTaskDelete(state, action) {
 
   let taskId = action.task.id
+  let newTaskEntry = {}
+  newTaskEntry[taskId] = action.task
 
   let updatedPendingTaskActions = undefined
 
-  // the task is already queued to be created; XXX it
+  // the task is already queued to be created; remove it from creation
   if (taskId in state.pendingTaskActions.create) {
-     // TODO
+     let remainingTasks = removeTask(state.pendingTaskActions.create, taskId)
+
+     let taskMap = {}
+     _.forEach(remainingTasks, (task) => {
+       taskMap[task.id] = task
+     })
+
+     updatedPendingTaskActions = {
+       create: taskMap,
+       update: state.pendingTaskActions.update,
+       delete: state.pendingTaskActions.delete
+     }
    }
-   // the task is already queued to be updated; XXX it
+   /*
+    The task is already queued to be updated; queue it for deletion anyways,
+    because the backend design is such that deletes and updates do not conflict
+    with each other.
+   */
    else if (taskId in state.pendingTaskActions.update) {
-     // TODO
+    let queuedDeletes =
+      updateObject(state.pendingTaskActions.delete, newTaskEntry)
+
+    updatedPendingTaskActions = {
+      delete: queuedDeletes,
+      update: state.pendingTaskActions.update,
+      create: state.pendingTaskActions.create
+    }
    }
    else {
      /* the task is already queued to be deleted; do nothing */
      updatedPendingTaskActions = state.pendingTaskActions
    }
 
-   return updateObject(state, updatedPendingTaskActions)
+   return updateObject(state, {
+     pendingTaskActions: updatedPendingTaskActions
+   })
 }
 
 function startTaskSync(state, action) {

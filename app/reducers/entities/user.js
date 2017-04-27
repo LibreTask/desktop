@@ -11,7 +11,7 @@ import {
   END_USER_SYNC,
   SYNC_USER
 } from '../../actions/entities/user'
-import { updateObject, createReducer } from './../reducer-utils'
+import { updateObject } from './../reducer-utils'
 
 function startUserSync(state, action) {
   return updateObject(state, {

@@ -15,10 +15,7 @@ import {
   TOGGLE_SHOW_COMPLETED_TASKS,
   REFRESH_TASK_VIEW
 } from '../../actions/ui/taskview'
-import {
-  updateObject,
-  createReducer,
-} from '../reducer-utils'
+import { updateObject } from '../reducer-utils'
 
 const initialState = {
   showCompletedTasks: true, // default to true

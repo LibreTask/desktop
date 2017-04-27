@@ -21,6 +21,7 @@ import * as TaskViewActions from '../actions/ui/taskview'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
 import * as TaskStorage from '../models/storage/task-storage'
+import * as UserController from '../models/controllers/user'
 
 import DateUtils from '../utils/date-utils'
 import AppConstants from '../constants'
@@ -231,23 +232,32 @@ class MultiTaskPage extends Component {
                 let userId = this.props.profile.id
                 let pw = this.props.profile.password
 
-                TaskController.updateTask(task, userId, pw)
-                .then( response => {
-                  // use the task in the reponse; it is the most up-to-date
-                  this._updateTaskLocally(response.task)
-                 })
-                 .catch( error => {
+                if (!task.isCompleted && task.completionDateTimeUtc) {
+                  // if the task is "unchecked", delete the completion time
+                  task.completionDateTimeUtc = undefined
+                }
 
-                    if (error.name === 'NoConnection') {
-                      task.updatedAtDateTimeUtc = new Date()
-                      this._updateTaskLocally(task)
-                    } else {
-                      this.setState({
-                        updateError: error.message,
-                        isUpdating: false
-                      })
-                    }
-                 })
+                if (UserController.canAccessNetwork(this.props.profile)) {
+
+                  TaskController.updateTask(task, userId, pw)
+                  .then( response => {
+                    // use the task in the reponse; it is the most up-to-date
+                    this._updateTaskLocally(response.task)
+                   })
+                   .catch( error => {
+
+                      if (error.name === 'NoConnection') {
+                        this._updateTaskLocally(task, true)
+                      } else {
+                        this.setState({
+                          updateError: error.message,
+                          isUpdating: false
+                        })
+                      }
+                   })
+               } else {
+                 this._updateTaskLocally(task, true)
+               }
             }}/>
           }
           onClick={
@@ -268,7 +278,17 @@ class MultiTaskPage extends Component {
     return <div key={`empty-task-list-item-${task.id}`}></div>
   }
 
-  _updateTaskLocally = (task) => {
+  _updateTaskLocally = (task, queueTaskUpdate) => {
+
+    if (queueTaskUpdate) {
+
+      // mark update time, before queueing
+      task.updatedAtDateTimeUtc = new Date()
+
+      // task is queued only when network could not be reached
+      this.props.pendingTaskUpdate(task)
+    }
+
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
   }
@@ -394,6 +414,7 @@ const mapDispatchToProps = {
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   createOrUpdateTask: TaskActions.createOrUpdateTask,
+  pendingTaskUpdate: TaskActions.pendingTaskUpdate,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setNavAction: NavbarActions.setNavAction
 }

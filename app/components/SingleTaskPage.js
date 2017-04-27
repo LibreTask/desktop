@@ -151,7 +151,7 @@ class SingleTaskPage extends Component {
          .catch( error => {
 
             if (error.name === 'NoConnection') {
-              this._updateTaskLocally(task)
+              this._updateTaskLocally(task, true)
             } else {
               this.setState({
                 updateError: error.message,
@@ -161,11 +161,21 @@ class SingleTaskPage extends Component {
          })
       })
     } else {
-      this._updateTaskLocally(task)
+      this._updateTaskLocally(task, true)
     }
   }
 
-  _updateTaskLocally = (task) => {
+  _updateTaskLocally = (task, queueTaskUpdate) => {
+
+    if (queueTaskUpdate) {
+
+      // mark update time, before queueing
+      task.updatedAtDateTimeUtc = new Date()
+
+      // task is queued only when network could not be reached
+      this.props.pendingTaskUpdate(task)
+    }
+
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
 
@@ -197,7 +207,7 @@ class SingleTaskPage extends Component {
          .catch( error => {
 
            if (error.name === 'NoConnection') {
-             this._deleteTaskLocallyAndRedirect(task)
+             this._deleteTaskLocallyAndRedirect(task, true)
            } else {
              this.setState({
                deleteError: error.message,
@@ -207,13 +217,24 @@ class SingleTaskPage extends Component {
          })
       })
     } else {
-      this._deleteTaskLocallyAndRedirect(task)
+      this._deleteTaskLocallyAndRedirect(task, true)
     }
   }
 
-  _deleteTaskLocallyAndRedirect = (task) => {
+  _deleteTaskLocallyAndRedirect = (task, queueTaskDeletion) => {
+
+    if (queueTaskDeletion) {
+
+      // mark update time, before queueing
+      task.updatedAtDateTimeUtc = new Date()
+
+      // task is queued only when network could not be reached
+      this.props.pendingTaskDelete(task)
+    }
+
     TaskStorage.deleteTaskByTaskId(task.id)
     this.props.deleteTask(task.id)
+
     hashHistory.replace('/tasks')
   }
 
@@ -469,6 +490,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   createOrUpdateTask: TaskActions.createOrUpdateTask,
+  pendingTaskUpdate: TaskActions.pendingTaskUpdate,
+  pendingTaskDelete: TaskActions.pendingTaskDelete,
   deleteTask: TaskActions.deleteTask,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton,

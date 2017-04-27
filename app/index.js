@@ -59,11 +59,28 @@ async function getInitialState() {
   return {
     entities: {
       task: {
-        tasks: tasks
+        tasks: tasks,
+        pendingTaskActions: {
+          update: {
+            // taskId: {public task attributes}
+          },
+          delete: {
+            // taskId: {public task attributes}
+          },
+          create: {
+            // taskId: {public task attributes}
+          }
+        },
+        isSyncing: false,
+        intervalId: undefined, // used to cancel sync
+        lastSuccessfulSyncDateTimeUtc: undefined
       },
       user: {
         profile: profile,
         isLoggedIn: isLoggedIn,
+        isSyncing: false,
+        lastSuccessfulSyncDateTimeUtc: undefined,
+        intervalId: undefined, // used to cancel sync
       }
     },
   }

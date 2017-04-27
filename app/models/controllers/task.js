@@ -14,9 +14,17 @@ const uuid = require('node-uuid')
 */
 export const constructTaskLocally = (taskName, taskNotes,
   taskDueDateTimeUtc) => {
+
+  const creationDateTimeUtc = new Date()
+
   return {
     name: taskName,
     notes: taskNotes,
+    creationDateTimeUtc: creationDateTimeUtc,
+
+    // initially updateTime = creationTime
+    updatedAtDateTimeUtc: creationDateTimeUtc,
+
     dueDateTimeUtc: taskDueDateTimeUtc,
     id: 'client-task-' + uuid.v4(),
     // Notably, no userId is assigned because one may not exist.
