@@ -56,8 +56,8 @@ class Profile extends Component {
       updateError: '',
       updateSuccess: '',
       isUpdatingProfile: false,
-      currentEmail: this.props.profile.email,
-      currentName: this.props.profile.name,
+      currentEmail: this.props.profile.email || '',
+      currentName: this.props.profile.name || '',
       deleteProfileDialogIsOpen: false,
       nameValidationError: '',
       emailValidationError: ''
