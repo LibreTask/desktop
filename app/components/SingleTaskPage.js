@@ -192,6 +192,7 @@ class SingleTaskPage extends Component {
   _onDeleteTask = () => {
 
     let task = this.state.editedTask
+    task.isDeleted = true
 
     if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState({isDeleting: true}, () => {
@@ -232,8 +233,16 @@ class SingleTaskPage extends Component {
       this.props.addPendingTaskDelete(task)
     }
 
-    TaskStorage.deleteTaskByTaskId(task.id)
-    this.props.deleteTask(task.id)
+    /*
+     The task has been marked `isDeleted = true`.
+
+     We choose to "createOrUpdateTask" the task, even though it is being
+     deleted, so that we can correctly manage the sync. Without a reference to
+     this task, a sync might receive an outdated (undeleted) version of the
+     task and incorrectly re-recreate it.
+    */
+    TaskStorage.createOrUpdateTask(task)
+    this.props.createOrUpdateTask(task)
 
     hashHistory.replace('/tasks')
   }

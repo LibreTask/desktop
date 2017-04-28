@@ -303,22 +303,20 @@ function syncTasks(state, action) {
       const existingTaskUpdateDateTimeUtc =
         existingTasks[syncedTask.id].updatedAtDateTimeUtc
 
-        console.log("task id: " + syncedTask.id)
-
-        console.log("synced update: " + syncedTaskUpdateDateTimeUtc)
-        console.log("existing update: " + existingTaskUpdateDateTimeUtc)
-
-      console.log("equality: " + (syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc))
-
-      if (syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc) {
+      if (syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc
+          && syncedTaskDoesNotConflictWithQueuedTask(state, syncedTask)) {
         // synced task was updated more recently than the version on
         // this device. so we must mark it for update/creation.
         tasksToCreateOrUpdate.push(syncedTask)
       } else {
-        // the version of the task on the client is the most up-to-date.
-        // we sent it to the server.
+        /*
+          The synced task was less up-to-date than the version residing on the
+          client. This is expected in some scenarios, such as when the client
+          looses network connectivity, and must queue up a task action.
 
-        // TODO - handle this case, should we queue up?
+          For this case, we do nothing here. The queue-logic is designed to
+          completely handle such scenarios.
+        */
       }
 
     } else {
@@ -335,6 +333,60 @@ function syncTasks(state, action) {
     tasks: tasksToCreateOrUpdate,
     lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
   })
+}
+
+/*
+  This method is not expected to always be correct. There are many nuances
+  involved with correctly syncing and queueing state, especially as more
+  clients are involved and the network is assumed to be unreliable.
+
+  The current approach is to simply return false if the synced task was updated
+  at a LESS RECENT date than the task on the client.
+*/
+function syncedTaskDoesNotConflictWithQueuedTask(state, syncedTask) {
+
+  let pendingTaskActions = state.pendingTaskActions
+
+  console.log("pending task actions...")
+  console.dir(pendingTaskActions)
+
+  console.log("synced task...")
+  console.dir(syncedTask)
+
+  if (syncedTask.id in pendingTaskActions.create) {
+    // This should never happen. It would indicate either a bug (most likely)
+    // or a UUID collision resulting from a client-assigned id being identical
+    // to a server-assignd id (near impossible).
+    throw new Error("Synced task was found in to-be-created queue.")
+  }
+  else if (syncedTask.id in pendingTaskActions.update) {
+
+    let queuedTask = pendingTaskActions.update[syncTask.id]
+
+    // TODO - improve
+
+    if (syncTask.updatedAtDateTimeUtc > queuedTask.updatedAtDateTimeUtc) {
+      return false
+    } else {
+      return false
+    }
+  }
+  else if (syncedTask.id in pendingTaskActions.delete) {
+
+    let queuedTask = pendingTaskActions.delete[syncTask.id]
+
+    // TODO - improve
+
+    if (syncTask.updatedAtDateTimeUtc > queuedTask.updatedAtDateTimeUtc) {
+      return false
+    } else {
+      return false
+    }
+  }
+  else {
+    /* the synced task does not conflict; it is not in the queue. */
+    return true
+  }
 }
 
 const initialState = {
