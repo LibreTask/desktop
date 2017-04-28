@@ -151,11 +151,19 @@ export const submitQueuedTasks = () => {
         TaskController.createTaskFromQueue(task, userId, password)
         .then( response => {
 
-          // TODO - update ID?
+          /*
+            Each task has a unique identifier that is assigned by the server.
+            However, when the server cannot be reached, the client will queue
+            the task creation and temporarily assign an id.
+
+            This code handles the case when a queued task has its temporary id
+            replaced with the permanent, server-assigned id. 
+          */
 
           dispatch({
             type: REMOVE_PENDING_TASK_CREATE,
-            taskId: task.id
+            taskId: task.id,
+            serverAssignedTaskId: response.task.id
           })
         })
         .catch( error => {

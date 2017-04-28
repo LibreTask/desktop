@@ -154,6 +154,15 @@ function removePendingTaskCreate(state, action) {
     taskMap[task.id] = task
   })
 
+  let clientAssignedTaskId = action.taskId
+  let serverAssignedTaskId = action.serverAssignedTaskId
+
+  // TODO - refine the approach of replacing the existing task
+  let task = Object.assign({}, state.tasks[clientAssignedTaskId])
+  task.id = serverAssignedTaskId
+  delete state.tasks[clientAssignedTaskId] // delete existing task
+  state.tasks[serverAssignedTaskId] = task // replace with new ID
+
   return updateObject(state, {
     pendingTaskActions: {
       create: taskMap,
