@@ -3,6 +3,12 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
+import {
+  SIDEMENU_TOGGLE,
+  SIDEMENU_OPEN,
+  SIDEMENU_CLOSE,
+} from '../../actions/sidemenu'
+
 const initialState = {
   isOpen: false,
   disableGestures: false,
@@ -10,17 +16,17 @@ const initialState = {
 
 export default function sideMenuReducer(state = initialState, action) {
   switch (action.type) {
-    case 'SIDEMENU_TOGGLE':
+    case SIDEMENU_TOGGLE:
       return {
         ...state,
         isOpen: !state.isOpen
       }
-    case 'SIDEMENU_OPEN':
+    case SIDEMENU_OPEN:
       return {
         ...state,
         isOpen: true
       }
-    case 'SIDEMENU_CLOSE':
+    case SIDEMENU_CLOSE:
       return {
         ...state,
         isOpen: false

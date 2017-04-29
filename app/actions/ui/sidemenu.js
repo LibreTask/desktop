@@ -3,20 +3,26 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-export function toggle() {
+export const SIDEMENU_TOGGLE = 'SIDEMENU_TOGGLE'
+
+export const toggleSideMenu = () => {
   return {
-    type: 'SIDEMENU_TOGGLE'
+    type: SIDEMENU_TOGGLE
   }
 }
 
-export function open() {
+export const SIDEMENU_OPEN = 'SIDEMENU_OPEN'
+
+export const openSideMenu = () => {
   return {
-    type: 'SIDEMENU_OPEN'
+    type: SIDEMENU_OPEN
   }
 }
 
-export function close() {
+export const SIDEMENU_CLOSE = 'SIDEMENU_CLOSE'
+
+export const closeSideMenu = () => {
   return {
-    type: 'SIDEMENU_CLOSE'
+    type: SIDEMENU_CLOSE
   }
 }
