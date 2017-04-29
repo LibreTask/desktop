@@ -5,7 +5,7 @@
 
 export const SIDEMENU_TOGGLE = 'SIDEMENU_TOGGLE'
 
-export const toggleSideMenu = () => {
+export const toggle = () => {
   return {
     type: SIDEMENU_TOGGLE
   }
@@ -13,7 +13,7 @@ export const toggleSideMenu = () => {
 
 export const SIDEMENU_OPEN = 'SIDEMENU_OPEN'
 
-export const openSideMenu = () => {
+export const open = () => {
   return {
     type: SIDEMENU_OPEN
   }
@@ -21,7 +21,7 @@ export const openSideMenu = () => {
 
 export const SIDEMENU_CLOSE = 'SIDEMENU_CLOSE'
 
-export const closeSideMenu = () => {
+export const close = () => {
   return {
     type: SIDEMENU_CLOSE
   }
