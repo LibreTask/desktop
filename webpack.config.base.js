@@ -41,6 +41,9 @@ export default validate({
     }, {
       test: /\.json$/,
       loader: 'json-loader'
+    }, {
+      test: /\.(woff|woff2|eot|ttf|svg)$/,
+      loader: 'file?name=fonts/[name].[ext]'
     }]
   },
 
