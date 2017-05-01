@@ -68,12 +68,12 @@ export async function getAllPendingCreates() {
 async function _getPendingTasks(map) {
   // TODO - look into "design doc" for map queries
 
-
   let tasks = await db.query(map)
 
   let taskMap = {}
   for (let task of tasks.rows) {
-    taskMap[task.id] = _endoraFormat(task)
+    let formattedTask = _endoraFormat(task)
+    taskMap[formattedTask.id] = formattedTask
   }
 
   return taskMap
@@ -104,7 +104,7 @@ function _upsertTask(task, operation) {
 
 export function dequeueTaskByTaskId(taskId) {
     // TODO - we should instead update the "deletion status"
-  return db.get(`queue/task/${task.id}`).then(function(task) {
+  return db.get(`queue/task/${taskId}`).then(function(task) {
     return db.remove(task)
   })
 }

@@ -107,6 +107,7 @@ export const syncTasks = () => {
 }
 
 import * as TaskQueue from '../../models/storage/task-queue'
+import * as TaskStorage from '../../models/storage/task-storage'
 
 export const START_QUEUED_TASK_SUBMIT = 'START_QUEUED_TASK_SUBMIT'
 
