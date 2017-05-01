@@ -162,7 +162,9 @@ export const submitQueuedTasks = () => {
             replaced with the permanent, server-assigned id.
           */
 
+          // delete both versions of task that have outdated id
           TaskQueue.dequeueTaskByTaskId(task.id)
+          TaskStorage.deleteTaskByTaskId(task.id)
 
           dispatch({
             type: REMOVE_PENDING_TASK_CREATE,

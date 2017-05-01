@@ -93,7 +93,7 @@ export function queueTaskDelete(task) {
 
 function _upsertTask(task, operation) {
 
-  return db.upsert(task.id, function(doc) {
+  return db.upsert(`queue/task/${task.id}`, function(doc) {
     task._id = task.id
     task.type = 'queue/task'
     task.operation = operation
@@ -104,7 +104,7 @@ function _upsertTask(task, operation) {
 
 export function dequeueTaskByTaskId(taskId) {
     // TODO - we should instead update the "deletion status"
-  return db.get(taskId).then(function(task) {
+  return db.get(`queue/task/${task.id}`).then(function(task) {
     return db.remove(task)
   })
 }
