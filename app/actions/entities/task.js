@@ -106,6 +106,8 @@ export const syncTasks = () => {
   }
 }
 
+import * as TaskQueue from '../../models/storage/task-queue'
+
 export const START_QUEUED_TASK_SUBMIT = 'START_QUEUED_TASK_SUBMIT'
 
 export const startQueuedTaskSubmit = (intervalId) => {
@@ -157,8 +159,10 @@ export const submitQueuedTasks = () => {
             the task creation and temporarily assign an id.
 
             This code handles the case when a queued task has its temporary id
-            replaced with the permanent, server-assigned id. 
+            replaced with the permanent, server-assigned id.
           */
+
+          TaskQueue.dequeueTaskByTaskId(task.id)
 
           dispatch({
             type: REMOVE_PENDING_TASK_CREATE,
@@ -181,7 +185,7 @@ export const submitQueuedTasks = () => {
         TaskController.updateTaskFromQueue(task, userId, password)
         .then( response => {
 
-          // TODO - update ID?
+          TaskQueue.dequeueTaskByTaskId(task.id)
 
           dispatch({
             type: REMOVE_PENDING_TASK_UPDATE,
@@ -203,7 +207,7 @@ export const submitQueuedTasks = () => {
         TaskController.deleteTaskFromQueue(task, userId, password)
         .then( response => {
 
-          // TODO - update ID?
+          TaskQueue.dequeueTaskByTaskId(task.id)
 
           dispatch({
             type: REMOVE_PENDING_TASK_DELETE,

@@ -16,6 +16,7 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import * as NavbarActions from '../actions/ui/navbar'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
+import * as TaskQueue from '../models/storage/task-queue'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
@@ -174,6 +175,7 @@ class SingleTaskPage extends Component {
 
       // task is queued only when network could not be reached
       this.props.addPendingTaskUpdate(task)
+      TaskQueue.queueTaskUpdate(task)
     }
 
     TaskStorage.createOrUpdateTask(task)
@@ -231,6 +233,7 @@ class SingleTaskPage extends Component {
 
       // task is queued only when network could not be reached
       this.props.addPendingTaskDelete(task)
+      TaskQueue.queueTaskDelete(task)
     }
 
     /*

@@ -14,6 +14,7 @@ import IconButton from 'material-ui/IconButton'
 import * as NavbarActions from '../actions/ui/navbar'
 import * as TaskActions from '../actions/entities/task'
 import * as TaskController from '../models/controllers/task'
+import * as TaskQueue from '../models/storage/task-queue'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
@@ -170,6 +171,7 @@ class CreateTask extends Component {
     let task = TaskController.constructTaskLocally(name, notes, dueDateTimeUtc)
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
+    TaskQueue.queueTaskCreate(task)
     this.props.addPendingTaskCreate(task)
 
     // navigate to main on success

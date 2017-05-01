@@ -18,6 +18,7 @@ import AppConstants from './constants'
 
 import * as MetaStorage from './models/storage/meta-storage'
 import * as TaskStorage from './models/storage/task-storage'
+import * as TaskQueue from './models/storage/task-queue'
 import * as ProfileStorage from './models/storage/profile-storage'
 
 /*
@@ -41,11 +42,26 @@ MetaStorage.getWindowSize()
 async function getInitialState() {
 
   let tasks = {}
+  let queuedTaskCreates = {}
+  let queuedTaskUpdates = {}
+  let queuedTaskDeletes = {}
   let profile = {}
   let isLoggedIn = false
 
   try {
     tasks = await TaskStorage.getAllTasks()
+  } catch (err) { /* ignore */ }
+
+  try {
+    queuedTaskUpdates = await TaskQueue.getAllPendingUpdates()
+  } catch (err) { /* ignore */ }
+
+  try {
+    queuedTaskCreates = await TaskQueue.getAllPendingCreates()
+  } catch (err) { /* ignore */ }
+
+  try {
+    queuedTaskDeletes = await TaskQueue.getAllPendingDeletes()
   } catch (err) { /* ignore */ }
 
   try {
@@ -61,15 +77,9 @@ async function getInitialState() {
       task: {
         tasks: tasks,
         pendingTaskActions: {
-          update: {
-            // taskId: {public task attributes}
-          },
-          delete: {
-            // taskId: {public task attributes}
-          },
-          create: {
-            // taskId: {public task attributes}
-          }
+          update: queuedTaskUpdates,
+          delete: queuedTaskDeletes,
+          create: queuedTaskCreates
         },
         isSyncing: false,
         syncIntervalId: undefined, // used to cancel sync
