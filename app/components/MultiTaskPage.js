@@ -24,7 +24,7 @@ import * as TaskQueue from '../models/storage/task-queue'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
 
-import DateUtils from '../utils/date-utils'
+import TaskUtils from '../utils/task-utils'
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
@@ -331,26 +331,9 @@ class MultiTaskPage extends Component {
     for (let taskId in this.props.tasks) {
       let task = this.props.tasks[taskId]
 
-      if (!task) continue;
-
-      if (task.isDeleted) continue; // do not display deleted tasks
-
-      if (task.isCompleted) {
-
-        // continue if, for some reason, we do not have the date recorded
-        if (!task.completionDateTimeUtc) continue;
-
-        // only display completed tasks less than one day ago
-        if (new Date(task.completionDateTimeUtc) < DateUtils.yesterday()) {
-          continue;
-        }
-
-        // do not display the completed task, unless the
-        // showCompletedTasks flag is set to true
-        if (!this.props.showCompletedTasks) continue;
+      if (TaskUtils.shouldRenderTask(task, this.props.showCompletedTasks)) {
+        tasks.push(task)
       }
-
-      tasks.push(task)
     }
 
     return this._sortTasksByDateAndInsertHeaders(tasks)
