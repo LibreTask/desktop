@@ -3,6 +3,14 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
+import * as TaskController from '../../models/controllers/task'
+import * as UserController from '../../models/controllers/user'
+
+import * as TaskQueue from '../../models/storage/task-queue'
+import * as TaskStorage from '../../models/storage/task-storage'
+
+import DateUtils from '../../utils/date-utils'
+
 export const CREATE_OR_UPDATE_TASK = 'CREATE_OR_UPDATE_TASK'
 
 export const createOrUpdateTask = (task) => {
@@ -57,10 +65,6 @@ export const endTaskSync = () => {
   }
 }
 
-import * as TaskController from '../../models/controllers/task'
-import * as UserController from '../../models/controllers/user'
-import DateUtils from '../../utils/date-utils'
-
 export const SYNC_TASKS = 'SYNC_TASKS'
 
 export const syncTasks = () => {
@@ -105,9 +109,6 @@ export const syncTasks = () => {
     }
   }
 }
-
-import * as TaskQueue from '../../models/storage/task-queue'
-import * as TaskStorage from '../../models/storage/task-storage'
 
 export const START_QUEUED_TASK_SUBMIT = 'START_QUEUED_TASK_SUBMIT'
 
@@ -225,6 +226,107 @@ export const submitQueuedTasks = () => {
 
       return;
     }
+  }
+}
+
+export const START_TASK_CLEANUP = 'START_TASK_CLEANUP'
+
+export const startTaskCleanup = (intervalId) => {
+
+  return {
+    type: START_TASK_CLEANUP,
+    intervalId: intervalId
+  }
+}
+
+export const STOP_TASK_CLEANUP = 'STOP_TASK_CLEANUP'
+
+export const stopTaskCleanup = () => {
+
+  return {
+    type: STOP_TASK_CLEANUP,
+  }
+}
+
+export const cleanupTasks = () => {
+
+  /*
+    This method has much room for improvement. Currently we dereference a task
+    if it was completed or deleted later than yesterday.
+  */
+  let cleanupTask = (task) => {
+
+    if (task.isCompleted
+      && task.completionDateTimeUtc < DateUtils.yesterday()) {
+      return true
+    }
+
+    if (task.isDeleted
+      && task.updatedAtDateTimeUtc < DateUtils.yesterday()) {
+      return true
+    }
+
+    return false
+  }
+
+  return function(dispatch, getState) {
+
+    const pendingTaskActions = getState().entities.task.pendingTaskActions
+    const tasks = getState().entities.task.tasks
+
+    for (let taskId in tasks) {
+      let task = tasks[taskId]
+
+      if (cleanupTask(task)) {
+        TaskStorage.deleteTaskByTaskId(task.id)
+
+        dispatch({
+          type: DELETE_TASK,
+          taskId: task.id
+        })
+      }
+    }
+
+    for (let taskId in pendingTaskActions.update) {
+      let task = pendingTaskActions.update[taskId]
+
+      if (cleanupTask(task)) {
+        TaskQueue.dequeueTaskByTaskId(task.id)
+
+        dispatch({
+          type: REMOVE_PENDING_TASK_UPDATE,
+          taskId: task.id
+        })
+      }
+    }
+
+    for (let taskId in pendingTaskActions.create) {
+      let task = pendingTaskActions.create[taskId]
+
+      if (cleanupTask(task)) {
+        TaskQueue.dequeueTaskByTaskId(task.id)
+
+        dispatch({
+          type: REMOVE_PENDING_TASK_CREATE,
+          taskId: task.id
+        })
+      }
+    }
+
+    for (let taskId in pendingTaskActions.delete) {
+      let task = pendingTaskActions.delete[taskId]
+
+      if (cleanupTask(task)) {
+        TaskQueue.dequeueTaskByTaskId(task.id)
+
+        dispatch({
+          type: REMOVE_PENDING_TASK_DELETE,
+          taskId: task.id
+        })
+      }
+    }
+
+    return;
   }
 }
 

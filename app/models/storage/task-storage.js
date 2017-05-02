@@ -65,7 +65,6 @@ export function createOrUpdateTask(task) {
 }
 
 export function deleteTaskByTaskId(taskId) {
-    // TODO - we should instead update the "deletion status"
   return db.get(taskId).then(function(task) {
     return db.remove(task)
   })

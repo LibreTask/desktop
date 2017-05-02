@@ -208,7 +208,10 @@ class CreateTask extends Component {
         let userId = this.props.profile.id
         let pw = this.props.profile.password
 
-        TaskController.createTask(name, notes, dueDateTimeUtc, userId, pw)
+        let isCompleted = false // task is not completed when initiallyc reated
+
+        TaskController.createTask(name, notes, dueDateTimeUtc, isCompleted,
+          userId, pw)
         .then( response => {
 
           let task = response.task

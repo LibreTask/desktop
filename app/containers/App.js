@@ -160,6 +160,17 @@ class App extends Component {
     }
   }
 
+  _startTaskCleanup = () => {
+    if (!this.props.isCleaningUpTasks) {
+      let intervalId = setInterval( () => {
+        this.props.cleanupTasks()
+      }, AppConstants.TASK_CLEANUP_INTERVAL_MILLIS)
+
+      // register intervalId so we can cancel later
+      this.props.startTaskCleanup(intervalId)
+    }
+  }
+
   _startUIRefreshCheck = () => {
     setInterval(() => {
       /*
@@ -182,6 +193,7 @@ class App extends Component {
     this._startProfileSync()
     this._startUIRefreshCheck()
     this._startSubmissionOfQueuedTasks()
+    this._startTaskCleanup()
   }
 
   componentWillUnmount() {
@@ -189,6 +201,7 @@ class App extends Component {
     this.props.stopQueuedTaskSubmission()
     this.props.stopUserSync()
     this.props.stopTaskViewRefresh()
+    this.props.stopTaskCleanup()
   }
 
   _onSetOpen = (open) => {
@@ -481,6 +494,7 @@ const mapStateToProps = (state) => ({
   farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
   isSyncingTasks: state.entities.task.isSyncingTasks,
   isSubmittingQueuedTasks: state.entities.task.isSubmittingQueuedTasks,
+  isCleaningUpTasks: state.entities.task.isCleaningUpTasks,
   isSyncingUser: state.entities.user.isSyncing,
   showCompletedTasks: state.ui.taskview.showCompletedTasks,
   lastTaskViewRefreshDate: state.ui.taskview.lastTaskViewRefreshDate
@@ -502,6 +516,9 @@ const mapDispatchToProps = {
   startTaskSync: TaskActions.startTaskSync,
   stopTaskSync: TaskActions.stopTaskSync,
   syncTasks: TaskActions.syncTasks,
+  cleanupTasks: TaskActions.cleanupTasks,
+  startTaskCleanup: TaskActions.startTaskCleanup,
+  stopTaskCleanup: TaskActions.stopTaskCleanup,
   submitQueuedTasks: TaskActions.submitQueuedTasks,
   startQueuedTaskSubmit: TaskActions.startQueuedTaskSubmit,
   stopQueuedTaskSubmission: TaskActions.stopQueuedTaskSubmission,

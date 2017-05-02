@@ -33,11 +33,11 @@ export const constructTaskLocally = (taskName, taskNotes,
 }
 
 export const createTaskFromQueue = (task, userId, password) => {
-  return createTask(task.name, task.notes, task.dueDateTimeUtc, userId,
-     password)
+  return createTask(task.name, task.notes, task.dueDateTimeUtc,
+    task.isCompleted, userId, password)
 }
 
-export const createTask = (taskName, taskNotes, taskDueDateTimeUtc,
+export const createTask = (taskName, taskNotes, taskDueDateTimeUtc, isCompleted,
    userId, password) => {
   const request = {
     endpoint: `task/create`,
@@ -51,7 +51,15 @@ export const createTask = (taskName, taskNotes, taskDueDateTimeUtc,
        name: taskName,
        notes: taskNotes,
        dueDateTimeUtc: taskDueDateTimeUtc,
-       // TODO -
+
+       /*
+          It is possible to create a task that has already been completed.
+
+          This scenario occurs when the client is unable to reach the server,
+          and, consequently, the task has been created (and updated) LOCALLY.
+          In other words, the CREATE + UPDATE is being bundled together here.
+       */
+       isCompleted: isCompleted ? true : false
      })
   }
 
