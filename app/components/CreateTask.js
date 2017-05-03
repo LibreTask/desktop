@@ -209,9 +209,10 @@ class CreateTask extends Component {
         let pw = this.props.profile.password
 
         let isCompleted = false // task is not completed when initiallyc reated
+        let completionDateTimeUtc = undefined
 
         TaskController.createTask(name, notes, dueDateTimeUtc, isCompleted,
-          userId, pw)
+          completionDateTimeUtc, userId, pw)
         .then( response => {
 
           let task = response.task

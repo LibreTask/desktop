@@ -34,11 +34,11 @@ export const constructTaskLocally = (taskName, taskNotes,
 
 export const createTaskFromQueue = (task, userId, password) => {
   return createTask(task.name, task.notes, task.dueDateTimeUtc,
-    task.isCompleted, userId, password)
+    task.isCompleted, task.completionDateTimeUtc, userId, password)
 }
 
 export const createTask = (taskName, taskNotes, taskDueDateTimeUtc, isCompleted,
-   userId, password) => {
+   completionDateTimeUtc, userId, password) => {
   const request = {
     endpoint: `task/create`,
     method: 'POST',
@@ -59,7 +59,8 @@ export const createTask = (taskName, taskNotes, taskDueDateTimeUtc, isCompleted,
           and, consequently, the task has been created (and updated) LOCALLY.
           In other words, the CREATE + UPDATE is being bundled together here.
        */
-       isCompleted: isCompleted ? true : false
+       isCompleted: isCompleted ? true : false,
+       completionDateTimeUtc: completionDateTimeUtc
      })
   }
 
