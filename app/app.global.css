@@ -32,6 +32,11 @@
   width: 100%; /* MODIFICATION: 100% width */
 }
 
+.SingleDatePicker__picker {
+  /* datepicker should take precedence over everything, even the navbar */
+  z-index: 9999999999;
+}
+
 /*
  HACK: this margin-top is meant to be exactly the height of the header.
  That means Header.height + Header.paddingBottom + Header.paddingTop
