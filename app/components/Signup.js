@@ -133,7 +133,7 @@ class Signup extends Component {
           />
 
           <br/>
-          
+
           {/* NOTE: Multiline passwords are not supported by MaterialUI. */}
           <TextField
             style={AppStyles.centeredElement}
@@ -150,8 +150,8 @@ class Signup extends Component {
 
           <br/>
 
+          {/* NOTE: Multiline passwords are not supported by MaterialUI. */}
           <TextField
-            multiLine={true}
             style={AppStyles.centeredElement}
             errorText={this.state.confirmPasswordValidationError}
             hintText="Confirm Password Field"
