@@ -37,9 +37,6 @@ const styles = {
     fontSize: '100%',
     width: '100%'
   },
-  errorText: {
-    color: 'red'
-  },
   successText: {
     color: 'green'
   },
@@ -127,6 +124,7 @@ class SingleTaskPage extends Component {
 
     if (nameValidationError || notesValidationError) {
       this.setState({
+        updateError: '',
         nameValidationError: nameValidationError,
         notesValidationError: notesValidationError
       })
@@ -480,7 +478,7 @@ class SingleTaskPage extends Component {
 
           <br/>
 
-          <div style={styles.errorText}>
+          <div style={AppStyles.errorText}>
             {this.state.updateError}
           </div>
 

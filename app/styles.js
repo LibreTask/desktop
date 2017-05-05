@@ -12,7 +12,6 @@ const STYLES = {
     color: '#000000',
     width: '85%',
     margin: 'auto',
-    padding: 12
   },
   centeredWindow: {
     margin: 'auto',
@@ -26,6 +25,11 @@ const STYLES = {
   },
   dialog: {
     zIndex: 999999999 // dialogs have precedence over everything
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
+    marginBottom: 5
   }
 }
 

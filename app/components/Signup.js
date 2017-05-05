@@ -23,12 +23,9 @@ import Validator from 'validator'
 const styles = {
   button: {
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 20,
     fontSize: '140%'
   },
-  errorText: {
-    color: 'red'
-  }
 }
 
 class Signup extends Component {
@@ -77,6 +74,7 @@ class Signup extends Component {
     if (passwordValidationError || emailValidationError
       || confirmPasswordValidationError) {
       this.setState({
+        signupError: '',
         emailValidationError: emailValidationError,
         passwordValidationError: passwordValidationError,
         confirmPasswordValidationError: confirmPasswordValidationError
@@ -164,15 +162,15 @@ class Signup extends Component {
             }
           />
 
-          <div style={styles.errorText}>
+          <div style={AppStyles.errorText}>
             {this.state.signupError}
           </div>
 
           <RaisedButton
             label="Signup"
             style={{
-              ...styles.button,
-              ...AppStyles.centeredElement
+              ...AppStyles.centeredElement,
+              ...styles.button
             }}
             onTouchTap={this._signup}
            />

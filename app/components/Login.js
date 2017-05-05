@@ -30,11 +30,11 @@ const styles = {
   },
   link: {
     color: AppStyles.linkColor,
-    fontSize: '90%'
+    cursor: 'pointer',
+    fontSize: '90%',
+    marginTop: 15,
+    marginBottom: 15
   },
-  errorText: {
-    color: 'red'
-  }
 }
 
 class Login extends Component {
@@ -73,6 +73,7 @@ class Login extends Component {
 
     if (passwordValidationError || emailValidationError) {
       this.setState({
+        loginError: '',
         emailValidationError: emailValidationError,
         passwordValidationError: passwordValidationError
       })
@@ -152,7 +153,7 @@ class Login extends Component {
             Forgot password?
           </p>
 
-          <div style={styles.errorText}>
+          <div style={AppStyles.errorText}>
             {this.state.loginError}
           </div>
 

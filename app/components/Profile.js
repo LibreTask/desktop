@@ -39,9 +39,6 @@ const styles = {
     textTransform: 'none',
     fontSize: '100%'
   },
-  errorText: {
-    color: 'red'
-  },
   successText: {
     color: 'green'
   },
@@ -311,7 +308,7 @@ class Profile extends Component {
 
           <div style={styles.spacer}/>
 
-          <div style={styles.errorText}>
+          <div style={AppStyles.errorText}>
             {this.state.updateError}
           </div>
 

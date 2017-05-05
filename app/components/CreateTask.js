@@ -35,9 +35,6 @@ const styles = {
   button: {
     marginTop: 15,
   },
-  errorText: {
-    color: 'red'
-  },
   createTaskButtonLabel: {
     textTransform: 'none',
     fontSize: '120%'
@@ -190,6 +187,7 @@ class CreateTask extends Component {
 
     if (nameValidationError || notesValidationError) {
       this.setState({
+        createError: '',
         nameValidationError: nameValidationError,
         notesValidationError: notesValidationError
       })
@@ -403,7 +401,7 @@ class CreateTask extends Component {
 
           {this._constructDatePicker()}
 
-          <div style={styles.errorText}>
+          <div style={AppStyles.errorText}>
             {this.state.createError}
           </div>
         </div>
