@@ -54,9 +54,7 @@ class Profile extends Component {
       updateSuccess: '',
       isUpdatingProfile: false,
       currentEmail: this.props.profile.email || '',
-      currentName: this.props.profile.name || '',
       deleteProfileDialogIsOpen: false,
-      nameValidationError: '',
       emailValidationError: ''
     }
   }
@@ -85,37 +83,28 @@ class Profile extends Component {
   }
 
   _onProfileUpdate = () => {
-    let updatedName = this.state.currentName || ''
     let updatedEmail = this.state.currentEmail || ''
 
     let emailValidationError = ''
-    let nameValidationError = ''
 
     if (!Validator.isEmail(updatedEmail)) {
       emailValidationError = 'Email is not valid'
     }
 
-    if (!Validator.isLength(updatedName, {min: 0, max: 100})) {
-      nameValidationError = 'Name must be between 0 and 100 characters'
-    }
-
-    if (emailValidationError || nameValidationError) {
+    if (emailValidationError) {
       this.setState({
         emailValidationError: emailValidationError,
-        nameValidationError: nameValidationError
       })
 
       return; // validation failed; cannot updated profile
     }
 
     let updatedProfile = Object.assign({}, this.props.profile, {
-      name: updatedName,
       email: updatedEmail
     })
 
     this.setState({
       isUpdatingProfile: true,
-      nameValidationError: '',
       emailValidationError: ''
     }, () => {
       UserController.updateProfile(updatedProfile)
@@ -265,23 +254,6 @@ class Profile extends Component {
           >
             Are you sure you want to delete your profile?
           </Dialog>
-
-          <TextField
-            style={{
-              ...styles.input,
-              ...AppStyles.centeredElement
-            }}
-            hintText="Name"
-            floatingLabelText="Name"
-            errorText={this.state.nameValidationError}
-            type="text"
-            value={this.state.currentName}
-            onChange={
-              (event, name) => {
-                this.setState({currentName: name})
-              }
-            }
-          />
 
           <br/>
 

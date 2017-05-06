@@ -23,7 +23,7 @@ const styles = {
     fontSize: '90%',
   },
   titleText: {
-    marginTop: 5,
+    marginTop: 15,
     marginBottom: 5,
     fontSize: '100%',
     fontWeight: 'bold'
