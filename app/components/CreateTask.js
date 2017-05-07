@@ -127,43 +127,46 @@ class CreateTask extends Component {
   _updateTaskViewCollapsedStatus(task) {
     // TODO - fix the hacky date logic in this method
 
-    const today = new Date()
-    const tomorrow = new Date(today.getFullYear(),
-      today.getMonth(), today.getDate() + 1)
-
     const taskDate = task.dueDateTimeUtc
       ? new Date(task.dueDateTimeUtc)
       : null;
 
     if (this._noTasksAreCurrentlyDisplayed()) {
 
-      if (!taskDate
-        && this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)) {
+      if (!taskDate) {
+        if (this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)) {
 
-        this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE)
-      }
-      else if (taskDate.toDateString() === today.toDateString()
-        && this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)) {
+          this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE)
+        }
+      } else {
 
-        this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS)
-      }
-      else if (taskDate.toDateString() === tomorrow.toDateString()
-        && this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)) {
+        const today = new Date()
+        const tomorrow = new Date(today.getFullYear(),
+          today.getMonth(), today.getDate() + 1)
 
-        this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS)
-      }
-      else if (taskDate.getTime() > tomorrow.getTime()
-        && this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)) {
+        if (taskDate.toDateString() === today.toDateString()
+          && this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)) {
 
-        this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS)
-      }
-      else if (taskDate.getTime() < today.getTime()
-        && this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)) {
+          this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS)
+        }
+        else if (taskDate.toDateString() === tomorrow.toDateString()
+          && this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)) {
 
-        this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS)
-      }
-      else {
-        // TODO - what here?
+          this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS)
+        }
+        else if (taskDate.getTime() > tomorrow.getTime()
+          && this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)) {
+
+          this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS)
+        }
+        else if (taskDate.getTime() < today.getTime()
+          && this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)) {
+
+          this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS)
+        }
+        else {
+          // TODO - what here?
+        }
       }
     }
   }
