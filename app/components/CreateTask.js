@@ -173,8 +173,12 @@ class CreateTask extends Component {
 
   _createTask = () => {
     let name = this.state.currentName
-    let notes = this.state.currentNotes
-    let dueDateTimeUtc = this.state.selectedDate
+
+    // only include optional attributes if their icon is selected
+    let notes = this.state.notesIconSelected
+      ? this.state.currentNotes : ''
+    let dueDateTimeUtc = this.state.calendarIconSelected
+      ? this.state.selectedDate : undefined
 
     let nameValidationError = ''
     let notesValidationError = ''
