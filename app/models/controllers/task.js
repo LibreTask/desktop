@@ -21,6 +21,8 @@ export const constructTaskLocally = (taskName, taskNotes,
     name: taskName,
     notes: taskNotes,
     creationDateTimeUtc: creationDateTimeUtc,
+    isCompleted: false,
+    completionDateTimeUtc: undefined,
 
     // initially updateTime = creationTime
     updatedAtDateTimeUtc: creationDateTimeUtc,
