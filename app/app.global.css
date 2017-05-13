@@ -6,6 +6,10 @@
 @import "~font-awesome/css/font-awesome.css";
 @import "~react-dates/lib/css/_datepicker.css";
 
+* {
+  font-weight: lighter;
+}
+
 /*
   To meet Algernon's requirements, I have copy-pasted the styling from
   react-dates (below) and modified where necessary. Any updates to the

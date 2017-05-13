@@ -335,6 +335,7 @@ class SingleTaskPage extends Component {
     return (
       <div style={styles.datePicker}>
         <SingleDatePicker
+          placeholder='Due Date'
           withFullScreenPortal={true}
           reopenPickerOnClearDate={false}
           showClearDate={true}

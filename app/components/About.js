@@ -20,13 +20,13 @@ const styles = {
   textField: {
     marginTop: 10,
     marginBottom: 10,
-    fontSize: '90%',
+    fontSize: '100%',
   },
   titleText: {
     marginTop: 15,
     marginBottom: 5,
-    fontSize: '100%',
-    fontWeight: 'bold'
+    fontWeight: 'normal',
+    fontSize: '105%',
   },
   linkText: {
     fontSize: '90%',

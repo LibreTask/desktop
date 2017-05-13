@@ -16,7 +16,6 @@ import {
   START_TASK_CLEANUP,
   STOP_TASK_CLEANUP,
   CREATE_OR_UPDATE_TASK,
-  CREATE_OR_UPDATE_TASKS,
   DELETE_ALL_TASKS,
   DELETE_TASK,
   START_TASK_SYNC,
@@ -490,12 +489,6 @@ function tasksReducer(state = initialState, action) {
     */
     case CREATE_OR_UPDATE_TASK:
       return addTask(state, action)
-
-    /*
-      TODO - doc
-    */
-    case CREATE_OR_UPDATE_TASKS:
-      return addTasks(state, action)
 
     /*
       TODO - doc

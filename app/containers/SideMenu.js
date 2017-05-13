@@ -133,8 +133,16 @@ const SideMenu = (props) => {
       <div style={styles.content}>
         {sideMenuItems}
 
+        {/* hack to enable hover CSS */}
         <style>
-          { ".sideMenuItem:hover {color: " + AppStyles.hoverColor + "} " }
+          { `.sideMenuItem:hover {
+              color: ${AppStyles.hoverColor}
+             }
+
+             .sideMenuItem {
+               font-weight: lighter
+             }
+          ` }
         </style>
       </div>
     </TitlePanel>

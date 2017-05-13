@@ -20,15 +20,6 @@ export const createOrUpdateTask = (task) => {
   }
 }
 
-export const CREATE_OR_UPDATE_TASKS = 'CREATE_OR_UPDATE_TASKS'
-
-export const createOrUpdateTasks = (tasks) => {
-  return {
-    type: CREATE_OR_UPDATE_TASKS,
-    tasks: tasks
-  }
-}
-
 export const DELETE_TASK = 'DELETE_TASK'
 
 export const deleteTask = (taskId) => {
@@ -88,19 +79,17 @@ export const syncTasks = () => {
       return TaskController.syncTasks(lastSuccessfulSyncDateTimeUtc)
       .then( response => {
 
-        let syncAction = {
+        // After the Sync, let the reducer handle what Tasks to
+        // update/create/delete. Here are are simply passing all
+        // the sync data to the Reducer, without performing any
+        // logic on it.
+        dispatch({
           type: SYNC_TASKS,
           tasks: response.tasks,
 
           // set 'lastSync' time as five minutes ago, to provide small buffer
           lastSuccessfulSyncDateTimeUtc: DateUtils.fiveMinutesAgo()
-        }
-
-        // After the Sync, let the reducer handle what Tasks to
-        // update/create/delete. Here are are simply passing all
-        // the sync data to the Reducer, without performing any
-        // logic on it.
-        dispatch(syncAction)
+        })
       })
       .catch( error => {
         console.log('sync error....')

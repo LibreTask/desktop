@@ -34,7 +34,8 @@ const styles = {
     height: 30,
   },
   headerText: {
-    marginLeft: 16
+    marginLeft: 16,
+    fontWeight: 'lighter'
   }
 }
 

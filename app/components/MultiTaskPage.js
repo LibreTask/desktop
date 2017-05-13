@@ -31,7 +31,8 @@ import AppStyles from '../styles'
 const styles = {
   listItem: {
     color: 'black',
-    fontSize: '90%'
+    fontSize: '100%',
+    fontWeight: 'lighter'
   },
   createTaskListItem: {
     color: AppStyles.linkColor,
@@ -40,8 +41,8 @@ const styles = {
   },
   listItemHeader: {
     color: 'black',
-    fontSize: '90%',
-    fontWeight: 'bold'
+    fontSize: '100%',
+    fontWeight: 'lighter'
   },
   completedTask: {
     opacity: 0.3,

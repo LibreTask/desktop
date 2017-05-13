@@ -65,7 +65,7 @@ const styles = {
     height: 30,
     display: 'inlineFlex',
     verticalAlign: 'middle',
-    color: 'black'
+    color: 'white'
   },
   navbarTitle: {
     paddingHorizontal: 10,
@@ -82,6 +82,7 @@ const styles = {
   mediumIcon: {
     width: 30,
     height: 30,
+    color: 'white'
   },
   mediumRightNavButton: {
     position: 'absolute',
@@ -93,6 +94,12 @@ const styles = {
     position: 'absolute',
     top: 0,
     right: 10,
+    padding: '10px'
+  },
+  farRightNavDropdown: {
+    position: 'absolute',
+    top: 0,
+    right: 4,
     padding: '10px'
   },
   mediumRightBackButton: {
@@ -282,14 +289,19 @@ class App extends Component {
       return (
         <IconMenu
           style={{
-            ...styles.farRightNavButton,
+            ...styles.farRightNavDropdown,
             ...{padding: 0}
           }}
-          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          iconButtonElement={
+            <IconButton
+              style={styles.farRightNavDropdown}
+              iconStyle={styles.mediumIcon}>
+              <MoreVertIcon />
+            </IconButton>}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           targetOrigin={{horizontal: 'right', vertical: 'top'}}>
            <MenuItem
-             style={{fontSize: '80%'}}
+             style={{ fontSize: '80%' }}
              checked={this.props.showCompletedTasks}
              primaryText="Show Completed"
              onTouchTap={() => {
@@ -453,7 +465,7 @@ class App extends Component {
                     this.props.closeLoginDialog()
                   }}
                 >
-                  You must be logged in before you can completed this action.
+                  You must be logged in before you can complete this action.
                 </Dialog>
                 <Dialog
                   style={AppStyles.dialog}

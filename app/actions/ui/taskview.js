@@ -30,6 +30,10 @@ export const refreshTaskView = (shouldRefresh) => {
   }
 }
 
+export const refreshCollapseStatusAfterTaskAction = (task) => {
+
+}
+
 export const stopTaskViewRefresh = () => {
   return {
     type: STOP_REFRESH_TASK_VIEW

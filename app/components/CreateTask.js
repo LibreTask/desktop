@@ -64,7 +64,7 @@ const styles = {
   datePicker: {
     paddingTop: 10,
     paddingBottom: 10,
-    width: '100%'
+    width: '100%',
   },
   mainContent: {
     paddingBottom: 20 // padding between content and footer
