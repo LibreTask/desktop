@@ -24,7 +24,6 @@ import moment from 'moment'
 
 import Validator from 'validator'
 
-import TaskUtils from '../utils/task-utils'
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 
@@ -102,73 +101,6 @@ class CreateTask extends Component {
   // TODO - clean up this sloppy logic / indirection; should not need a function
   _viewIsCollapsed(view) {
     return this.props.taskCategories[view].isCollapsed
-  }
-
-  _noTasksAreCurrentlyDisplayed() {
-    if (this.props.tasks && Object.keys(this.props.tasks).length) {
-      for (let taskId in this.props.tasks) {
-        if (TaskUtils.shouldRenderTask(this.props.tasks[taskId],
-           this.props.showCompletedTasks)) {
-
-            return false; // at least one task is displayed
-        }
-      }
-    }
-
-    return true; // no tasks are displayed
-  }
-
-  /*
-    If no tasks exist, we want the newly created task to not have its view
-    initially collapsed. After creating a task, the first action a user will
-    take would be to un-collapse the task's view category. We are simply saving
-    them that step here.
-  */
-  _updateTaskViewCollapsedStatus(task) {
-    // TODO - fix the hacky date logic in this method
-
-    const taskDate = task.dueDateTimeUtc
-      ? new Date(task.dueDateTimeUtc)
-      : null;
-
-    if (this._noTasksAreCurrentlyDisplayed()) {
-
-      if (!taskDate) {
-        if (this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)) {
-
-          this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE)
-        }
-      } else {
-
-        const today = new Date()
-        const tomorrow = new Date(today.getFullYear(),
-          today.getMonth(), today.getDate() + 1)
-
-        if (taskDate.toDateString() === today.toDateString()
-          && this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)) {
-
-          this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS)
-        }
-        else if (taskDate.toDateString() === tomorrow.toDateString()
-          && this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)) {
-
-          this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS)
-        }
-        else if (taskDate.getTime() > tomorrow.getTime()
-          && this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)) {
-
-          this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS)
-        }
-        else if (taskDate.getTime() < today.getTime()
-          && this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)) {
-
-          this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS)
-        }
-        else {
-          // TODO - what here?
-        }
-      }
-    }
   }
 
   _createTask = () => {
@@ -256,7 +188,7 @@ class CreateTask extends Component {
     TaskQueue.queueTaskCreate(task)
     this.props.addPendingTaskCreate(task)
 
-    this._updateTaskViewCollapsedStatus(task)
+  //  this._updateTaskViewCollapsedStatus(task)
 
     // navigate to main on success
     hashHistory.replace('/tasks')
