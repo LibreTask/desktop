@@ -95,6 +95,7 @@ async function getInitialState() {
         intervalId: undefined, // used to cancel sync
       }
     },
+    // TODO - UI elements?
   }
 }
 

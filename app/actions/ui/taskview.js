@@ -20,56 +20,37 @@ export const TASKS_WITH_NO_DATE = 'TASKS_WITH_NO_DATE'
 
 import TaskUtils from '../../utils/task-utils'
 
-export const refreshCollapseStatusAfterTaskDelete = (task) => {
-
-  return function(dispatch, getState) {
-
-    const tasks = getState().entities.task.tasks
-
-    /*
-    if deleted and one other COLLAPSED task remains
-	   - uncollapse it
-     */
-  }
-}
-
-export const refreshCollapseStatusAfterTaskUpdate = (task) => {
-
-  return function(dispatch, getState) {
-
-    const tasks = getState().entities.task.tasks
-
-    /*
-    if updated and now all tasks are collapsed
-	     - uncollapse one
-     */
-  }
-}
-
 /*
-  If no tasks exist, we want the newly created task to not have its view
-  initially collapsed. After creating a task, the first action a user will
-  take would be to un-collapse the task's view category. We are simply saving
-  them that step here.
-*//*
-export const refreshCollapseStatusAfterTaskCreate = (task) => {
+  This action enables "smart uncollapsing". It must be called _AFTER_ a task
+  has been created/updated/deleted.
+
+  After creating/updating/deleting a task, if only one task now remains, the
+  first action a user will. take would be to un-collapse the task's view category. We are simply saving them that step here.
+*/
+export const refreshTaskViewCollapseStatus = () => {
 
   return function(dispatch, getState) {
 
-    const tasks = getState().entities.task.tasks
+    const displayedTasks = _displayedTasks(
+      getState().entities.task.tasks,
+      getState().ui.taskview.showCompletedTasks
+    )
+    const taskCategories = getState().ui.taskview || {}
 
-    // TODO - fix the hacky date logic in this method
+    if (displayedTasks && Object.keys(displayedTasks).length === 1) {
 
-    const taskDate = task.dueDateTimeUtc
-      ? new Date(task.dueDateTimeUtc)
-      : null;
+      let soleTask = displayedTasks[Object.keys(displayedTasks)[0]]
 
-    if (_noTasksAreCurrentlyDisplayed(tasks, showCompletedTasks)()) {
+      // TODO - fix the hacky date logic in this method
+
+      const taskDate = soleTask.dueDateTimeUtc
+        ? new Date(soleTask.dueDateTimeUtc)
+        : null;
 
       if (!taskDate) {
-        if (this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)) {
+        if (taskCategories[TASKS_WITH_NO_DATE].isCollapsed) {
 
-          this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE)
+          dispatch(showCategory(TASKS_WITH_NO_DATE))
         }
       } else {
 
@@ -78,51 +59,48 @@ export const refreshCollapseStatusAfterTaskCreate = (task) => {
           today.getMonth(), today.getDate() + 1)
 
         if (taskDate.toDateString() === today.toDateString()
-          && this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)) {
+          && taskCategories[TODAYS_TASKS].isCollapsed) {
 
-          this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS)
+          dispatch(showCategory(TODAYS_TASKS))
         }
         else if (taskDate.toDateString() === tomorrow.toDateString()
-          && this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)) {
+          && taskCategories[TOMORROWS_TASKS].isCollapsed) {
 
-          this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS)
+          dispatch(showCategory(TOMORROWS_TASKS))
         }
         else if (taskDate.getTime() > tomorrow.getTime()
-          && this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)) {
+          && taskCategories[FUTURE_TASKS].isCollapsed) {
 
-          this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS)
+          dispatch(showCategory(FUTURE_TASKS))
         }
         else if (taskDate.getTime() < today.getTime()
-          && this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)) {
+          && taskCategories[OVERDUE_TASKS].isCollapsed) {
 
-          this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS)
+          dispatch(showCategory(OVERDUE_TASKS))
         }
         else {
           // TODO - what here?
         }
       }
     }
-
-    /*
-    if created and new task is collapsed
-	     - uncollapse it
-     */
-/*  }
+  }
 }
 
-_noTasksAreCurrentlyDisplayed = (tasks, showCompletedTasks) => {
+const _displayedTasks = (tasks, showCompletedTasks) => {
+
+  let displayedTasks = []
+
   if (tasks && Object.keys(tasks).length) {
     for (let taskId in tasks) {
-      if (TaskUtils.shouldRenderTask(ttasks[taskId], showCompletedTasks)) {
+      if (TaskUtils.shouldRenderTask(tasks[taskId], showCompletedTasks)) {
 
-          return false; // at least one task is displayed
+          displayedTasks.push(tasks[taskId])
       }
     }
-  }
+   }
 
-  return true; // no tasks are displayed
+  return displayedTasks
 }
-*/
 
 /*
   This is primarily intended to be used to refresh

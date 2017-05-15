@@ -98,11 +98,6 @@ class CreateTask extends Component {
     this.props.removeLeftNavButton()
   }
 
-  // TODO - clean up this sloppy logic / indirection; should not need a function
-  _viewIsCollapsed(view) {
-    return this.props.taskCategories[view].isCollapsed
-  }
-
   _createTask = () => {
     let name = this.state.currentName
 
@@ -158,7 +153,7 @@ class CreateTask extends Component {
           TaskStorage.createOrUpdateTask(task)
           this.props.createOrUpdateTask(task)
 
-          this._updateTaskViewCollapsedStatus(task)
+          this.props.updateTaskViewCollapsedStatus()
 
           // navigate to main on success
           hashHistory.replace('/tasks')
@@ -188,7 +183,7 @@ class CreateTask extends Component {
     TaskQueue.queueTaskCreate(task)
     this.props.addPendingTaskCreate(task)
 
-  //  this._updateTaskViewCollapsedStatus(task)
+    this.props.refreshTaskViewCollapseStatus()
 
     // navigate to main on success
     hashHistory.replace('/tasks')
@@ -368,7 +363,6 @@ class CreateTask extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.entities.user.isLoggedIn,
   profile: state.entities.user.profile,
-  taskCategories: state.ui.taskview,
   tasks: state.entities.task.tasks,
   showCompletedTasks: state.ui.taskview.showCompletedTasks,
 })
@@ -379,9 +373,7 @@ const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton,
-  collapseTaskView: TaskViewActions.collapseCategory,
-  showTaskView: TaskViewActions.showCategory,
-  toggleTaskView: TaskViewActions.toggleCategory,
+  refreshTaskViewCollapseStatus: TaskViewActions.refreshTaskViewCollapseStatus
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateTask)

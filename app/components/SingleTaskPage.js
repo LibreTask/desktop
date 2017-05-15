@@ -19,6 +19,7 @@ import * as TaskController from '../models/controllers/task'
 import * as TaskQueue from '../models/storage/task-queue'
 import * as TaskStorage from '../models/storage/task-storage'
 import * as UserController from '../models/controllers/user'
+import * as TaskViewActions from '../actions/ui/taskview'
 
 import { SingleDatePicker } from 'react-dates'
 import moment from 'moment'
@@ -179,6 +180,8 @@ class SingleTaskPage extends Component {
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
 
+    this.props.refreshTaskViewCollapseStatus()
+
     this.setState({updateSuccess: 'Successfully updated'})
 
     // erase update success text after 1.5 seconds
@@ -244,6 +247,8 @@ class SingleTaskPage extends Component {
     */
     TaskStorage.createOrUpdateTask(task)
     this.props.createOrUpdateTask(task)
+
+    this.props.refreshTaskViewCollapseStatus()
 
     hashHistory.replace('/tasks')
   }
@@ -511,7 +516,8 @@ const mapDispatchToProps = {
   setFarRightNavButton: NavbarActions.setFarRightNavButton,
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton,
   setNavbarTitle: NavbarActions.setNavbarTitle,
-  setNavAction: NavbarActions.setNavAction
+  setNavAction: NavbarActions.setNavAction,
+  refreshTaskViewCollapseStatus: TaskViewActions.refreshTaskViewCollapseStatus
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleTaskPage)
