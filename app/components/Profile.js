@@ -17,6 +17,8 @@ import * as UserActions from '../actions/entities/user'
 import * as UserController from '../models/controllers/user'
 import * as ProfileStorage from '../models/storage/profile-storage'
 
+import moment from 'moment'
+
 import AppConstants from '../constants'
 import AppStyles from '../styles'
 import Validator from 'validator'
@@ -186,11 +188,18 @@ class Profile extends Component {
     shell.openExternal(AppConstants.ACCOUNT_DOWNGRADE_LINK)
   }
 
+  _hasPremiumSubscription = () => {
+    let today = new Date()
+
+    return this.props.profile
+      && this.props.profile.currentPlan === 'premium'
+      && new Date(this.props.profile.planExpirationDateTimeUtc) > today
+  }
+
   _accountStatusButton = () => {
     let accountStatusButton;
 
-    if (this.props.profile
-      && this.props.profile.currentPlan === 'premium') {
+    if (this._hasPremiumSubscription()) {
       accountStatusButton = (
         <RaisedButton
           style={{
@@ -219,6 +228,54 @@ class Profile extends Component {
     }
 
     return accountStatusButton
+  }
+
+  _expirationDateDisplay = () => {
+
+    if (this._hasPremiumSubscription()) {
+
+      let planExpirationDateTimeUtc =
+        this.props.profile.planExpirationDateTimeUtc
+
+      let formattedExpirationDate = planExpirationDateTimeUtc ?
+        moment(planExpirationDateTimeUtc).format('LLLL')
+        : 'An error has occurred, please check back later'
+
+        /*
+
+        TODO - correctly style this
+
+        underlineDisabledStyle={{
+          borderColor: 'black',
+          borderStyle: 'solid',
+          borderWidth: '1px',
+          opacity: 0.3,
+          width: '100%'
+        }}
+        style={{
+          cursor: 'auto',
+          color: 'black',
+          width: '100%',
+        }}
+        textareaStyle={{
+          color: 'black'
+        }}
+        */
+
+        return (
+          <TextField
+            style={{
+              ...styles.input,
+              ...AppStyles.centeredElement
+            }}
+            disabled={true}
+            floatingLabelText="Premium Plan Expiration"
+            value={formattedExpirationDate}
+          />
+        )
+    } else {
+      return (<span/>)
+    }
   }
 
   render = () => {
@@ -273,6 +330,8 @@ class Profile extends Component {
               }
             }
           />
+
+          {this._expirationDateDisplay()}
 
           <div style={styles.spacer}/>
 
