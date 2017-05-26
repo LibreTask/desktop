@@ -241,32 +241,29 @@ class Profile extends Component {
         moment(planExpirationDateTimeUtc).format('LLLL')
         : 'An error has occurred, please check back later'
 
-        /*
-
-        TODO - correctly style this
-
-        underlineDisabledStyle={{
-          borderColor: 'black',
-          borderStyle: 'solid',
-          borderWidth: '1px',
-          opacity: 0.3,
-          width: '100%'
-        }}
-        style={{
-          cursor: 'auto',
-          color: 'black',
-          width: '100%',
-        }}
-        textareaStyle={{
-          color: 'black'
-        }}
-        */
-
+        // Styling here is intended to be identical to a non-disabled TextField.
         return (
           <TextField
             style={{
               ...styles.input,
               ...AppStyles.centeredElement
+            }}
+            underlineDisabledStyle={{
+              width: '100%',
+              borderBottom: '1px solid #E0E0E0',
+              borderBottomColor: '#E0E0E0'
+            }}
+            style={{
+              cursor: 'auto',
+              color: 'black',
+              width: '100%',
+            }}
+            inputStyle={{
+              color: 'black',
+              fontSize: '120%'
+            }}
+            floatingLabelStyle={{
+              fontSize: '120%'
             }}
             disabled={true}
             floatingLabelText="Premium Plan Expiration"
@@ -324,6 +321,11 @@ class Profile extends Component {
             errorText={this.state.emailValidationError}
             type="email"
             value={this.state.currentEmail}
+            underlineStyle={{
+              width: '100%',
+              borderBottom: '1px solid #E0E0E0',
+              borderBottomColor: '#E0E0E0'
+            }}
             onChange={
               (event, email) => {
                 this.setState({currentEmail: email})
