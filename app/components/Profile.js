@@ -180,10 +180,6 @@ class Profile extends Component {
     hashHistory.replace('/tasks') // navigate to main on deletion
   }
 
-  _onAccountUpgrade = () => {
-    hashHistory.replace('/premium-tour')
-  }
-
   _onAccountDowngrade = () => {
     shell.openExternal(AppConstants.ACCOUNT_DOWNGRADE_LINK)
   }
@@ -222,7 +218,9 @@ class Profile extends Component {
           backgroundColor={AppStyles.buttonColor}
           labelStyle={styles.profileButtonLabel}
           label="Learn about Premium"
-          onTouchTap={this._onAccountUpgrade}
+          onTouchTap={() => {
+            shell.openExternal(AppConstants.PREMIUM_TOUR_LINK)
+          }}
          />
        )
     }
