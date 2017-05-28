@@ -5,70 +5,66 @@
 
 // TODO - how to properly create DB and share across all storage adapters?
 
-import PouchDB from 'pouchdb-browser'
-PouchDB.plugin(require('pouchdb-upsert'))
+import PouchDB from "pouchdb-browser";
+PouchDB.plugin(require("pouchdb-upsert"));
 
-let db = new PouchDB('./endoradb', {adapter: 'websql'})
+let db = new PouchDB("./endoradb", { adapter: "websql" });
 
 function _endoraFormat(profile) {
-  let endoraFormattedProfile = {}
+  let endoraFormattedProfile = {};
 
   if (profile) {
-    endoraFormattedProfile = profile
-    delete endoraFormattedProfile._id
-    delete endoraFormattedProfile._rev
-    delete endoraFormattedProfile.type
+    endoraFormattedProfile = profile;
+    delete endoraFormattedProfile._id;
+    delete endoraFormattedProfile._rev;
+    delete endoraFormattedProfile.type;
   }
 
-  return endoraFormattedProfile
+  return endoraFormattedProfile;
 }
 
 export function createOrUpdateProfile(profile) {
+  console.log("createOrUpdateProfile");
 
-  console.log("createOrUpdateProfile")
-
-  console.dir(db)
+  console.dir(db);
 
   // TODO - use encrypted storage for confidential information
 
-  return db.upsert('profile', function(doc) {
-
-    profile._id = 'profile' // there is only one profile active a time
-    profile.type = 'profile' // type helps differentiates between all objects
+  return db.upsert("profile", function(doc) {
+    profile._id = "profile"; // there is only one profile active a time
+    profile.type = "profile"; // type helps differentiates between all objects
 
     return profile;
-  })
+  });
 }
 
 export function deleteProfile() {
-  return cleanProfileStorage()
+  return cleanProfileStorage();
 }
 
 export async function getMyProfile() {
-    return _endoraFormat(await db.get('profile'))
+  return _endoraFormat(await db.get("profile"));
 }
 
 export function logout() {
-  return cleanProfileStorage()
+  return cleanProfileStorage();
 }
 
 export async function isLoggedIn() {
-
   // TODO - refine this approach
 
-  let profile = await getMyProfile()
+  let profile = await getMyProfile();
 
-  return profile !== null
-    && profile !== undefined
-    && Object.keys(profile) !== 0;
+  return (
+    profile !== null && profile !== undefined && Object.keys(profile) !== 0
+  );
 }
 
 export function cleanProfileStorage() {
   // for security purposes, remove everything
   return db.destroy().then(function(response) {
-
     // and then recreate the database, in case the user wants to
     // log in again or perform other actions
-    db = new PouchDB('./endoradb', {adapter: 'websql'})
-  })
+    db = new PouchDB("./endoradb", { adapter: "websql" });
+  });
 }

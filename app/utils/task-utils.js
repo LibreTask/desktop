@@ -3,7 +3,7 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import DateUtils from './date-utils'
+import DateUtils from "./date-utils";
 
 const TaskUtils = {
   shouldRenderTask: function(task, showCompletedTasks = false) {
@@ -12,7 +12,6 @@ const TaskUtils = {
     if (task.isDeleted) return false; // do not display deleted tasks
 
     if (task.isCompleted) {
-
       // continue if, for some reason, we do not have the date recorded
       if (!task.completionDateTimeUtc) return false;
 
@@ -27,7 +26,7 @@ const TaskUtils = {
     }
 
     return true;
-  },
-}
+  }
+};
 
 module.exports = TaskUtils;

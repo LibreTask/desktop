@@ -3,19 +3,21 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import { invoke, constructAuthHeader } from '../../middleware/api'
+import { invoke, constructAuthHeader } from "../../middleware/api";
 
-const uuid = require('node-uuid')
+const uuid = require("node-uuid");
 
 /*
   Only invoked when a Task need to be created client side, rather than server
   side. That is, when the client 1) has no network connection OR 2) is not
   logged in.
 */
-export const constructTaskLocally = (taskName, taskNotes,
-  taskDueDateTimeUtc) => {
-
-  const creationDateTimeUtc = new Date()
+export const constructTaskLocally = (
+  taskName,
+  taskNotes,
+  taskDueDateTimeUtc
+) => {
+  const creationDateTimeUtc = new Date();
 
   return {
     name: taskName,
@@ -28,71 +30,85 @@ export const constructTaskLocally = (taskName, taskNotes,
     updatedAtDateTimeUtc: creationDateTimeUtc,
 
     dueDateTimeUtc: taskDueDateTimeUtc,
-    id: 'client-task-' + uuid.v4(),
+    id: "client-task-" + uuid.v4()
     // Notably, no userId is assigned because one may not exist.
     // A successful sync will rectify any discrepencies.
-  }
-}
+  };
+};
 
 export const createTaskFromQueue = (task, userId, password) => {
-  return createTask(task.name, task.notes, task.dueDateTimeUtc,
-    task.isCompleted, task.completionDateTimeUtc, userId, password)
-}
+  return createTask(
+    task.name,
+    task.notes,
+    task.dueDateTimeUtc,
+    task.isCompleted,
+    task.completionDateTimeUtc,
+    userId,
+    password
+  );
+};
 
-export const createTask = (taskName, taskNotes, taskDueDateTimeUtc, isCompleted,
-   completionDateTimeUtc, userId, password) => {
+export const createTask = (
+  taskName,
+  taskNotes,
+  taskDueDateTimeUtc,
+  isCompleted,
+  completionDateTimeUtc,
+  userId,
+  password
+) => {
   const request = {
     endpoint: `task/create`,
-    method: 'POST',
-     headers: {
-       'Accept': 'application/json',
-       'Content-Type': 'application/json',
-       'Authorization': constructAuthHeader(userId, password)
-     },
-     body: JSON.stringify({
-       name: taskName,
-       notes: taskNotes,
-       dueDateTimeUtc: taskDueDateTimeUtc,
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: constructAuthHeader(userId, password)
+    },
+    body: JSON.stringify({
+      name: taskName,
+      notes: taskNotes,
+      dueDateTimeUtc: taskDueDateTimeUtc,
 
-       /*
+      /*
           It is possible to create a task that has already been completed.
 
           This scenario occurs when the client is unable to reach the server,
           and, consequently, the task has been created (and updated) LOCALLY.
           In other words, the CREATE + UPDATE is being bundled together here.
        */
-       isCompleted: isCompleted ? true : false,
-       completionDateTimeUtc: completionDateTimeUtc
-     })
-  }
+      isCompleted: isCompleted ? true : false,
+      completionDateTimeUtc: completionDateTimeUtc
+    })
+  };
 
-  return invoke(request)
-}
+  return invoke(request);
+};
 
 export const updateTaskFromQueue = (task, userId, password) => {
-  return updateTask(task, userId, password)
-}
+  return updateTask(task, userId, password);
+};
 
 export const updateTask = (task, userId, password) => {
-    const request = {
-      endpoint: `task/update`,
-      method: 'POST',
-       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-         'Authorization': constructAuthHeader(userId, password)
-       },
-       body: JSON.stringify({
-         task: task
-       })
-    }
+  const request = {
+    endpoint: `task/update`,
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: constructAuthHeader(userId, password)
+    },
+    body: JSON.stringify({
+      task: task
+    })
+  };
 
-    return invoke(request)
-}
+  return invoke(request);
+};
 
 export const deleteTaskFromQueue = (task, userId, password) => {
-  return deleteTask(task.id, userId, password)
-}
+  return deleteTask(task.id, userId, password);
+};
 
 export const deleteTask = (taskId, userId, password) => {
   const request = {
@@ -100,57 +116,61 @@ export const deleteTask = (taskId, userId, password) => {
 
     // POST because we do not immediately delete the Task.
     // The deletion must first be synced to all of the User's devices.
-    method: 'POST',
-     headers: {
-       'Accept': 'application/json',
-       'Content-Type': 'application/json',
-       'Authorization': constructAuthHeader(userId, password)
-     },
-     body: JSON.stringify({
-       taskId: taskId
-     })
-  }
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: constructAuthHeader(userId, password)
+    },
+    body: JSON.stringify({
+      taskId: taskId
+    })
+  };
 
-  return invoke(request)
-}
+  return invoke(request);
+};
 
 export const fetchTask = (taskId, userId, password) => {
   const request = {
-      endpoint: `task/get-task-by-id/taskId=${taskId}`,
-      schema: TaskSchema,
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': constructAuthHeader(userId, password)
-      },
-  }
+    endpoint: `task/get-task-by-id/taskId=${taskId}`,
+    schema: TaskSchema,
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: constructAuthHeader(userId, password)
+    }
+  };
 
-  return invoke(request)
-}
+  return invoke(request);
+};
 
-import * as TaskStorage from '../storage/task-storage'
-import * as ProfileStorage from '../storage/profile-storage'
+import * as TaskStorage from "../storage/task-storage";
+import * as ProfileStorage from "../storage/profile-storage";
 
 // TODO - move this method to general-purpose file
 async function getState() {
-
-  let tasks = []
-  let profile = undefined
-  let isLoggedIn = false
-
-  try {
-    tasks = await TaskStorage.getAllTasks()
-  } catch (err) { /* ignore */ }
-
+  let tasks = [];
+  let profile = undefined;
+  let isLoggedIn = false;
 
   try {
-    profile = await ProfileStorage.getMyProfile()
-  } catch (err) { /* ignore */ }
+    tasks = await TaskStorage.getAllTasks();
+  } catch (err) {
+    /* ignore */
+  }
 
   try {
-    isLoggedIn = await ProfileStorage.isLoggedIn()
-  } catch (err) { /* ignore */ }
+    profile = await ProfileStorage.getMyProfile();
+  } catch (err) {
+    /* ignore */
+  }
+
+  try {
+    isLoggedIn = await ProfileStorage.isLoggedIn();
+  } catch (err) {
+    /* ignore */
+  }
 
   return {
     user: {
@@ -158,50 +178,47 @@ async function getState() {
       isLoggedIn: isLoggedIn
     },
     tasks: tasks
-  }
+  };
 }
 
-export const syncTasks = async (lastSuccessfulSyncDateTimeUtc) => {
+export const syncTasks = async lastSuccessfulSyncDateTimeUtc => {
+  const state = await getState();
 
-  const state = await getState()
-
-  console.log("state...")
-  console.dir(state)
+  console.log("state...");
+  console.dir(state);
 
   if (!state.user.isLoggedIn) {
     return;
   }
 
   // TODO - refine
-  const isoDateTimeUtc = lastSuccessfulSyncDateTimeUtc.toISOString()
+  const isoDateTimeUtc = lastSuccessfulSyncDateTimeUtc.toISOString();
 
-  const userId = state.user.profile.id
-  const password = state.user.profile.password
+  const userId = state.user.profile.id;
+  const password = state.user.profile.password;
 
   // TODO - pass in (and store) the actual date
 
-  const endpoint =
-   `task/sync-tasks-after-timestamp/timestamp=${isoDateTimeUtc}`
+  const endpoint = `task/sync-tasks-after-timestamp/timestamp=${isoDateTimeUtc}`;
 
   const request = {
     endpoint: endpoint,
-    method: 'GET',
-     headers: {
-       'Accept': 'application/json',
-       'Content-Type': 'application/json',
-       'Authorization': constructAuthHeader(userId, password)
-     }
-  }
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: constructAuthHeader(userId, password)
+    }
+  };
 
   return invoke(request)
-  .then( response => {
+    .then(response => {
+      // TODO - log / inspect object / persist if necessary
 
-    // TODO - log / inspect object / persist if necessary
+      console.log("abc response...");
+      console.dir(response);
 
-    console.log("abc response...")
-    console.dir(response)
-
-    /*
+      /*
 
     if (response.tasks && response.length > 0) {
       TaskStorage.createOrUpdateTasks(response.state.entities.tasks)
@@ -209,10 +226,10 @@ export const syncTasks = async (lastSuccessfulSyncDateTimeUtc) => {
 
     */
 
-    return response
-  })
-  .catch(err => {
-    console.log("task err...")
-    console.dir(err)
-  })
-}
+      return response;
+    })
+    .catch(err => {
+      console.log("task err...");
+      console.dir(err);
+    });
+};

@@ -3,10 +3,10 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-export const EDIT_NAV_ACTION = 'EDIT_NAV_ACTION'
-export const DELETE_NAV_ACTION = 'DELETE_NAV_ACTION'
-export const SAVE_NAV_ACTION = 'SAVE_NAV_ACTION'
-export const CREATE_NAV_ACTION = 'CREATE_NAV_ACTION'
+export const EDIT_NAV_ACTION = "EDIT_NAV_ACTION";
+export const DELETE_NAV_ACTION = "DELETE_NAV_ACTION";
+export const SAVE_NAV_ACTION = "SAVE_NAV_ACTION";
+export const CREATE_NAV_ACTION = "CREATE_NAV_ACTION";
 
 /*
  This is used when the navbar should communicate an action to children
@@ -19,9 +19,9 @@ export const CREATE_NAV_ACTION = 'CREATE_NAV_ACTION'
 */
 export function setNavAction(navAction = undefined) {
   return {
-    type: 'SET_NAV_ACTION',
+    type: "SET_NAV_ACTION",
     navAction: navAction
-  }
+  };
 }
 
 /*
@@ -29,33 +29,31 @@ export function setNavAction(navAction = undefined) {
  transitionLocation is not used, because we simply hashHistory.goBack()
 */
 export function setLeftNavButton(leftButton) {
-
   return {
-    type: 'SET_LEFT_NAV_BUTTON',
-    leftButton: leftButton,
-  }
+    type: "SET_LEFT_NAV_BUTTON",
+    leftButton: leftButton
+  };
 }
 
 export function removeLeftNavButton() {
   return {
-    type: 'REMOVE_LEFT_NAV_BUTTON',
+    type: "REMOVE_LEFT_NAV_BUTTON",
     leftButton: null
-  }
+  };
 }
 
 export function setMediumRightNavButton(rightButton) {
-
   return {
-    type: 'SET_MEDIUM_RIGHT_NAV_BUTTON',
-    mediumRightButton: rightButton,
-  }
+    type: "SET_MEDIUM_RIGHT_NAV_BUTTON",
+    mediumRightButton: rightButton
+  };
 }
 
 export function removeMediumRightNavButton() {
   return {
-    type: 'REMOVE_MEDIUM_RIGHT_NAV_BUTTON',
+    type: "REMOVE_MEDIUM_RIGHT_NAV_BUTTON",
     mediumRightButton: null
-  }
+  };
 }
 
 /*
@@ -63,23 +61,22 @@ The default right navigation bar button is intended to be the 'far right' nav
 button. If a secondary button is required, then use the 'medium right' button.
 */
 export function setFarRightNavButton(rightButton) {
-
   return {
-    type: 'SET_FAR_RIGHT_NAV_BUTTON',
+    type: "SET_FAR_RIGHT_NAV_BUTTON",
     farRightButton: rightButton
-  }
+  };
 }
 
 export function removeFarRightNavButton() {
   return {
-    type: 'REMOVE_FAR_RIGHT_NAV_BUTTON',
+    type: "REMOVE_FAR_RIGHT_NAV_BUTTON",
     farRightButton: null
-  }
+  };
 }
 
 export function setNavbarTitle(title) {
   return {
-    type: 'SET_NAVBAR_TITLE',
+    type: "SET_NAVBAR_TITLE",
     title: title
-  }
+  };
 }

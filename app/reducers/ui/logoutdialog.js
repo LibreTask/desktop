@@ -4,27 +4,27 @@
  */
 
 const initialState = {
-  isOpen: false,
-}
+  isOpen: false
+};
 
 export default function logoutDialogReducer(state = initialState, action) {
   switch (action.type) {
-    case 'LOGOUTDIALOG_TOGGLE':
+    case "LOGOUTDIALOG_TOGGLE":
       return {
         ...state,
         isOpen: !state.isOpen
-      }
-    case 'LOGOUTDIALOG_OPEN':
+      };
+    case "LOGOUTDIALOG_OPEN":
       return {
         ...state,
         isOpen: true
-      }
-    case 'LOGOUTDIALOG_CLOSE':
+      };
+    case "LOGOUTDIALOG_CLOSE":
       return {
         ...state,
         isOpen: false
-      }
+      };
     default:
-      return state
+      return state;
   }
 }

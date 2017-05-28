@@ -3,135 +3,134 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { hashHistory } from 'react-router'
+import React, { Component, PropTypes } from "react";
+import { connect } from "react-redux";
+import { hashHistory } from "react-router";
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import {deepOrange500} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {List, ListItem} from 'material-ui/List'
-import Checkbox from 'material-ui/Checkbox'
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import { deepOrange500 } from "material-ui/styles/colors";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import { List, ListItem } from "material-ui/List";
+import Checkbox from "material-ui/Checkbox";
 
-const FaChevronRight = require('react-icons/lib/fa/chevron-right')
-const FaChevronDown = require('react-icons/lib/fa/chevron-down')
+const FaChevronRight = require("react-icons/lib/fa/chevron-right");
+const FaChevronDown = require("react-icons/lib/fa/chevron-down");
 
-import * as NavbarActions from '../actions/ui/navbar'
-import * as TaskViewActions from '../actions/ui/taskview'
-import * as TaskActions from '../actions/entities/task'
-import * as TaskController from '../models/controllers/task'
-import * as TaskQueue from '../models/storage/task-queue'
-import * as TaskStorage from '../models/storage/task-storage'
-import * as UserController from '../models/controllers/user'
+import * as NavbarActions from "../actions/ui/navbar";
+import * as TaskViewActions from "../actions/ui/taskview";
+import * as TaskActions from "../actions/entities/task";
+import * as TaskController from "../models/controllers/task";
+import * as TaskQueue from "../models/storage/task-queue";
+import * as TaskStorage from "../models/storage/task-storage";
+import * as UserController from "../models/controllers/user";
 
-import TaskUtils from '../utils/task-utils'
-import AppConstants from '../constants'
-import AppStyles from '../styles'
+import TaskUtils from "../utils/task-utils";
+import AppConstants from "../constants";
+import AppStyles from "../styles";
 
 const styles = {
   listItem: {
-    color: 'black',
-    fontSize: '100%',
-    fontWeight: 'lighter'
+    color: "black",
+    fontSize: "100%",
+    fontWeight: "lighter"
   },
   createTaskListItem: {
     color: AppStyles.linkColor,
-    fontSize: '110%',
-    textAlign: 'center'
+    fontSize: "110%",
+    textAlign: "center"
   },
   listItemHeader: {
-    color: 'black',
-    fontSize: '100%',
-    fontWeight: 'lighter'
+    color: "black",
+    fontSize: "100%",
+    fontWeight: "lighter"
   },
   completedTask: {
-    opacity: 0.3,
+    opacity: 0.3
     // TODO - strike through the task when completed
   },
   emptyListText: {
     margin: 30,
-    fontSize: '140%'
+    fontSize: "140%"
   }
-}
+};
 
 // TODO - look into alternate themes
 const muiTheme = getMuiTheme({
   palette: {
-    accent1Color: deepOrange500,
-  },
-})
+    accent1Color: deepOrange500
+  }
+});
 
 class MultiTaskPage extends Component {
-
   componentDidMount() {
-    this.props.setNavbarTitle('Tasks')
-    this.props.setMediumRightNavButton(AppConstants.CREATE_NAVBAR_BUTTON)
-    this.props.setFarRightNavButton(AppConstants.MULTITASK_NAV_DROPDOWN)
+    this.props.setNavbarTitle("Tasks");
+    this.props.setMediumRightNavButton(AppConstants.CREATE_NAVBAR_BUTTON);
+    this.props.setFarRightNavButton(AppConstants.MULTITASK_NAV_DROPDOWN);
   }
 
   componentWillUnmount() {
-    this.props.removeMediumRightNavButton()
-    this.props.removeFarRightNavButton()
+    this.props.removeMediumRightNavButton();
+    this.props.removeFarRightNavButton();
   }
 
   componentWillReceiveProps(nextProps) {
-
     // consume any actions triggered via the Navbar
     if (nextProps.navAction === NavbarActions.CREATE_NAV_ACTION) {
       // remove before transition
-      this.props.removeMediumRightNavButton()
-      this.props.removeFarRightNavButton()
+      this.props.removeMediumRightNavButton();
+      this.props.removeFarRightNavButton();
 
-      this.props.setNavAction(undefined)
-      hashHistory.push('/task/create')
+      this.props.setNavAction(undefined);
+      hashHistory.push("/task/create");
     }
 
     if (nextProps.shouldRefreshTaskView) {
-      this.forceUpdate() // this triggers a refresh
-      this.props.refreshTaskView(false) // set to false, after refresh
+      this.forceUpdate(); // this triggers a refresh
+      this.props.refreshTaskView(false); // set to false, after refresh
     }
   }
 
   // TODO - clean up this sloppy logic / indirection; should not need a function
   _viewIsCollapsed(view) {
-    return this.props.taskCategories[view].isCollapsed
+    return this.props.taskCategories[view].isCollapsed;
   }
 
-  _sortTasksByDateAndInsertHeaders(tasks)  {
-
+  _sortTasksByDateAndInsertHeaders(tasks) {
     // TODO - fix the hacky date logic in this method
 
-    const today = new Date()
-    const tomorrow = new Date(today.getFullYear(),
-      today.getMonth(), today.getDate() + 1)
+    const today = new Date();
+    const tomorrow = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + 1
+    );
 
-    let todaysTasks = []
-    let tomorrowsTasks = []
-    let futureTasks = []
-    let overdueTasks = []
-    let tasksWithNoDate = []
+    let todaysTasks = [];
+    let tomorrowsTasks = [];
+    let futureTasks = [];
+    let overdueTasks = [];
+    let tasksWithNoDate = [];
 
     for (let task of tasks) {
-
       const taskDate = task.dueDateTimeUtc
         ? new Date(task.dueDateTimeUtc)
         : null;
 
       if (!taskDate) {
-        task.displayCategory = 'No Date'
-        tasksWithNoDate.push(task)
+        task.displayCategory = "No Date";
+        tasksWithNoDate.push(task);
       } else if (taskDate.toDateString() === today.toDateString()) {
-        task.displayCategory = 'Today'
-        todaysTasks.push(task)
+        task.displayCategory = "Today";
+        todaysTasks.push(task);
       } else if (taskDate.toDateString() === tomorrow.toDateString()) {
-        task.displayCategory = 'Tomorrow'
-        tomorrowsTasks.push(task)
+        task.displayCategory = "Tomorrow";
+        tomorrowsTasks.push(task);
       } else if (taskDate.getTime() > tomorrow.getTime()) {
-        task.displayCategory = 'Future'
-        futureTasks.push(task)
+        task.displayCategory = "Future";
+        futureTasks.push(task);
       } else if (taskDate.getTime() < today.getTime()) {
-        task.displayCategory = "Overdue"
-        overdueTasks.push(task)
+        task.displayCategory = "Overdue";
+        overdueTasks.push(task);
       } else {
         // TODO - what here?
       }
@@ -140,76 +139,75 @@ class MultiTaskPage extends Component {
     if (tasksWithNoDate.length > 0) {
       tasksWithNoDate.unshift({
         isHeader: true,
-        name: 'No Date',
-      })
+        name: "No Date"
+      });
     }
 
     if (todaysTasks.length > 0) {
       todaysTasks.unshift({
         isHeader: true,
-        name: 'Today',
-      })
+        name: "Today"
+      });
     }
 
     if (tomorrowsTasks.length > 0) {
       tomorrowsTasks.unshift({
         isHeader: true,
-        name: 'Tomorrow',
-      })
+        name: "Tomorrow"
+      });
     }
 
     if (futureTasks.length > 0) {
       futureTasks.unshift({
         isHeader: true,
-        name: 'Future',
-      })
+        name: "Future"
+      });
     }
 
     if (overdueTasks.length > 0) {
       overdueTasks.unshift({
         isHeader: true,
-        name: 'Overdue',
-      })
+        name: "Overdue"
+      });
     }
 
     return tasksWithNoDate.concat(
-      todaysTasks, tomorrowsTasks, futureTasks, overdueTasks)
+      todaysTasks,
+      tomorrowsTasks,
+      futureTasks,
+      overdueTasks
+    );
   }
 
   _isHeaderCurrentlyCollapsed(category) {
-    if (category === 'No Date') {
-      return this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE)
-    } else if (category === 'Today') {
-      return this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS)
-    } else if (category === 'Tomorrow') {
-      return this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS)
-    } else if (category === 'Future') {
-      return this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS)
-    } else if (category === 'Overdue') {
-      return this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS)
+    if (category === "No Date") {
+      return this._viewIsCollapsed(TaskViewActions.TASKS_WITH_NO_DATE);
+    } else if (category === "Today") {
+      return this._viewIsCollapsed(TaskViewActions.TODAYS_TASKS);
+    } else if (category === "Tomorrow") {
+      return this._viewIsCollapsed(TaskViewActions.TOMORROWS_TASKS);
+    } else if (category === "Future") {
+      return this._viewIsCollapsed(TaskViewActions.FUTURE_TASKS);
+    } else if (category === "Overdue") {
+      return this._viewIsCollapsed(TaskViewActions.OVERDUE_TASKS);
     } else {
-      return false // TODO - what here?
+      return false; // TODO - what here?
     }
   }
 
-  _renderRow(row)  {
+  _renderRow(row) {
     try {
-      return row.isHeader
-        ? this._renderHeader(row)
-        : this._renderTask(row)
+      return row.isHeader ? this._renderHeader(row) : this._renderTask(row);
     } catch (err) {
-      console.log('err rendering row: ' + err)
+      console.log("err rendering row: " + err);
     }
   }
 
   _renderTask(task) {
-
     if (!this._isHeaderCurrentlyCollapsed(task.displayCategory)) {
-
-      let listItemStyle =
-        task.isCompleted
-        ? {...styles.listItem, ...styles.completedTask}
-        : styles.listItem
+      let listItemStyle = task.isCompleted
+        ? { ...styles.listItem, ...styles.completedTask }
+        : styles.listItem;
 
       return (
         <ListItem
@@ -218,134 +216,125 @@ class MultiTaskPage extends Component {
           leftCheckbox={
             <Checkbox
               checked={task.isCompleted}
-              onClick={(event) => {
-
+              onClick={event => {
                 /*
                   We must use `onClick`, rather than `onCheck`, so that we can
                   stop event propagation. That means we do not have access to
                   the checked status, so we simply invert the task's current
                   completion status.
                 */
-                event.stopPropagation()
+                event.stopPropagation();
 
-                task.isCompleted = !task.isCompleted
-                task.completionDateTimeUtc = (new Date()).getTime()
+                task.isCompleted = !task.isCompleted;
+                task.completionDateTimeUtc = new Date().getTime();
 
-                let userId = this.props.profile.id
-                let pw = this.props.profile.password
+                let userId = this.props.profile.id;
+                let pw = this.props.profile.password;
 
                 if (!task.isCompleted && task.completionDateTimeUtc) {
                   // if the task is "unchecked", delete the completion time
-                  task.completionDateTimeUtc = undefined
+                  task.completionDateTimeUtc = undefined;
                 }
 
                 if (UserController.canAccessNetwork(this.props.profile)) {
-
                   TaskController.updateTask(task, userId, pw)
-                  .then( response => {
-                    // use the task in the reponse; it is the most up-to-date
-                    this._updateTaskLocally(response.task)
-                   })
-                   .catch( error => {
-
-                      if (error.name === 'NoConnection') {
-                        this._updateTaskLocally(task, true)
+                    .then(response => {
+                      // use the task in the reponse; it is the most up-to-date
+                      this._updateTaskLocally(response.task);
+                    })
+                    .catch(error => {
+                      if (error.name === "NoConnection") {
+                        this._updateTaskLocally(task, true);
                       } else {
                         this.setState({
                           updateError: error.message,
                           isUpdating: false
-                        })
+                        });
                       }
-                   })
-               } else {
-                 this._updateTaskLocally(task, true)
-               }
-            }}/>
+                    });
+                } else {
+                  this._updateTaskLocally(task, true);
+                }
+              }}
+            />
           }
-          onClick={
-            (event) => {
+          onClick={event => {
+            // remove before transition
+            this.props.removeMediumRightNavButton();
+            this.props.removeFarRightNavButton();
 
-              // remove before transition
-              this.props.removeMediumRightNavButton()
-              this.props.removeFarRightNavButton()
-
-              hashHistory.push(`/task/${task.id}`)
-            }
-          }
+            hashHistory.push(`/task/${task.id}`);
+          }}
           primaryText={task.name}
         />
-      )
+      );
     }
 
-    return <div key={`empty-task-list-item-${task.id}`}></div>
+    return <div key={`empty-task-list-item-${task.id}`} />;
   }
 
   _updateTaskLocally = (task, queueTaskUpdate) => {
-
     if (queueTaskUpdate) {
-
       // mark update time, before queueing
-      task.updatedAtDateTimeUtc = new Date()
+      task.updatedAtDateTimeUtc = new Date();
 
       // task is queued only when network could not be reached
-      this.props.addPendingTaskUpdate(task)
-      TaskQueue.queueTaskUpdate(task)
+      this.props.addPendingTaskUpdate(task);
+      TaskQueue.queueTaskUpdate(task);
     }
 
-    TaskStorage.createOrUpdateTask(task)
-    this.props.createOrUpdateTask(task)
-  }
+    TaskStorage.createOrUpdateTask(task);
+    this.props.createOrUpdateTask(task);
+  };
 
   _renderHeader(header) {
+    let listsArrowImage = this._isHeaderCurrentlyCollapsed(header.name)
+      ? <FaChevronRight />
+      : <FaChevronDown />;
 
-    let listsArrowImage =
-        this._isHeaderCurrentlyCollapsed(header.name)
-        ? <FaChevronRight/>
-        : <FaChevronDown/>;
-
-    return  (
-       <ListItem
+    return (
+      <ListItem
         style={styles.listItemHeader}
         key={`list-item-header-${header.name}`}
         leftIcon={listsArrowImage}
         primaryText={header.name}
-        onTouchTap={ () => {
-          if (header.name === 'No Date') {
-            this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE)
-          } else if (header.name === 'Today') {
-            this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS)
-          } else if (header.name === 'Tomorrow') {
-            this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS)
-          } else if (header.name === 'Future') {
-            this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS)
-          } else if (header.name === 'Overdue') {
-            this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS)
+        onTouchTap={() => {
+          if (header.name === "No Date") {
+            this.props.toggleTaskView(TaskViewActions.TASKS_WITH_NO_DATE);
+          } else if (header.name === "Today") {
+            this.props.toggleTaskView(TaskViewActions.TODAYS_TASKS);
+          } else if (header.name === "Tomorrow") {
+            this.props.toggleTaskView(TaskViewActions.TOMORROWS_TASKS);
+          } else if (header.name === "Future") {
+            this.props.toggleTaskView(TaskViewActions.FUTURE_TASKS);
+          } else if (header.name === "Overdue") {
+            this.props.toggleTaskView(TaskViewActions.OVERDUE_TASKS);
           }
-        }} >
-      </ListItem>
-    )
+        }}
+      />
+    );
   }
 
   _getTasksToDisplay() {
-    let tasks = []
+    let tasks = [];
 
     for (let taskId in this.props.tasks) {
-      let task = this.props.tasks[taskId]
+      let task = this.props.tasks[taskId];
 
       if (TaskUtils.shouldRenderTask(task, this.props.showCompletedTasks)) {
-        tasks.push(task)
+        tasks.push(task);
       }
     }
 
-    return this._sortTasksByDateAndInsertHeaders(tasks)
+    return this._sortTasksByDateAndInsertHeaders(tasks);
   }
 
   _renderTasks() {
-    let listItems = []
-    let tasksToDisplay = this._getTasksToDisplay()
+    let listItems = [];
+    let tasksToDisplay = this._getTasksToDisplay();
 
     for (let task of tasksToDisplay) {
-      listItems.push(this._renderRow(task))
+      listItems.push(this._renderRow(task));
     }
 
     // if no tasks exist, prompt user to create one
@@ -353,22 +342,20 @@ class MultiTaskPage extends Component {
       listItems.push(
         <ListItem
           style={styles.createTaskListItem}
-          key={'create-task-list-item'}
-          onClick={
-            (event) => {
-              hashHistory.push('/task/create')
-            }
-          }
-          primaryText={'Create Task'}
+          key={"create-task-list-item"}
+          onClick={event => {
+            hashHistory.push("/task/create");
+          }}
+          primaryText={"Create Task"}
         />
-      )
+      );
     }
 
     return (
       <List>
-          {listItems}
+        {listItems}
       </List>
-    )
+    );
   }
 
   render() {
@@ -376,11 +363,11 @@ class MultiTaskPage extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         {this._renderTasks()}
       </MuiThemeProvider>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   isLoggedIn: state.entities.user.isLoggedIn,
   profile: state.entities.user.profile,
   tasks: state.entities.task.tasks,
@@ -388,7 +375,7 @@ const mapStateToProps = (state) => ({
   taskCategories: state.ui.taskview,
   showCompletedTasks: state.ui.taskview.showCompletedTasks,
   shouldRefreshTaskView: state.ui.taskview.shouldRefreshTaskView
-})
+});
 
 const mapDispatchToProps = {
   refreshTaskView: TaskViewActions.refreshTaskView,
@@ -403,6 +390,6 @@ const mapDispatchToProps = {
   addPendingTaskUpdate: TaskActions.addPendingTaskUpdate,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setNavAction: NavbarActions.setNavAction
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiTaskPage)
+export default connect(mapStateToProps, mapDispatchToProps)(MultiTaskPage);

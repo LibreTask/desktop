@@ -5,18 +5,18 @@
 
 export function toggle() {
   return {
-    type: 'LOGINDIALOG_TOGGLE'
-  }
+    type: "LOGINDIALOG_TOGGLE"
+  };
 }
 
 export function open() {
   return {
-    type: 'LOGINDIALOG_OPEN'
-  }
+    type: "LOGINDIALOG_OPEN"
+  };
 }
 
 export function close() {
   return {
-    type: 'LOGINDIALOG_CLOSE'
-  }
+    type: "LOGINDIALOG_CLOSE"
+  };
 }

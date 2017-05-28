@@ -5,18 +5,18 @@
 
 export function toggle() {
   return {
-    type: 'LOGOUTDIALOG_TOGGLE'
-  }
+    type: "LOGOUTDIALOG_TOGGLE"
+  };
 }
 
 export function open() {
   return {
-    type: 'LOGOUTDIALOG_OPEN'
-  }
+    type: "LOGOUTDIALOG_OPEN"
+  };
 }
 
 export function close() {
   return {
-    type: 'LOGOUTDIALOG_CLOSE'
-  }
+    type: "LOGOUTDIALOG_CLOSE"
+  };
 }

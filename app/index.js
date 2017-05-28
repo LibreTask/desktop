@@ -3,23 +3,23 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import { Router, hashHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
-import injectTapEventPlugin from 'react-tap-event-plugin'
+import React from "react";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import { Router, hashHistory } from "react-router";
+import { syncHistoryWithStore } from "react-router-redux";
+import injectTapEventPlugin from "react-tap-event-plugin";
 
-import routes from './routes'
-import configureStore from './store/configureStore'
-import './app.global.css'
+import routes from "./routes";
+import configureStore from "./store/configureStore";
+import "./app.global.css";
 
-import AppConstants from './constants'
+import AppConstants from "./constants";
 
-import * as MetaStorage from './models/storage/meta-storage'
-import * as TaskStorage from './models/storage/task-storage'
-import * as TaskQueue from './models/storage/task-queue'
-import * as ProfileStorage from './models/storage/profile-storage'
+import * as MetaStorage from "./models/storage/meta-storage";
+import * as TaskStorage from "./models/storage/task-storage";
+import * as TaskQueue from "./models/storage/task-queue";
+import * as ProfileStorage from "./models/storage/profile-storage";
 
 /*
 MetaStorage.getWindowSize()
@@ -40,37 +40,48 @@ MetaStorage.getWindowSize()
 */
 
 async function getInitialState() {
-
-  let tasks = {}
-  let queuedTaskCreates = {}
-  let queuedTaskUpdates = {}
-  let queuedTaskDeletes = {}
-  let profile = {}
-  let isLoggedIn = false
-
-  try {
-    tasks = await TaskStorage.getAllTasks()
-  } catch (err) { /* ignore */ }
+  let tasks = {};
+  let queuedTaskCreates = {};
+  let queuedTaskUpdates = {};
+  let queuedTaskDeletes = {};
+  let profile = {};
+  let isLoggedIn = false;
 
   try {
-    queuedTaskUpdates = await TaskQueue.getAllPendingUpdates()
-  } catch (err) { /* ignore */ }
+    tasks = await TaskStorage.getAllTasks();
+  } catch (err) {
+    /* ignore */
+  }
 
   try {
-    queuedTaskCreates = await TaskQueue.getAllPendingCreates()
-  } catch (err) { /* ignore */ }
+    queuedTaskUpdates = await TaskQueue.getAllPendingUpdates();
+  } catch (err) {
+    /* ignore */
+  }
 
   try {
-    queuedTaskDeletes = await TaskQueue.getAllPendingDeletes()
-  } catch (err) { /* ignore */ }
+    queuedTaskCreates = await TaskQueue.getAllPendingCreates();
+  } catch (err) {
+    /* ignore */
+  }
 
   try {
-    profile = await ProfileStorage.getMyProfile()
-  } catch (err) { /* ignore */ }
+    queuedTaskDeletes = await TaskQueue.getAllPendingDeletes();
+  } catch (err) {
+    /* ignore */
+  }
 
   try {
-    isLoggedIn = await ProfileStorage.isLoggedIn()
-  } catch (err) { /* ignore */ }
+    profile = await ProfileStorage.getMyProfile();
+  } catch (err) {
+    /* ignore */
+  }
+
+  try {
+    isLoggedIn = await ProfileStorage.isLoggedIn();
+  } catch (err) {
+    /* ignore */
+  }
 
   return {
     entities: {
@@ -92,25 +103,23 @@ async function getInitialState() {
         isLoggedIn: isLoggedIn,
         isSyncing: false,
         lastSuccessfulSyncDateTimeUtc: undefined,
-        intervalId: undefined, // used to cancel sync
+        intervalId: undefined // used to cancel sync
       }
-    },
+    }
     // TODO - UI elements?
-  }
+  };
 }
 
-getInitialState()
-.then(initialState => {
+getInitialState().then(initialState => {
+  const store = configureStore(initialState);
+  const history = syncHistoryWithStore(hashHistory, store);
 
-  const store = configureStore(initialState)
-  const history = syncHistoryWithStore(hashHistory, store)
-
-  injectTapEventPlugin()
+  injectTapEventPlugin();
 
   render(
     <Provider store={store}>
       <Router history={history} routes={routes} />
     </Provider>,
-    document.getElementById('root')
-  )
-})
+    document.getElementById("root")
+  );
+});
