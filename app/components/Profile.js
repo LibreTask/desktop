@@ -180,10 +180,6 @@ class Profile extends Component {
     hashHistory.replace("/tasks"); // navigate to main on deletion
   };
 
-  _onAccountDowngrade = () => {
-    shell.openExternal(AppConstants.ACCOUNT_DOWNGRADE_LINK);
-  };
-
   _hasPremiumSubscription = () => {
     let today = new Date();
 
@@ -207,7 +203,9 @@ class Profile extends Component {
           backgroundColor={AppStyles.buttonColor}
           labelStyle={styles.profileButtonLabel}
           label="Cancel Premium"
-          onTouchTap={this._onAccountDowngrade}
+          onTouchTap={() => {
+            shell.openExternal(AppConstants.ACCOUNT_DOWNGRADE_LINK);
+          }}
         />
       );
     } else {
