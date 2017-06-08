@@ -204,6 +204,7 @@ class MultiTaskPage extends Component {
   }
 
   _renderTask(task) {
+    // only render if header is not collapsed
     if (!this._isHeaderCurrentlyCollapsed(task.displayCategory)) {
       let listItemStyle = task.isCompleted
         ? { ...styles.listItem, ...styles.completedTask }
