@@ -24,6 +24,7 @@ import * as TaskViewActions from "../actions/ui/taskview";
 import { SingleDatePicker } from "react-dates";
 import moment from "moment";
 
+import DateUtils from "../utils/date-utils";
 import AppConstants from "../constants";
 import AppStyles from "../styles";
 
@@ -340,7 +341,8 @@ class SingleTaskPage extends Component {
           date={selectedDate}
           onDateChange={selectedDate => {
             let task = this.state.editedTask;
-            task.dueDateTimeUtc = selectedDate;
+            task.dueDateTimeUtc =
+              DateUtils.oneSecondBeforeMidnight(electedDate);
             this.setState({ editedTask: task });
           }}
           focused={this.state.datePickerIsFocused}

@@ -24,6 +24,7 @@ import moment from "moment";
 
 import Validator from "validator";
 
+import DateUtils from "../utils/date-utils";
 import AppConstants from "../constants";
 import AppStyles from "../styles";
 
@@ -161,7 +162,7 @@ class CreateTask extends Component {
               TaskStorage.createOrUpdateTask(task);
               this.props.createOrUpdateTask(task);
 
-              this.props.updateTaskViewCollapsedStatus();
+              this.props.refreshTaskViewCollapseStatus();
 
               // navigate to main on success
               hashHistory.replace("/tasks");
@@ -244,7 +245,9 @@ class CreateTask extends Component {
           numberOfMonths={1}
           date={selectedDate}
           onDateChange={selectedDate => {
-            this.setState({ selectedDate: selectedDate });
+            this.setState({
+              selectedDate: DateUtils.oneSecondBeforeMidnight(selectedDate)
+            });
           }}
           focused={this.state.datePickerIsFocused}
           onFocusChange={({ focused }) => {

@@ -110,9 +110,9 @@ function addPendingTaskDelete(state, action) {
     let remainingTasks = removeTask(state.pendingTaskActions.create, taskId);
 
     let taskMap = {};
-    _.forEach(remainingTasks, task => {
+    for (let task of remainingTasks) {
       taskMap[task.id] = task;
-    });
+    }
 
     updatedPendingTaskActions = {
       create: taskMap,
@@ -157,9 +157,9 @@ function removePendingTaskCreate(state, action) {
   );
 
   let taskMap = {};
-  _.forEach(remainingTasks, task => {
+  for (let task of remainingTasks) {
     taskMap[task.id] = task;
-  });
+  }
 
   let clientAssignedTaskId = action.taskId;
   let serverAssignedTaskId = action.serverAssignedTaskId;
@@ -186,9 +186,9 @@ function removePendingTaskUpdate(state, action) {
   );
 
   let taskMap = {};
-  _.forEach(remainingTasks, task => {
+  for (let task of remainingTasks) {
     taskMap[task.id] = task;
-  });
+  }
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -206,9 +206,9 @@ function removePendingTaskDelete(state, action) {
   );
 
   let taskMap = {};
-  _.forEach(remainingTasks, task => {
+  for (let task of remainingTasks) {
     taskMap[task.id] = task;
-  });
+  }
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -279,18 +279,19 @@ function deleteTask(state, action) {
   let remainingTasks = removeTask(state.tasks, action.taskId);
 
   let taskMap = {};
-  _.forEach(remainingTasks, task => {
+  for (let task of remainingTasks) {
     taskMap[task.id] = task;
-  });
+  }
 
   return updateObject(state, { tasks: taskMap });
 }
 
 function addTasks(state, action) {
   let normalizedTasks = {};
-  _.forEach(action.tasks, task => {
+  for (let task of action.tasks) {
     normalizedTasks[task.id] = task;
-  });
+  }
+
   return updateObject(state, {
     tasks: updateObject(state.tasks, normalizedTasks)
   });
@@ -317,7 +318,7 @@ function syncTasks(state, action) {
   const syncedTasks = action.tasks;
   const existingTasks = state.tasks;
 
-  console.log("synced tasks...");
+  console.log("ALL synced tasks...");
   console.dir(syncedTasks);
 
   console.log("existing tasks...");
@@ -325,14 +326,20 @@ function syncTasks(state, action) {
 
   let tasksToCreateOrUpdate = [];
 
-  _.forEach(syncedTasks, syncedTask => {
+  for (let syncedTask of syncedTasks) {
     if (syncedTask.id in existingTasks) {
       const syncedTaskUpdateDateTimeUtc = syncedTask.updatedAtDateTimeUtc;
       const existingTaskUpdateDateTimeUtc =
         existingTasks[syncedTask.id].updatedAtDateTimeUtc;
 
+      let syncedTaskWasUpdatedMostRecently = (
+        (syncedTaskUpdateDateTimeUtc && !existingTaskUpdateDateTimeUtc)
+        ||
+        (syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc)
+      )
+
       if (
-        syncedTaskUpdateDateTimeUtc > existingTaskUpdateDateTimeUtc &&
+        syncedTaskWasUpdatedMostRecently &&
         syncedTaskDoesNotConflictWithQueuedTask(state, syncedTask)
       ) {
         // synced task was updated more recently than the version on
@@ -353,7 +360,7 @@ function syncTasks(state, action) {
       // so we must mark it for update/creation.
       tasksToCreateOrUpdate.push(syncedTask);
     }
-  });
+  }
 
   console.log("tasks to create or update...");
   console.dir(tasksToCreateOrUpdate);

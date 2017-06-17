@@ -138,6 +138,9 @@ class App extends Component {
     if (!this.props.isSyncingTasks) {
       let intervalId = setInterval(() => {
         this.props.syncTasks();
+
+        // refresh task view after each sync
+        this.props.refreshTaskViewCollapseStatus()
       }, AppConstants.SYNC_INTERVAL_MILLIS);
 
       // register intervalId so we can cancel later
@@ -201,6 +204,9 @@ class App extends Component {
     this._startUIRefreshCheck();
     this._startSubmissionOfQueuedTasks();
     this._startTaskCleanup();
+
+    // refresh task view on startup
+    this.props.refreshTaskViewCollapseStatus()
   }
 
   componentWillUnmount() {
@@ -542,6 +548,7 @@ const mapDispatchToProps = {
   setNavAction: NavbarActions.setNavAction,
   toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks,
   refreshTaskView: TaskViewActions.refreshTaskView,
+  refreshTaskViewCollapseStatus: TaskViewActions.refreshTaskViewCollapseStatus,
   stopTaskViewRefresh: TaskViewActions.stopTaskViewRefresh
 };
 
