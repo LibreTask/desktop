@@ -3,4 +3,15 @@
 `npm run dev`
 
 # Build for platform (example here is mac)
-`electron-packager . Algernon --platform=darwin --arch=x64`
+1. `npm run build`
+
+2. `electron-packager . Algernon --platform=darwin --arch=x64`
+OR
+2. `npm run start`
+
+
+---
+
+Potential requirement?
+
+`npm install ajv@5.2.0`
