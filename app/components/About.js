@@ -29,7 +29,7 @@ const styles = {
     fontSize: "105%"
   },
   linkText: {
-    fontSize: "90%",
+    fontSize: "100%",
     color: AppStyles.linkColor,
     cursor: "pointer"
   }
@@ -43,12 +43,12 @@ class About extends Component {
   render() {
     return (
       <div style={AppStyles.mainWindow}>
-
         <div style={AppStyles.centeredWindow}>
           <div style={styles.titleText}>Algernon</div>
 
           <div style={styles.textField}>
-            Organize your goals, track your progress, and have updates seamlessly sync across all of your devices.
+            Organize your goals, track your progress, and have updates
+            seamlessly sync across all of your devices.
           </div>
 
           <Divider />

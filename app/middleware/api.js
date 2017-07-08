@@ -6,7 +6,11 @@
 import RetryableError from "./errors/RetryableError";
 import ErrorCodes from "./errors/ErrorCodes";
 
-const API_ROOT = "http://192.168.1.111:3001/api/v1/";
+const API_ROOT = "http://174.138.64.49/api/v1/";
+// TEST ENV - "http://192.168.1.111:3001/api/v1/";
+// PROD ENV - "http://174.138.64.49/api/v1/";
+// (production does not need port due to NGINX proxy)
+
 const MAX_RETRIES = 3;
 
 const Buffer = require("buffer").Buffer;
@@ -44,34 +48,30 @@ function humanReadableError(error) {
 export function invoke(request, retriesRemaining) {
   const { endpoint, method, headers, body } = request;
 
-  return _invoke(endpoint, method, headers, body)
-  .catch(err => {
+  return _invoke(endpoint, method, headers, body).catch(err => {
     if (retriesRemaining === undefined) {
-      retriesRemaining = MAX_RETRIES
+      retriesRemaining = MAX_RETRIES;
     }
 
-    let shouldRetry = err instanceof RetryableError
-    shouldRetry &= method === 'GET'
-    shouldRetry &= retriesRemaining >= 1
+    let shouldRetry = err instanceof RetryableError;
+    shouldRetry &= method === "GET";
+    shouldRetry &= retriesRemaining >= 1;
 
     if (shouldRetry) {
+      let retryAttemptNumber = MAX_RETRIES - retriesRemaining;
 
-      let retryAttemptNumber = MAX_RETRIES - retriesRemaining
-
-      return _retryWait(retryAttemptNumber)
-      .then(() => {
-          return invoke(request, (retriesRemaining - 1))
-      })
+      return _retryWait(retryAttemptNumber).then(() => {
+        return invoke(request, retriesRemaining - 1);
+      });
     } else {
       throw err;
     }
-  })
+  });
 }
 
 function _invoke(endpoint, method, headers, body) {
-  const fullUrl = endpoint.indexOf(API_ROOT) === -1
-    ? API_ROOT + endpoint
-    : endpoint;
+  const fullUrl =
+    endpoint.indexOf(API_ROOT) === -1 ? API_ROOT + endpoint : endpoint;
 
   const options = {
     uri: fullUrl,
@@ -81,9 +81,8 @@ function _invoke(endpoint, method, headers, body) {
   };
 
   return rp(options).then(response => JSON.parse(response)).catch(error => {
-
-    console.log('error...')
-    console.dir(error)
+    console.log("error...");
+    console.dir(error);
 
     if (error.error && error.error.code === "ECONNREFUSED") {
       throw new RetryableError();
@@ -94,11 +93,10 @@ function _invoke(endpoint, method, headers, body) {
 }
 
 function _retryWait(retryAttemptNumber) {
-
   // TODO - refine this value
-  let retryDurationMillis = 1000 * (1.5 ** retryAttemptNumber)
+  let retryDurationMillis = 1000 * 1.5 ** retryAttemptNumber;
 
-  console.log("retrying for: " + retryDurationMillis)
+  console.log("retrying for: " + retryDurationMillis);
 
-  return new Promise(resolve => setTimeout(resolve, retryDurationMillis))
+  return new Promise(resolve => setTimeout(resolve, retryDurationMillis));
 }

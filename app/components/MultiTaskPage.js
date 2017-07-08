@@ -31,8 +31,7 @@ import AppStyles from "../styles";
 const styles = {
   listItem: {
     color: "black",
-    fontSize: "100%",
-    fontWeight: "lighter"
+    fontSize: "100%"
   },
   createTaskListItem: {
     color: AppStyles.linkColor,
@@ -42,7 +41,7 @@ const styles = {
   listItemHeader: {
     color: "black",
     fontSize: "100%",
-    fontWeight: "lighter"
+    fontWeight: "bold"
   },
   completedTask: {
     opacity: 0.3
@@ -295,7 +294,7 @@ class MultiTaskPage extends Component {
 
     return (
       <ListItem
-        style={styles.listItemHeader}
+        innerDivStyle={styles.listItemHeader}
         key={`list-item-header-${header.name}`}
         leftIcon={listsArrowImage}
         primaryText={header.name}

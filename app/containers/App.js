@@ -140,7 +140,7 @@ class App extends Component {
         this.props.syncTasks();
 
         // refresh task view after each sync
-        this.props.refreshTaskViewCollapseStatus()
+        this.props.refreshTaskViewCollapseStatus();
       }, AppConstants.SYNC_INTERVAL_MILLIS);
 
       // register intervalId so we can cancel later
@@ -206,7 +206,7 @@ class App extends Component {
     this._startTaskCleanup();
 
     // refresh task view on startup
-    this.props.refreshTaskViewCollapseStatus()
+    this.props.refreshTaskViewCollapseStatus();
   }
 
   componentWillUnmount() {
@@ -375,15 +375,11 @@ class App extends Component {
           {!this.state.docked && leftNavButton}
         </span>
         &nbsp;&nbsp;&nbsp;
-        <span style={styles.navbarTitle}>
-          {this.props.navbarTitle}
-        </span>
+        <span style={styles.navbarTitle}>{this.props.navbarTitle}</span>
         <span style={styles.contentHeaderMenuButton}>
           {mediumRightNavButton}
         </span>
-        <span style={styles.contentHeaderMenuButton}>
-          {farRightNavButton}
-        </span>
+        <span style={styles.contentHeaderMenuButton}>{farRightNavButton}</span>
       </div>
     );
 
@@ -460,10 +456,15 @@ class App extends Component {
       />
     ];
 
+    // ensure all non-sidemenu elements have opacity modified
+    let titlePanelStyle = this.props.sideMenuIsOpen
+      ? { opacity: 0.8 }
+      : { opacity: 1 };
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <Sidebar {...sidebarProps}>
-          <TitlePanel title={contentHeader}>
+          <TitlePanel style={titlePanelStyle} title={contentHeader}>
             <div>
               <div>
                 <Dialog
@@ -512,8 +513,8 @@ const mapStateToProps = state => ({
   mediumRightNavButton: state.ui.navbar.mediumRightButton,
   farRightNavButton: state.ui.navbar.farRightButton,
   leftNavButton: state.ui.navbar.leftButton,
-  mediumRightNavTransitionLocation: state.ui.navbar
-    .mediumRightTransitionLocation,
+  mediumRightNavTransitionLocation:
+    state.ui.navbar.mediumRightTransitionLocation,
   farRightNavTransitionLocation: state.ui.navbar.farRightTransitionLocation,
   isSyncingTasks: state.entities.task.isSyncingTasks,
   isSubmittingQueuedTasks: state.entities.task.isSubmittingQueuedTasks,
