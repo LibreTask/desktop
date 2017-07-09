@@ -119,7 +119,6 @@ class Signup extends Component {
   render = () => {
     return (
       <div style={AppStyles.mainWindow}>
-
         <div style={AppStyles.centeredWindow}>
           <TextField
             style={AppStyles.centeredElement}
@@ -160,10 +159,6 @@ class Signup extends Component {
             }}
           />
 
-          <div style={AppStyles.errorText}>
-            {this.state.signupError}
-          </div>
-
           <RaisedButton
             label="Signup"
             style={{
@@ -172,6 +167,10 @@ class Signup extends Component {
             }}
             onTouchTap={this._signup}
           />
+
+          <div style={AppStyles.errorText}>
+            {this.state.signupError}
+          </div>
         </div>
       </div>
     );

@@ -113,7 +113,6 @@ class Login extends Component {
   render = () => {
     return (
       <div style={AppStyles.mainWindow}>
-
         <div style={AppStyles.centeredWindow}>
           <TextField
             multiLine={true}
@@ -152,10 +151,6 @@ class Login extends Component {
             Forgot password?
           </p>
 
-          <div style={AppStyles.errorText}>
-            {this.state.loginError}
-          </div>
-
           <RaisedButton
             label="Login"
             style={{
@@ -164,6 +159,10 @@ class Login extends Component {
             }}
             onTouchTap={this._login}
           />
+
+          <div style={AppStyles.errorText}>
+            {this.state.loginError}
+          </div>
         </div>
       </div>
     );
