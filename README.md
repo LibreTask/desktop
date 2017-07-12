@@ -15,3 +15,8 @@ OR
 Potential requirement?
 
 `npm install ajv@5.2.0`
+
+
+---
+
+NOTE: The current setup REQUIRES WEBPACK 2.6.1
