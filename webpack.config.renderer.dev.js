@@ -35,7 +35,7 @@ import ExtractTextPlugin from "extract-text-webpack-plugin";
 
 const port = process.env.PORT || 3000;
 
-export default merge(baseConfig, {
+export default merge.smart(baseConfig, {
   devtool: "inline-source-map",
 
   entry: [

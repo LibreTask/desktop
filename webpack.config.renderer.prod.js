@@ -34,8 +34,11 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import BabiliPlugin from "babili-webpack-plugin";
 import baseConfig from "./webpack.config.base";
 
-export default merge(baseConfig, {
-  devtool: "cheap-module-source-map",
+export default merge.smart(baseConfig, {
+  devtool: "source-map",
+
+  // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
+  target: "electron-renderer",
 
   entry: ["babel-polyfill", "./app/index"],
 
@@ -164,9 +167,19 @@ export default merge(baseConfig, {
     // https://github.com/webpack/webpack/issues/864
     new webpack.optimize.OccurrenceOrderPlugin(),
 
-    // NODE_ENV should be production so that modules do not perform certain development checks
+    /**
+     * Create global constants which can be configured at compile time.
+     *
+     * Useful for allowing different behaviour between development builds and
+     * release builds
+     *
+     * NODE_ENV should be production so that modules do not perform certain
+     * development checks
+     */
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("production")
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "production"
+      )
     }),
 
     new BabiliPlugin(),
@@ -178,8 +191,5 @@ export default merge(baseConfig, {
       template: "app/app.html",
       inject: false
     })
-  ],
-
-  // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
-  target: "electron-renderer"
+  ]
 });

@@ -11,13 +11,7 @@
       "plugins": ["babel-plugin-dev-expression"]
     },
     "development": {
-			"plugins": [ ],
-      "presets": ["react-hmre"]
-    },
-    "test": {
-      "plugins": [
-        ["webpack-loaders", { "config": "webpack.config.test.js", "verbose": false }]
-      ]
+      "plugins": [ ]
     }
   }
 }

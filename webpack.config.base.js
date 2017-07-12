@@ -27,9 +27,12 @@ SOFTWARE.
  */
 
 import path from "path";
+import webpack from "webpack";
 import { dependencies as externals } from "./app/package.json";
 
 export default {
+  externals: Object.keys(externals || {}),
+
   module: {
     rules: [
       {
@@ -55,11 +58,9 @@ export default {
 
   // https://webpack.github.io/docs/configuration.html#resolve
   resolve: {
-    extensions: ["*", ".js", ".jsx", ".json"],
+    extensions: [".js", ".jsx", ".json"],
     modules: [path.join(__dirname, "app"), "node_modules"]
   },
 
-  plugins: [],
-
-  externals: Object.keys(externals || {})
+  plugins: [new webpack.NamedModulesPlugin()]
 };
