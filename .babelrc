@@ -4,14 +4,17 @@
     "stage-0",
     "react"
   ],
-  "plugins": ["add-module-exports"],
+   "plugins": ["add-module-exports", "dynamic-import-webpack"],
   "env": {
     "production": {
       "presets": ["react-optimize"],
       "plugins": ["babel-plugin-dev-expression"]
     },
     "development": {
-      "plugins": [ ]
+      "plugins": [
+        "transform-class-properties",
+        "transform-es2015-classes",
+      ]
     }
   }
 }
