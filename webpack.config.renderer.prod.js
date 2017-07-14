@@ -40,7 +40,7 @@ export default merge.smart(baseConfig, {
   // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
   target: "electron-renderer",
 
-  entry: "./app/index",
+  entry: ["babel-polyfill", "./app/index"],
 
   output: {
     path: path.join(__dirname, "app/dist"),
