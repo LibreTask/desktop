@@ -13,6 +13,7 @@
     },
     "development": {
       "plugins": [
+        "babel-polyfill",
         "transform-class-properties",
         "transform-es2015-classes",
       ]
