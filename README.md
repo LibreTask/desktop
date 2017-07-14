@@ -9,10 +9,13 @@
 
 1. `npm run build`
 
-2. `electron-packager . Algernon --platform=darwin --arch=x64`
-OR
 2. `npm run start`
 
+# The above does not package the application. See
+
+(NOT THIS ONE) `electron-packager . Algernon --platform=darwin --arch=x64`
+
+1. `npm run package`
 
 ---
 
