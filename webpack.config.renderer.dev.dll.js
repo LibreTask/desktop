@@ -34,6 +34,8 @@ import { dependencies } from "./package.json";
 
 const dist = path.resolve(process.cwd(), "dll");
 
+const excludedModules = ["font-awesome", "react-icons"];
+
 export default merge.smart(baseConfig, {
   context: process.cwd(),
 
@@ -182,7 +184,7 @@ export default merge.smart(baseConfig, {
 
   entry: {
     renderer: Object.keys(dependencies || {}).filter(
-      dependency => dependency !== "font-awesome"
+      dependency => !excludedModules.includes(dependency)
     )
   },
 

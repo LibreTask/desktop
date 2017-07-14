@@ -3,6 +3,10 @@
 `npm run dev`
 
 # Build for platform (example here is mac)
+
+# Please note these commands take a long time (up to several minutes, so
+# do please be patient)
+
 1. `npm run build`
 
 2. `electron-packager . Algernon --platform=darwin --arch=x64`

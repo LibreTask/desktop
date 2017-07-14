@@ -1,19 +1,19 @@
 <html>
   <head>
-    <title>
-      Algernon
-    </title>
+    <meta charset="utf-8">
+    <title> Algernon </title>
     <script>
-      (function() {
-        if (!process.env.HOT) {
-          const link = document.createElement('link')
-          link.rel = 'stylesheet'
-          link.href = './dist/style.css'
-          document.getElementsByTagName('head')[0].appendChild(link)
-        }
-      }())
-    </script>
-    <link rel="stylesheet" type="text/css" href="./fonts/index.css"
+        (function() {
+          if (!process.env.HOT) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = './dist/style.css';
+            // HACK: Writing the script path should be done with webpack
+            document.getElementsByTagName('head')[0].appendChild(link);
+          }
+        }());
+      </script>
+    <link rel="stylesheet" type="text/css" href="./fonts/index.css"/>
   </head>
   <body>
     <div id="root"></div>
