@@ -62,12 +62,9 @@ const styles = {
     right: 0
   },
   datePicker: {
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 10,
     width: "100%"
-  },
-  mainContent: {
-    paddingBottom: 20 // padding between content and footer
   }
 };
 
@@ -236,7 +233,6 @@ class CreateTask extends Component {
 
     return (
       <div style={styles.datePicker}>
-
         <SingleDatePicker
           placeholder="Due Date"
           withFullScreenPortal={true}
@@ -317,14 +313,7 @@ class CreateTask extends Component {
   render = () => {
     return (
       <div style={AppStyles.mainWindow}>
-
-        <div
-          style={{
-            ...AppStyles.centeredWindow,
-            ...styles.mainContent
-          }}
-        >
-
+        <div style={AppStyles.centeredWindow}>
           <TextField
             multiLine={true}
             style={AppStyles.centeredElement}
@@ -360,7 +349,6 @@ class CreateTask extends Component {
           />
 
           {this._constructAttributeIcons()}
-
         </div>
       </div>
     );

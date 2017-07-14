@@ -43,7 +43,7 @@ const styles = {
     color: "green"
   },
   datePicker: {
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 10,
     width: "100%"
   }
@@ -294,9 +294,10 @@ class SingleTaskPage extends Component {
 
     let recurringFrequency = this.state.editedTask.recurringFrequency;
 
-    let initialIndex = recurringFrequency in frequencyToIndex
-      ? frequencyToIndex[recurringFrequency]
-      : defaultIndex;
+    let initialIndex =
+      recurringFrequency in frequencyToIndex
+        ? frequencyToIndex[recurringFrequency]
+        : defaultIndex;
 
     return (
       <Dialog
@@ -341,8 +342,9 @@ class SingleTaskPage extends Component {
           date={selectedDate}
           onDateChange={selectedDate => {
             let task = this.state.editedTask;
-            task.dueDateTimeUtc =
-              DateUtils.oneSecondBeforeMidnight(selectedDate);
+            task.dueDateTimeUtc = DateUtils.oneSecondBeforeMidnight(
+              selectedDate
+            );
             this.setState({ editedTask: task });
           }}
           focused={this.state.datePickerIsFocused}
@@ -409,7 +411,6 @@ class SingleTaskPage extends Component {
 
     return (
       <div style={AppStyles.mainWindow}>
-
         <div style={AppStyles.centeredWindow}>
           <Dialog
             style={AppStyles.dialog}
