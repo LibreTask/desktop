@@ -7,5 +7,6 @@ Algernon-darwin-x64
 app/main.prod.js
 app/main.prod.js.map
 app/dist
+release
 dist
 dll
