@@ -5,7 +5,7 @@
 
 import { invoke, constructAuthHeader } from "../../middleware/api";
 
-const uuid = require("node-uuid");
+const uuidV4 = require("uuid/v4");
 
 /*
   Only invoked when a Task need to be created client side, rather than server
@@ -30,7 +30,7 @@ export const constructTaskLocally = (
     updatedAtDateTimeUtc: creationDateTimeUtc,
 
     dueDateTimeUtc: taskDueDateTimeUtc,
-    id: "client-task-" + uuid.v4()
+    id: "client-task-" + uuidV4()
     // Notably, no userId is assigned because one may not exist.
     // A successful sync will rectify any discrepencies.
   };
@@ -185,9 +185,9 @@ export const syncTasks = async lastSuccessfulSyncDateTimeUtc => {
   const state = await getState();
 
   console.log("state...");
-  console.dir(state);
+  //console.dir(state);
 
-  if (!state.user.isLoggedIn) {
+  if (!state.user || !state.user.isLoggedIn) {
     return;
   }
 
@@ -216,7 +216,7 @@ export const syncTasks = async lastSuccessfulSyncDateTimeUtc => {
       // TODO - log / inspect object / persist if necessary
 
       console.log("abc response...");
-      console.dir(response);
+      //console.dir(response);
 
       /*
 
@@ -230,6 +230,6 @@ export const syncTasks = async lastSuccessfulSyncDateTimeUtc => {
     })
     .catch(err => {
       console.log("task err...");
-      console.dir(err);
+      //console.dir(err);
     });
 };

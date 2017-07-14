@@ -115,7 +115,6 @@
     "font-awesome": "^4.7.0",
     "material-ui": "^0.16.6",
     "moment": "^2.18.1",
-    "node-uuid": "^1.4.7",
     "pouchdb-browser": "^6.1.2",
     "pouchdb-upsert": "^2.1.0",
     "react": "^15.6.1",
@@ -134,6 +133,7 @@
     "redux-thunk": "^2.2.0",
     "request-promise": "^4.1.1",
     "source-map-support": "^0.4.6",
+    "uuid": "^3.1.0",
     "validator": "^6.2.1"
   },
   "devEngines": {

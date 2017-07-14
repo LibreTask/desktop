@@ -59,12 +59,12 @@ export const SYNC_TASKS = "SYNC_TASKS";
 export const syncTasks = () => {
   return function(dispatch, getState) {
     console.log("sync task state...");
-    console.dir(getState());
+    //////console.dir(getState());
 
-    let profile = getState().entities.user.profile;
+    let user = getState().entities.user;
 
     // only sync if the user can access the network
-    if (UserController.canAccessNetwork(profile)) {
+    if (user && UserController.canAccessNetwork(user.profile)) {
       // if no successful sync has been recorded, sync entire last month
       let lastSuccessfulSyncDateTimeUtc =
         getState().entities.task.lastSuccessfulSyncDateTimeUtc ||
@@ -79,15 +79,15 @@ export const syncTasks = () => {
           // logic on it.
           dispatch({
             type: SYNC_TASKS,
-            tasks: response.tasks,
+            tasks: response && response.tasks ? response.tasks : [],
 
             // set 'lastSync' time as five minutes ago, to provide small buffer
             lastSuccessfulSyncDateTimeUtc: DateUtils.fiveMinutesAgo()
           });
         })
         .catch(error => {
-          console.log("sync error....");
-          console.dir(error);
+          console.log("sync error: " + error);
+          ////console.dir(error);
         });
     }
   };
@@ -113,7 +113,7 @@ export const stopQueuedTaskSubmission = () => {
 export const submitQueuedTasks = () => {
   return function(dispatch, getState) {
     console.log("queued task submit state...");
-    console.dir(getState());
+    ////console.dir(getState());
 
     const profile = getState().entities.user.profile;
 
@@ -124,7 +124,7 @@ export const submitQueuedTasks = () => {
       const password = profile.password;
 
       console.log("pending create...");
-      console.dir(pendingTaskActions.create);
+      ////console.dir(pendingTaskActions.create);
 
       for (let taskId in pendingTaskActions.create) {
         let task = pendingTaskActions.create[taskId];
@@ -152,12 +152,12 @@ export const submitQueuedTasks = () => {
           })
           .catch(error => {
             console.log("create task queue error....");
-            console.dir(error);
+            ////console.dir(error);
           });
       }
 
       console.log("pending update...");
-      console.dir(pendingTaskActions.update);
+      ////console.dir(pendingTaskActions.update);
 
       for (let taskId in pendingTaskActions.update) {
         let task = pendingTaskActions.update[taskId];
@@ -173,12 +173,12 @@ export const submitQueuedTasks = () => {
           })
           .catch(error => {
             console.log("update task queue error....");
-            console.dir(error);
+            ////console.dir(error);
           });
       }
 
       console.log("pending delete...");
-      console.dir(pendingTaskActions.delete);
+      ////console.dir(pendingTaskActions.delete);
 
       for (let taskId in pendingTaskActions.delete) {
         let task = pendingTaskActions.delete[taskId];
@@ -194,7 +194,7 @@ export const submitQueuedTasks = () => {
           })
           .catch(error => {
             console.log("delete task queue error....");
-            console.dir(error);
+            ////console.dir(error);
           });
       }
 
@@ -242,7 +242,7 @@ export const cleanupTasks = () => {
 
   return function(dispatch, getState) {
     const pendingTaskActions = getState().entities.task.pendingTaskActions;
-    const tasks = getState().entities.task.tasks;
+    const tasks = getState().entities.task.tasks || [];
 
     for (let taskId in tasks) {
       let task = tasks[taskId];
