@@ -142,15 +142,6 @@ class Login extends Component {
 
           <br />
 
-          <p
-            style={styles.link}
-            onClick={() => {
-              shell.openExternal(AppConstants.PASSWORD_RESET_LINK);
-            }}
-          >
-            Forgot password?
-          </p>
-
           <RaisedButton
             label="Login"
             style={{
@@ -159,6 +150,15 @@ class Login extends Component {
             }}
             onTouchTap={this._login}
           />
+
+          <p
+            style={styles.link}
+            onClick={() => {
+              shell.openExternal(AppConstants.PASSWORD_RESET_LINK);
+            }}
+          >
+            Forgot password?
+          </p>
 
           <div style={AppStyles.errorText}>
             {this.state.loginError}
