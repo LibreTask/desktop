@@ -145,57 +145,16 @@ export const fetchTask = (taskId, userId, password) => {
   return invoke(request);
 };
 
-import * as TaskStorage from "../storage/task-storage";
-import * as ProfileStorage from "../storage/profile-storage";
-
-// TODO - move this method to general-purpose file
-async function getState() {
-  let tasks = [];
-  let profile = undefined;
-  let isLoggedIn = false;
-
-  try {
-    tasks = await TaskStorage.getAllTasks();
-  } catch (err) {
-    /* ignore */
-  }
-
-  try {
-    profile = await ProfileStorage.getMyProfile();
-  } catch (err) {
-    /* ignore */
-  }
-
-  try {
-    isLoggedIn = await ProfileStorage.isLoggedIn();
-  } catch (err) {
-    /* ignore */
-  }
-
-  return {
-    user: {
-      profile: profile,
-      isLoggedIn: isLoggedIn
-    },
-    tasks: tasks
-  };
-}
-
-export const syncTasks = async lastSuccessfulSyncDateTimeUtc => {
-  const state = await getState();
-
-  console.log("state...");
-  //console.dir(state);
-
-  if (!state.user || !state.user.isLoggedIn) {
+export const syncTasks = async (lastSuccessfulSyncDateTimeUtc, user) => {
+  if (!user || !user.isLoggedIn) {
     return;
   }
 
   // TODO - refine
   const isoDateTimeUtc = lastSuccessfulSyncDateTimeUtc.toISOString();
 
-  const userId = state.user.profile.id;
-  const password = state.user.profile.password;
+  const userId = user.profile.id;
+  const password = user.profile.password;
 
   // TODO - pass in (and store) the actual date
 

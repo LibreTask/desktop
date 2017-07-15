@@ -71,7 +71,7 @@ export const syncTasks = () => {
         DateUtils.lastMonth(); // TODO - refine approach
 
       // sync all new updates
-      return TaskController.syncTasks(lastSuccessfulSyncDateTimeUtc)
+      return TaskController.syncTasks(lastSuccessfulSyncDateTimeUtc, user)
         .then(response => {
           // After the Sync, let the reducer handle what Tasks to
           // update/create/delete. Here are are simply passing all
