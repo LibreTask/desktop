@@ -210,9 +210,9 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this.props.stopTaskSync();
+    this.props.endTaskSync();
     this.props.stopQueuedTaskSubmission();
-    this.props.stopUserSync();
+    this.props.endUserSync();
     this.props.stopTaskViewRefresh();
     this.props.stopTaskCleanup();
   }
@@ -534,11 +534,11 @@ const mapDispatchToProps = {
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
   startUserSync: UserActions.startUserSync,
-  stopUserSync: UserActions.stopUserSync,
+  endUserSync: UserActions.endUserSync,
   syncUser: UserActions.syncUser,
   deleteAllTasks: TaskActions.deleteAllTasks,
   startTaskSync: TaskActions.startTaskSync,
-  stopTaskSync: TaskActions.stopTaskSync,
+  endTaskSync: TaskActions.endTaskSync,
   syncTasks: TaskActions.syncTasks,
   cleanupTasks: TaskActions.cleanupTasks,
   startTaskCleanup: TaskActions.startTaskCleanup,
