@@ -29,19 +29,34 @@ const styles = {
   },
   sidebarLink: {
     display: "block",
-    marginBottom: 15,
-    marginTop: 15,
+    padding: 16,
+    width: "100%",
     color: "black",
     fontSize: "140%",
     cursor: "pointer"
   },
+  sidebarLinkSelected: {
+    display: "block",
+    padding: 16,
+    width: "100%",
+    color: "black",
+    fontSize: "140%",
+    cursor: "pointer",
+    backgroundColor: "lightblue"
+  },
   content: {
     marginTop: 50,
-    padding: "16px",
+    paddingTop: 16,
     minHeight: "100%",
     backgroundColor: "white"
   }
 };
+
+function _linkStyle(link) {
+  let currentLink = hashHistory.getCurrentLocation().pathname;
+
+  return link === currentLink ? styles.sidebarLinkSelected : styles.sidebarLink;
+}
 
 const SideMenu = props => {
   const style = props.style
@@ -51,24 +66,20 @@ const SideMenu = props => {
   let sideMenuItems = [
     <div
       key={"all-tasks-view"}
-      style={styles.sidebarLink}
+      style={_linkStyle("/tasks")}
       onClick={() => {
         props.closeSideMenu();
         hashHistory.replace("/tasks");
       }}
     >
-
-      <span className={"sideMenuItem"}>
-        Tasks
-      </span>
-
+      <span className={"sideMenuItem"}>Tasks</span>
     </div>
   ];
 
   sideMenuItems.push(
     <div
       key={"profile-view"}
-      style={styles.sidebarLink}
+      style={_linkStyle("/profile")}
       onClick={() => {
         if (props.isLoggedIn) {
           props.closeSideMenu();
@@ -78,9 +89,7 @@ const SideMenu = props => {
         }
       }}
     >
-      <span className={"sideMenuItem"}>
-        Profile
-      </span>
+      <span className={"sideMenuItem"}>Profile</span>
     </div>
   );
 
@@ -93,9 +102,7 @@ const SideMenu = props => {
           props.toggleLogoutDialog();
         }}
       >
-        <span className={"sideMenuItem"}>
-          Logout
-        </span>
+        <span className={"sideMenuItem"}>Logout</span>
       </div>
     );
   }
@@ -103,15 +110,13 @@ const SideMenu = props => {
   sideMenuItems.push(
     <div
       key={"about-view"}
-      style={styles.sidebarLink}
+      style={_linkStyle("/about")}
       onClick={() => {
         props.closeSideMenu();
         hashHistory.replace("/about");
       }}
     >
-      <span className={"sideMenuItem"}>
-        About
-      </span>
+      <span className={"sideMenuItem"}>About</span>
     </div>
   );
 
