@@ -42,7 +42,7 @@ const styles = {
     color: "black",
     fontSize: "140%",
     cursor: "pointer",
-    backgroundColor: "lightblue"
+    backgroundColor: AppStyles.selectedSidebarLinkColor
   },
   content: {
     marginTop: 50,

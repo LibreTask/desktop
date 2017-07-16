@@ -8,6 +8,7 @@ const STYLES = {
   linkColor: "#19198C",
   hoverColor: "#615FFE",
   buttonColor: "#eaebed", // minutely off-white
+  selectedSidebarLinkColor: "#ddddf1",
   mainWindow: {
     color: "#000000",
     width: "85%",
