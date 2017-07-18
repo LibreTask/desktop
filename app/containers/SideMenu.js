@@ -52,10 +52,11 @@ const styles = {
   }
 };
 
-function _linkStyle(link) {
+function _linkStyle(links) {
   let currentLink = hashHistory.getCurrentLocation().pathname;
-
-  return link === currentLink ? styles.sidebarLinkSelected : styles.sidebarLink;
+  return links.indexOf(currentLink) >= 0
+    ? styles.sidebarLinkSelected
+    : styles.sidebarLink;
 }
 
 const SideMenu = props => {
@@ -66,7 +67,7 @@ const SideMenu = props => {
   let sideMenuItems = [
     <div
       key={"all-tasks-view"}
-      style={_linkStyle("/tasks")}
+      style={_linkStyle(["/tasks"])}
       onClick={() => {
         props.closeSideMenu();
         hashHistory.replace("/tasks");
@@ -79,7 +80,7 @@ const SideMenu = props => {
   sideMenuItems.push(
     <div
       key={"profile-view"}
-      style={_linkStyle("/profile")}
+      style={_linkStyle(["/profile", "/login", "/signup"])}
       onClick={() => {
         if (props.isLoggedIn) {
           props.closeSideMenu();
@@ -110,7 +111,7 @@ const SideMenu = props => {
   sideMenuItems.push(
     <div
       key={"about-view"}
-      style={_linkStyle("/about")}
+      style={_linkStyle(["/about"])}
       onClick={() => {
         props.closeSideMenu();
         hashHistory.replace("/about");
