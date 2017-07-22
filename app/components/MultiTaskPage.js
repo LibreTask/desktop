@@ -31,7 +31,8 @@ import AppStyles from "../styles";
 const styles = {
   listItem: {
     color: "black",
-    fontSize: "100%"
+    fontSize: "100%",
+    wordWrap: "break-word"
   },
   createTaskListItem: {
     color: AppStyles.linkColor,
