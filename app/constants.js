@@ -6,9 +6,8 @@
 const CONSTANTS = {
   ACCOUNT_UPGRADE_LINK: "https://www.algernon.io/profile/upgrade",
   ACCOUNT_DOWNGRADE_LINK: "https://www.algernon.io/profile/downgrade",
-  PASSWORD_RESET_LINK: "https://login.uber.com/forgot-password",
+  PASSWORD_RESET_LINK: "https://www.algernon.io/forgot-password",
   PRODUCT_PRIVACY_LINK: "https://www.algernon.io/privacy",
-  PREMIUM_TOUR_LINK: "https://www.algernon.io/premium-tour",
   PRODUCT_TERMS_LINK: "https://www.algernon.io/terms",
   WEBSITE_LINK: "https://algernon.io",
   SOURCE_CODE_LINK: "https://github.com/AlgernonLabs/mobile",
