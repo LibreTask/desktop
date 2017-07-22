@@ -151,6 +151,9 @@ class SingleTaskPage extends Component {
       }
     }
 
+    // We only want to update taskId. If we cannot do so (i.e., updatedTask is
+    // undefined), or if the taskId does not require updated, then we simply
+    // return the current task.
     if (!updatedTask || currentTask.id === updatedTask.id) {
       return currentTask;
     } else {
