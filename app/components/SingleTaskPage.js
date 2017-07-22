@@ -53,6 +53,9 @@ class SingleTaskPage extends Component {
   constructor(props) {
     super(props);
 
+    let id = props.router.params.taskId;
+    let editedTask = props.tasks[id];
+
     this.state = {
       deleteError: "",
       updateError: "",
@@ -61,14 +64,12 @@ class SingleTaskPage extends Component {
       isUpdating: false,
       deleteTaskDialogIsOpen: false,
 
-      recurringFrequencyDialogIsOpen: false,
-
       // TODO - we keep these references in case props are updated
       // eg: when this exact task is deleted
       // but how can we do this cleaner?
 
-      // copy objects, so that editing does not modify originals
-      editedTask: Object.assign({}, this._getTask()),
+      // copy object, so that editing does not modify originals
+      editedTask: Object.assign({}, editedTask),
 
       nameValidationError: "",
       notesValidationError: "",
@@ -98,11 +99,63 @@ class SingleTaskPage extends Component {
       this.setState({ deleteTaskDialogIsOpen: true });
       this.props.setNavAction(undefined);
     }
+
+    // Update the task, in case the sync has pulled in a more recent version.
+    this.setState({
+      editedTask: this._getTask(this.state.editedTask, nextProps)
+    });
   }
 
-  _getTask = () => {
-    let id = this.props.router.params.taskId;
-    return this.props.tasks[id];
+  /*
+    SingleTaskPage keeps a local reference to a task, so that the user can
+    edit it (as well as discard edits) without polluting global state. Global
+    state is only modified when the user confirms their changes.
+
+    This function fetches the task from global state, so that a local reference
+    can be made.
+
+    However, when the task is synced while the user is editing it, we might
+    need to update our local, now out-of-date, reference. We have made the
+    conscious decision to ONLY, ONLY update the task's ID for two reasons.
+
+    1. We do not want the EditTask page to unexpectedly change or discard
+       the user's edits without their consent.
+    2. An edge case exists such that, if the local reference to ID is not
+       updated, the task cannot possibly be updated.
+
+       See the following scenario:
+
+          - The task is created ONLY on the client and gets assigned a
+            temporary ID. This is possible when no network connectivity exists.
+          - The task is queued to be submitted to the server.
+          - The user navigates to the SingleTaskPage, while the task is still
+            queued, which causes the local reference to have the temporary ID.
+          - The task is finally submitted to the server and gets its temporary,
+            client-assigned ID replaced by a permanent, server-assigned ID. In
+            this scenario we absolutely MUST update our local reference with the
+            server-assigned ID. Otherwise, the server will not recognize the
+            old, client-assigned ID.
+
+    NOTE: This function can likely be refined.
+  */
+  _getTask = (currentTask, props) => {
+    let id = props.router.params.taskId;
+
+    let updatedTask = props.tasks[id];
+
+    if (!updatedTask) {
+      for (let taskId in props.tasks) {
+        if (props.tasks[taskId].clientAssignedTaskId === id) {
+          updatedTask = props.tasks[taskId];
+        }
+      }
+    }
+
+    if (!updatedTask || currentTask.id === updatedTask.id) {
+      return currentTask;
+    } else {
+      return Object.assign(currentTask, { id: updatedTask.id });
+    }
   };
 
   _onEditTask = () => {
@@ -132,7 +185,17 @@ class SingleTaskPage extends Component {
       return; // validation failed; cannot updated task
     }
 
-    if (UserController.canAccessNetwork(this.props.profile)) {
+    if (
+      task.id in this.props.pendingTaskCreates ||
+      task.id in this.props.pendingTaskUpdates
+    ) {
+      /*
+        If the task is in the pendingQueue, we update the queue rather than
+        attempt to submit the update to the server. A separate process will
+        handle submitting the queued tasks.
+      */
+      this._updateTaskLocally(task, true);
+    } else if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState(
         {
           isUpdating: true,
@@ -194,7 +257,17 @@ class SingleTaskPage extends Component {
     let task = this.state.editedTask;
     task.isDeleted = true;
 
-    if (UserController.canAccessNetwork(this.props.profile)) {
+    if (
+      task.id in this.props.pendingTaskCreates ||
+      task.id in this.props.pendingTaskUpdates
+    ) {
+      /*
+        If the task is in the pendingQueue, we update the queue rather than
+        attempt to submit the update to the server. A separate process will
+        handle submitting the queued tasks.
+      */
+      this._deleteTaskLocallyAndRedirect(task, true);
+    } else if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState({ isDeleting: true }, () => {
         let userId = this.props.profile.id;
         let pw = this.props.profile.password;
@@ -246,86 +319,6 @@ class SingleTaskPage extends Component {
     hashHistory.replace("/tasks");
   };
 
-  _renderRecurringFrequencyDialog = () => {
-    let frequencyToIndex = {
-      EVERYDAY: 0,
-      ONCE: 1
-    };
-
-    let indexToFrequency = {
-      0: "EVERYDAY",
-      1: "ONCE"
-    };
-
-    let defaultFrequency = "ONCE";
-    let defaultIndex = frequencyToIndex[defaultFrequency];
-
-    let radios = [
-      <RadioButton
-        key="EVERYDAY"
-        value={0}
-        label="Everyday"
-        style={styles.radioButton}
-      />,
-      <RadioButton
-        key="ONCE"
-        value={1}
-        label="Once"
-        style={styles.radioButton}
-      />
-
-      // TODO - expand these options
-    ];
-
-    const actions = [
-      <FlatButton
-        label="Close"
-        onTouchTap={() => {
-          this.setState({ recurringFrequencyDialogIsOpen: false });
-        }}
-      />,
-      <FlatButton
-        label="Update"
-        onTouchTap={() => {
-          this.setState({ recurringFrequencyDialogIsOpen: false });
-        }}
-      />
-    ];
-
-    let recurringFrequency = this.state.editedTask.recurringFrequency;
-
-    let initialIndex =
-      recurringFrequency in frequencyToIndex
-        ? frequencyToIndex[recurringFrequency]
-        : defaultIndex;
-
-    return (
-      <Dialog
-        style={AppStyles.dialog}
-        title="Recurring Frequency"
-        actions={actions}
-        modal={false}
-        open={this.state.recurringFrequencyDialogIsOpen}
-        onRequestClose={() => {
-          this.setState({ recurringFrequencyDialogIsOpen: false });
-        }}
-        autoScrollBodyContent={true}
-      >
-        <RadioButtonGroup
-          name="recurring_frequencies"
-          valueSelected={initialIndex}
-          onChange={(event, value) => {
-            let task = this.state.editedTask;
-            task.recurringFrequency = indexToFrequency[value];
-            this.setState({ task: task });
-          }}
-        >
-          {radios}
-        </RadioButtonGroup>
-      </Dialog>
-    );
-  };
-
   _datePicker = () => {
     const selectedDate = this.state.editedTask.dueDateTimeUtc
       ? moment(this.state.editedTask.dueDateTimeUtc)
@@ -368,27 +361,6 @@ class SingleTaskPage extends Component {
   };
 
   render = () => {
-    /*
-    TODO - implement recurring frequency
-
-
-            <TextField
-              style={styles.textField}
-              hintText="Recurring Frequency"
-              floatingLabelText="Recurring Frequency"
-              type="text"
-              value={task.recurringFrequency || ''}
-              onClick={() => {
-                this.setState({recurringFrequencyDialogIsOpen: true})
-              }}
-            />
-            {this._renderRecurringFrequencyDialog()}
-
-            <br/>
-    */
-
-    // TODO - add other task attributes here as well
-
     let task = this.state.editedTask;
 
     const actions = [
@@ -440,7 +412,7 @@ class SingleTaskPage extends Component {
               // update our reference to task
               task.name = name;
 
-              this.setState({ task: task });
+              this.setState({ editedTask: task });
             }}
           />
 
@@ -462,7 +434,7 @@ class SingleTaskPage extends Component {
               // update our reference to task
               task.notes = notes;
 
-              this.setState({ task: task });
+              this.setState({ editedTask: task });
             }}
           />
 
@@ -489,6 +461,8 @@ const mapStateToProps = state => ({
   isLoggedIn: state.entities.user.isLoggedIn,
   profile: state.entities.user.profile,
   tasks: state.entities.task.tasks,
+  pendingTaskCreates: state.entities.task.pendingTaskActions.create || {},
+  pendingTaskUpdates: state.entities.task.pendingTaskActions.update || {},
   navAction: state.ui.navbar.navAction
 });
 
