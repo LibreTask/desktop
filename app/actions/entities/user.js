@@ -121,6 +121,10 @@ export const submitQueuedProfileUpdate = () => {
       const queuedProfile = getState().entities.user.queuedProfile;
 
       if (queuedProfile) {
+        // update queued profile credentials, so that API access is possible
+        queuedProfile.id = profile.id;
+        queuedProfile.password = profile.password;
+
         UserController.updateProfile(queuedProfile)
           .then(response => {
             ProfileStorage.deletedQueuedProfile();
