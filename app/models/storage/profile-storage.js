@@ -23,9 +23,26 @@ function _endoraFormat(profile) {
   return endoraFormattedProfile;
 }
 
-export function queueProfileUpdate(profile) {}
+export function queueProfileUpdate(profile) {
+  // TODO - use encrypted storage for confidential information
 
-export function deletedQueuedProfile() {}
+  return db.upsert("queue/profile", function(doc) {
+    profile._id = "queue/profile"; // there is only one profile active a time
+    profile.type = "queue/profile"; // type helps differentiates between objects
+
+    return profile;
+  });
+}
+
+export function deletedQueuedProfile() {
+  return db.get("queue/profile").then(function(profile) {
+    return db.remove(profile);
+  });
+}
+
+export async function getQueuedProfile() {
+  return _endoraFormat(await db.get("queue/profile"));
+}
 
 export function createOrUpdateProfile(profile) {
   console.log("createOrUpdateProfile");
