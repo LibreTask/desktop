@@ -9,9 +9,9 @@ const DateUtils = {
     date.setDate(date.getDate() - 1);
     return date;
   },
-  lastMonth: function() {
+  twoWeeksAgo: function() {
     let date = new Date();
-    date.setMonth(date.getMonth() - 1);
+    date.setDate(date.getDate() - 14);
     return date;
   },
   fiveMinutesAgo: function() {
@@ -20,18 +20,17 @@ const DateUtils = {
     return date;
   },
   oneSecondBeforeMidnight: function(date) {
-
     /*
       Primarily used to set each task's dueDateTimeUtc
       to very last moment of specified date.
     */
 
     if (!(date instanceof Date)) {
-      date = new Date(date)
+      date = new Date(date);
     }
 
-    date.setHours(23, 59, 59, 0)
-    return date
+    date.setHours(23, 59, 59, 0);
+    return date;
   }
 };
 

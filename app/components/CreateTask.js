@@ -107,8 +107,8 @@ class CreateTask extends Component {
     let nameValidationError = "";
     let notesValidationError = "";
 
-    if (!Validator.isLength(name, { min: 2, max: 100 })) {
-      nameValidationError = "Name must be between 2 and 100 characters";
+    if (!Validator.isLength(name, { min: 1, max: 250 })) {
+      nameValidationError = "Name must be between 1 and 250 characters";
     }
 
     if (
