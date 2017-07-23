@@ -45,7 +45,7 @@ async function getInitialState() {
   let queuedTaskUpdates = {};
   let queuedTaskDeletes = {};
   let profile = {};
-  let queuedProfile = {};
+  let queuedProfile = undefined;
   let isLoggedIn = false;
 
   try {
