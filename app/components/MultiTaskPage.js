@@ -65,7 +65,7 @@ class MultiTaskPage extends Component {
   componentDidMount() {
     this.props.setNavbarTitle("Tasks");
     this.props.setMediumRightNavButton(AppConstants.CREATE_NAVBAR_BUTTON);
-    this.props.setFarRightNavButton(AppConstants.MULTITASK_NAV_DROPDOWN);
+    this.props.setFarRightNavButton(AppConstants.SETTINGS_NAV_BUTTON);
   }
 
   componentWillUnmount() {
@@ -82,6 +82,13 @@ class MultiTaskPage extends Component {
 
       this.props.setNavAction(undefined);
       hashHistory.push("/task/create");
+    } else if (nextProps.navAction === NavbarActions.SETTINGS_NAV_ACTION) {
+      // remove before transition
+      this.props.removeMediumRightNavButton();
+      this.props.removeFarRightNavButton();
+
+      this.props.setNavAction(undefined);
+      hashHistory.push("/settings");
     }
 
     if (nextProps.shouldRefreshTaskView) {
@@ -319,10 +326,12 @@ class MultiTaskPage extends Component {
   _getTasksToDisplay() {
     let tasks = [];
 
+    let showCompletedTasks = this.props.profile.showCompletedTasks || false;
+
     for (let taskId in this.props.tasks) {
       let task = this.props.tasks[taskId];
 
-      if (TaskUtils.shouldRenderTask(task, this.props.showCompletedTasks)) {
+      if (TaskUtils.shouldRenderTask(task, showCompletedTasks)) {
         tasks.push(task);
       }
     }
@@ -374,7 +383,6 @@ const mapStateToProps = state => ({
   tasks: state.entities.task.tasks,
   navAction: state.ui.navbar.navAction,
   taskCategories: state.ui.taskview,
-  showCompletedTasks: state.ui.taskview.showCompletedTasks,
   shouldRefreshTaskView: state.ui.taskview.shouldRefreshTaskView
 });
 

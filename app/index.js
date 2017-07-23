@@ -102,6 +102,7 @@ async function getInitialState() {
         profile: profile,
         isLoggedIn: isLoggedIn,
         isSyncing: false,
+        showCompletedTasks: true,
         lastSuccessfulSyncDateTimeUtc: undefined,
         intervalId: undefined // used to cancel sync
       }

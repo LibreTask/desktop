@@ -358,8 +358,7 @@ class CreateTask extends Component {
 const mapStateToProps = state => ({
   isLoggedIn: state.entities.user.isLoggedIn,
   profile: state.entities.user.profile,
-  tasks: state.entities.task.tasks,
-  showCompletedTasks: state.ui.taskview.showCompletedTasks
+  tasks: state.entities.task.tasks
 });
 
 const mapDispatchToProps = {

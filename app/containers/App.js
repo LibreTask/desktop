@@ -10,9 +10,6 @@ import { connect } from "react-redux";
 import TitlePanel from "./TitlePanel";
 import SideMenu from "./SideMenu";
 
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import RaisedButton from "material-ui/RaisedButton";
@@ -27,6 +24,7 @@ const FaFloppyO = require("react-icons/lib/fa/floppy-o");
 const FaTrashO = require("react-icons/lib/fa/trash-o");
 const FaEdit = require("react-icons/lib/fa/edit");
 const FaPlus = require("react-icons/lib/fa/plus");
+const FaCog = require("react-icons/lib/fa/cog");
 
 import { deepOrange500 } from "material-ui/styles/colors";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -291,41 +289,15 @@ class App extends Component {
   }
 
   _constructFarRightNavButton() {
-    // TODO - move this component to its own module
-    if (this.props.farRightNavButton === AppConstants.MULTITASK_NAV_DROPDOWN) {
-      return (
-        <IconMenu
-          style={{
-            ...styles.farRightNavDropdown,
-            ...{ padding: 0 }
-          }}
-          iconButtonElement={
-            <IconButton
-              style={styles.farRightNavDropdown}
-              iconStyle={styles.mediumIcon}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          }
-          anchorOrigin={{ horizontal: "right", vertical: "top" }}
-          targetOrigin={{ horizontal: "right", vertical: "top" }}
-        >
-          <MenuItem
-            style={{ fontSize: "80%" }}
-            checked={this.props.showCompletedTasks}
-            primaryText="Show Completed"
-            onTouchTap={() => {
-              this.props.toggleShowCompletedTasks();
-            }}
-          />
-        </IconMenu>
-      );
-    }
-
     let farRightNavIcon;
     let navbarAction;
 
-    if (this.props.farRightNavButton === AppConstants.EDIT_NAVBAR_BUTTON) {
+    if (this.props.farRightNavButton === AppConstants.SETTINGS_NAV_BUTTON) {
+      farRightNavIcon = <FaCog />;
+      navbarAction = NavbarActions.SETTINGS_NAV_ACTION;
+    } else if (
+      this.props.farRightNavButton === AppConstants.EDIT_NAVBAR_BUTTON
+    ) {
       farRightNavIcon = <FaEdit />;
       navbarAction = NavbarActions.EDIT_NAV_ACTION;
     } else if (
@@ -520,7 +492,6 @@ const mapStateToProps = state => ({
   isSubmittingQueuedTasks: state.entities.task.isSubmittingQueuedTasks,
   isCleaningUpTasks: state.entities.task.isCleaningUpTasks,
   isSyncingUser: state.entities.user.isSyncing,
-  showCompletedTasks: state.ui.taskview.showCompletedTasks,
   lastTaskViewRefreshDate: state.ui.taskview.lastTaskViewRefreshDate
 });
 
@@ -547,7 +518,6 @@ const mapDispatchToProps = {
   startQueuedTaskSubmit: TaskActions.startQueuedTaskSubmit,
   stopQueuedTaskSubmission: TaskActions.stopQueuedTaskSubmission,
   setNavAction: NavbarActions.setNavAction,
-  toggleShowCompletedTasks: TaskViewActions.toggleShowCompletedTasks,
   refreshTaskView: TaskViewActions.refreshTaskView,
   refreshTaskViewCollapseStatus: TaskViewActions.refreshTaskViewCollapseStatus,
   stopTaskViewRefresh: TaskViewActions.stopTaskViewRefresh

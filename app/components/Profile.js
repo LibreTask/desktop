@@ -116,34 +116,26 @@ class Profile extends Component {
             // TODO - handle PW in more secure way
             profile.password = this.props.profile.password;
 
-            this._updateProfileLocally(profile);
+            this.props.createOrUpdateProfile(profile);
+            ProfileStorage.createOrUpdateProfile(profile);
+
+            this.setState(
+              {
+                isUpdatingProfile: false,
+                updateSuccess: "Successfully updated"
+              },
+              () => {
+                // erase update success text after 1.5 seconds
+                setTimeout(() => this.setState({ updateSuccess: "" }), 1500);
+              }
+            );
           })
           .catch(error => {
-            if (error.name === "NoConnection") {
-              this._updateProfileLocally(updatedProfile);
-            } else {
-              this.setState({
-                updateError: error.message,
-                isUpdatingProfile: false
-              });
-            }
+            this.setState({
+              updateError: error.message,
+              isUpdatingProfile: false
+            });
           });
-      }
-    );
-  };
-
-  _updateProfileLocally = profile => {
-    this.props.createOrUpdateProfile(profile);
-    ProfileStorage.createOrUpdateProfile(profile);
-
-    this.setState(
-      {
-        isUpdatingProfile: false,
-        updateSuccess: "Successfully updated"
-      },
-      () => {
-        // erase update success text after 1.5 seconds
-        setTimeout(() => this.setState({ updateSuccess: "" }), 1500);
       }
     );
   };

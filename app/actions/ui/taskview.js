@@ -116,12 +116,6 @@ export const stopTaskViewRefresh = () => {
   };
 };
 
-export const toggleShowCompletedTasks = () => {
-  return {
-    type: TOGGLE_SHOW_COMPLETED_TASKS
-  };
-};
-
 export const collapseCategory = category => {
   return alterCategory(COLLAPSE_CATEGORY, category);
 };

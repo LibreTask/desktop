@@ -3,6 +3,7 @@
  * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
  */
 
+export const SETTINGS_NAV_ACTION = "SETTINGS_NAV_ACTION";
 export const EDIT_NAV_ACTION = "EDIT_NAV_ACTION";
 export const DELETE_NAV_ACTION = "DELETE_NAV_ACTION";
 export const SAVE_NAV_ACTION = "SAVE_NAV_ACTION";
