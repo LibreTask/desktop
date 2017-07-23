@@ -172,23 +172,9 @@ export const syncTasks = async (lastSuccessfulSyncDateTimeUtc, user) => {
 
   return invoke(request)
     .then(response => {
-      // TODO - log / inspect object / persist if necessary
-
-      console.log("abc response...");
-      //console.dir(response);
-
-      /*
-
-    if (response.tasks && response.length > 0) {
-      TaskStorage.createOrUpdateTasks(response.state.entities.tasks)
-    }
-
-    */
-
       return response;
     })
     .catch(err => {
       console.log("task err...");
-      //console.dir(err);
     });
 };
