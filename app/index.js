@@ -45,6 +45,7 @@ async function getInitialState() {
   let queuedTaskUpdates = {};
   let queuedTaskDeletes = {};
   let profile = {};
+  let queuedProfile = {};
   let isLoggedIn = false;
 
   try {
@@ -78,6 +79,12 @@ async function getInitialState() {
   }
 
   try {
+    queuedProfile = await ProfileStorage.getQueuedProfile();
+  } catch (err) {
+    /* ignore */
+  }
+
+  try {
     isLoggedIn = await ProfileStorage.isLoggedIn();
   } catch (err) {
     /* ignore */
@@ -100,6 +107,7 @@ async function getInitialState() {
       },
       user: {
         profile: profile,
+        queuedProfile: queuedProfile,
         isLoggedIn: isLoggedIn,
         isSyncing: false,
         showCompletedTasks: true,
