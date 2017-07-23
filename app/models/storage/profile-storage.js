@@ -23,6 +23,10 @@ function _endoraFormat(profile) {
   return endoraFormattedProfile;
 }
 
+export function queueProfileUpdate(profile) {}
+
+export function deletedQueuedProfile() {}
+
 export function createOrUpdateProfile(profile) {
   console.log("createOrUpdateProfile");
 

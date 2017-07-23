@@ -168,6 +168,17 @@ class App extends Component {
     }
   };
 
+  _startSubmissionOfQueuedProfileUpdates = () => {
+    if (!this.props.isSubmittingQueuedProfileUpdates) {
+      let intervalId = setInterval(() => {
+        this.props.submitQueuedProfileUpdate();
+      }, AppConstants.QUEUED_PROFILE_SUBMISSION_INTERVAL_MILLIS);
+
+      // register intervalId so we can cancel later
+      this.props.startQueuedProfileSubmission(intervalId);
+    }
+  };
+
   _startTaskCleanup = () => {
     if (!this.props.isCleaningUpTasks) {
       let intervalId = setInterval(() => {
@@ -202,6 +213,7 @@ class App extends Component {
     this._startUIRefreshCheck();
     this._startSubmissionOfQueuedTasks();
     this._startTaskCleanup();
+    this._startSubmissionOfQueuedProfileUpdates();
 
     // refresh task view on startup
     this.props.refreshTaskViewCollapseStatus();
@@ -211,6 +223,7 @@ class App extends Component {
     this.props.endTaskSync();
     this.props.stopQueuedTaskSubmission();
     this.props.endUserSync();
+    this.props.stopQueuedProfileSubmission();
     this.props.stopTaskViewRefresh();
     this.props.stopTaskCleanup();
   }
@@ -506,6 +519,11 @@ const mapDispatchToProps = {
   deleteProfile: UserActions.deleteProfile,
   startUserSync: UserActions.startUserSync,
   endUserSync: UserActions.endUserSync,
+  startQueuedProfileSubmission: UserActions.startQueuedProfileSubmission,
+  stopQueuedProfileSubmission: UserActions.stopQueuedProfileSubmission,
+  isSubmittingQueuedProfileUpdates:
+    UserActions.isSubmittingQueuedProfileUpdates,
+  submitQueuedProfileUpdate: UserActions.submitQueuedProfileUpdate,
   syncUser: UserActions.syncUser,
   deleteAllTasks: TaskActions.deleteAllTasks,
   startTaskSync: TaskActions.startTaskSync,

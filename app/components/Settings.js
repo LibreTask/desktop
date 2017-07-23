@@ -23,6 +23,14 @@ const styles = {
 };
 
 class Settings extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showCompletedTasks: props.profile.showCompletedTasks || false
+    };
+  }
+
   componentDidMount() {
     this.props.setNavbarTitle("Settings");
     this.props.setLeftNavButton(AppConstants.BACK_NAVBAR_BUTTON);
@@ -34,24 +42,30 @@ class Settings extends Component {
 
   _updateProfileLocally = (profile, shouldQueueUpdate) => {
     if (shouldQueueUpdate) {
-      // TODO
+      // mark update time, before queueing
+      profile.updatedAtDateTimeUtc = new Date();
+
+      // profile is queued only when network could not be reached
+      this.props.addPendingProfileUpdate(profile);
+      ProfileStorage.queueProfileUpdate(profile);
     }
 
     this.props.createOrUpdateProfile(profile);
     ProfileStorage.createOrUpdateProfile(profile);
+
+    this.setState({
+      showCompletedTasks: profile.showCompletedTasks
+    });
   };
 
   render() {
-    let profile = this.props.profile;
-    let showCompletedTasks = profile && profile.showCompletedTasks;
-
     return (
       <div style={AppStyles.mainWindow}>
         <div style={AppStyles.centeredWindow}>
           <Checkbox
             style={styles.showCompletedTasksCheckbox}
             label="Show completed tasks"
-            checked={showCompletedTasks}
+            checked={this.state.showCompletedTasks}
             onClick={event => {
               let updatedProfile = this.props.profile;
               updatedProfile.showCompletedTasks = !updatedProfile.showCompletedTasks;
@@ -67,18 +81,11 @@ class Settings extends Component {
                     this._updateProfileLocally(profile);
                   })
                   .catch(error => {
-                    if (error.name === "NoConnection") {
-                      let shouldQueueUpdate = true;
-                      this._updateProfileLocally(
-                        updatedProfile,
-                        shouldQueueUpdate
-                      );
-                    } else {
-                      this.setState({
-                        updateError: error.message,
-                        isUpdatingProfile: false
-                      });
-                    }
+                    let shouldQueueUpdate = true;
+                    this._updateProfileLocally(
+                      updatedProfile,
+                      shouldQueueUpdate
+                    );
                   });
               } else {
                 let shouldQueueUpdate = true;
@@ -98,6 +105,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
+  addPendingProfileUpdate: UserActions.addPendingProfileUpdate,
   setNavbarTitle: NavbarActions.setNavbarTitle,
   setLeftNavButton: NavbarActions.setLeftNavButton,
   removeLeftNavButton: NavbarActions.removeLeftNavButton

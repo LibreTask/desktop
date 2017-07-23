@@ -267,7 +267,7 @@ function startQueuedTaskSubmit(state, action) {
 }
 
 function stopQueuedTaskSubmission(state, action) {
-  clearInterval(state.intervalId); // TODO - is this the best place to do it?
+  //clearInterval(state.intervalId); // TODO - is this the best place to do it?
 
   return updateObject(state, {
     isSubmittingQueuedTasks: false,
@@ -283,7 +283,7 @@ function startTaskSync(state, action) {
 }
 
 function endTaskSync(state, action) {
-  clearInterval(state.intervalId); // TODO - is this the best place to do it?
+  //clearInterval(state.intervalId); // TODO - is this the best place to do it?
 
   return updateObject(state, {
     isSyncing: false,
@@ -299,7 +299,7 @@ function startTaskCleanup(state, action) {
 }
 
 function stopTaskCleanup(state, action) {
-  clearInterval(state.intervalId); // TODO - is this the best place to do it?
+  //clearInterval(state.intervalId); // TODO - is this the best place to do it?
 
   return updateObject(state, {
     isCleaningUpTasks: false,
