@@ -338,6 +338,7 @@ class SingleTaskPage extends Component {
           date={selectedDate}
           onDateChange={selectedDate => {
             let task = this.state.editedTask;
+
             task.dueDateTimeUtc = DateUtils.oneSecondBeforeMidnight(
               selectedDate
             );

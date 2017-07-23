@@ -25,6 +25,8 @@ const DateUtils = {
       to very last moment of specified date.
     */
 
+    if (!date) return undefined;
+
     if (!(date instanceof Date)) {
       date = new Date(date);
     }
