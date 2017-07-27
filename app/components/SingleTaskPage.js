@@ -215,7 +215,7 @@ class SingleTaskPage extends Component {
               this._updateTaskLocally(response.task);
             })
             .catch(error => {
-              if (error.name === "NoConnection") {
+              if (error.name === "RetryableError") {
                 this._updateTaskLocally(task, true);
               } else {
                 this.setState({
@@ -281,7 +281,7 @@ class SingleTaskPage extends Component {
             this._deleteTaskLocallyAndRedirect(response.task);
           })
           .catch(error => {
-            if (error.name === "NoConnection") {
+            if (error.name === "RetryableError") {
               this._deleteTaskLocallyAndRedirect(task, true);
             } else {
               this.setState({

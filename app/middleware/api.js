@@ -84,12 +84,24 @@ function _invoke(endpoint, method, headers, body) {
     console.log("error...");
     console.dir(error);
 
-    if (error.error && error.error.code === "ECONNREFUSED") {
+    if (_isRetryableError(error)) {
       throw new RetryableError();
     } else {
       throw new Error(humanReadableError(error));
     }
   });
+}
+
+function _isRetryableError(err) {
+  return _isServerError(err) || _isTimeoutError(err);
+}
+
+function _isServerError(err) {
+  return err && err.statusCode >= 500;
+}
+
+function _isTimeoutError(err) {
+  return err && err.name === "RequestError";
 }
 
 function _retryWait(retryAttemptNumber) {

@@ -165,7 +165,7 @@ class CreateTask extends Component {
               hashHistory.replace("/tasks");
             })
             .catch(error => {
-              if (error.name === "NoConnection") {
+              if (error.name === "RetryableError") {
                 this._createTaskLocallyAndRedirect(name);
               } else {
                 this.setState({

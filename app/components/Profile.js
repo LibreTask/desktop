@@ -153,7 +153,7 @@ class Profile extends Component {
           this._deleteProfileLocallyAndRedirect();
         })
         .catch(error => {
-          if (error.name === "NoConnection") {
+          if (error.name === "RetryableError") {
             this._deleteProfileLocallyAndRedirect();
           } else {
             this.setState({
