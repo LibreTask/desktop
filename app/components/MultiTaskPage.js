@@ -326,7 +326,8 @@ class MultiTaskPage extends Component {
   _getTasksToDisplay() {
     let tasks = [];
 
-    let showCompletedTasks = this.props.profile.showCompletedTasks || false;
+    let showCompletedTasks =
+      this.props.profile && this.props.profile.showCompletedTasks;
 
     for (let taskId in this.props.tasks) {
       let task = this.props.tasks[taskId];
