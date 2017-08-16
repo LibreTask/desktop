@@ -94,6 +94,8 @@ class About extends Component {
           >
             Terms of Service
           </p>
+
+          <Divider />
         </div>
       </div>
     );

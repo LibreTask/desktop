@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
+import CircularProgress from "material-ui/CircularProgress";
 
 import * as NavbarActions from "../actions/ui/navbar";
 import * as UserController from "../models/controllers/user";
@@ -23,7 +24,7 @@ import Validator from "validator";
 const styles = {
   button: {
     marginBottom: 10,
-    marginTop: 20,
+    marginTop: 30,
     fontSize: "140%"
   }
 };
@@ -117,9 +118,34 @@ class Signup extends Component {
   };
 
   render = () => {
+    let progress = <div />;
+    let windowOpacity = 1;
+
+    if (this.state.isSigningUp) {
+      progress = (
+        <CircularProgress
+          style={AppStyles.progressSpinner}
+          size={60}
+          thickness={7}
+        />
+      );
+      windowOpacity = AppStyles.loadingOpacity;
+    }
+
     return (
       <div style={AppStyles.mainWindow}>
-        <div style={AppStyles.centeredWindow}>
+        {progress}
+
+        <div
+          style={
+            (
+              AppStyles.centeredWindow,
+              {
+                opacity: windowOpacity
+              }
+            )
+          }
+        >
           <TextField
             style={AppStyles.centeredElement}
             hintText="Email Field"

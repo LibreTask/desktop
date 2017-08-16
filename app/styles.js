@@ -31,7 +31,16 @@ const STYLES = {
     color: "red",
     marginTop: 10,
     marginBottom: 10
-  }
+  },
+  progressSpinner: {
+    position: "absolute",
+    top: "20%",
+    left: 0,
+    right: 0,
+    zIndex: 100000000, // spinners should have precedence
+    margin: "auto"
+  },
+  loadingOpacity: 0.6
 };
 
 module.exports = STYLES;

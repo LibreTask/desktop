@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
+import CircularProgress from "material-ui/CircularProgress";
 
 import * as NavbarActions from "../actions/ui/navbar";
 import * as UserController from "../models/controllers/user";
@@ -25,7 +26,7 @@ const shell = require("electron").shell;
 const styles = {
   button: {
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 30,
     fontSize: "140%"
   },
   link: {
@@ -111,9 +112,34 @@ class Login extends Component {
   };
 
   render = () => {
+    let progress = <div />;
+    let windowOpacity = 1;
+
+    if (this.state.isLoggingIn) {
+      progress = (
+        <CircularProgress
+          style={AppStyles.progressSpinner}
+          size={60}
+          thickness={7}
+        />
+      );
+      windowOpacity = AppStyles.loadingOpacity;
+    }
+
     return (
       <div style={AppStyles.mainWindow}>
-        <div style={AppStyles.centeredWindow}>
+        {progress}
+
+        <div
+          style={
+            (
+              AppStyles.centeredWindow,
+              {
+                opacity: windowOpacity
+              }
+            )
+          }
+        >
           <TextField
             multiLine={true}
             style={AppStyles.centeredElement}
@@ -145,8 +171,8 @@ class Login extends Component {
           <RaisedButton
             label="Login"
             style={{
-              ...styles.button,
-              ...AppStyles.centeredElement
+              ...AppStyles.centeredElement,
+              ...styles.button
             }}
             onTouchTap={this._login}
           />
