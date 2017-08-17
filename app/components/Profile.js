@@ -106,6 +106,8 @@ class Profile extends Component {
     this.setState(
       {
         isUpdatingProfile: true,
+        updateError: "",
+        updateSuccess: "",
         emailValidationError: ""
       },
       () => {

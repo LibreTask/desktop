@@ -23,22 +23,30 @@ const UPDATE = "UPDATE";
 const DELETE = "DELETE";
 const CREATE = "CREATE";
 
-function _endoraFormat(task) {
-  let endoraFormattedTask = {};
+function _endoraFormat(task, deleteOperation = true) {
+  // output of `db.query` uses `task.key`, whereas `db.get` uses `task`
+  let endoraFormattedTask = task.key ? task.key : task;
 
   if (task) {
-    endoraFormattedTask = task.key;
     delete endoraFormattedTask._id;
     delete endoraFormattedTask._rev;
     delete endoraFormattedTask.type;
-    delete endoraFormattedTask.operation;
+
+    if (deleteOperation) {
+      delete endoraFormattedTask.operation;
+    }
   }
 
   return endoraFormattedTask;
 }
 
-export async function getQueuedTaskByTaskId(taskId) {
-  return _endoraFormat(await db.get(taskId));
+export async function _getQueuedTaskByTaskId(taskId) {
+  /*
+    Do not delete the operation. The result of the query will be used
+    internally, and knowing the specific operation is useful.
+  */
+  let deleteOperation = false;
+  return _endoraFormat(await db.get(`queue/task/${taskId}`), deleteOperation);
 }
 
 export async function getAllPendingUpdates() {
@@ -84,11 +92,24 @@ export function queueTaskCreate(task) {
 }
 
 export function queueTaskUpdate(task) {
-  return _upsertTask(task, UPDATE);
+  _getQueuedTaskByTaskId(task.id).then(queuedTask => {
+    // If the task is already queued, do not override the existing "operation".
+    let method = queuedTask ? queuedTask.operation : UPDATE;
+    return _upsertTask(task, method);
+  });
 }
 
+// TODO - if it is already queued, then just delete from the queue
 export function queueTaskDelete(task) {
-  return _upsertTask(task, DELETE);
+  _getQueuedTaskByTaskId(task.id).then(queuedTask => {
+    // If the task has not yet reached the server, we can simply delete
+    // the task from the queue. Otherwise, queue the delete.
+    if (queuedTask.operation === CREATE) {
+      return dequeueTaskByTaskId(task.id);
+    } else {
+      return _upsertTask(task, DELETE);
+    }
+  });
 }
 
 function _upsertTask(task, operation) {
