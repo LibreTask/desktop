@@ -10,6 +10,7 @@ import { hashHistory } from "react-router";
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import IconButton from "material-ui/IconButton";
+import CircularProgress from "material-ui/CircularProgress";
 
 import * as NavbarActions from "../actions/ui/navbar";
 import * as TaskActions from "../actions/entities/task";
@@ -311,9 +312,27 @@ class CreateTask extends Component {
   };
 
   render = () => {
+    let progress = <div />;
+    let windowOpacity = 1;
+
+    if (this.state.isCreatingTask) {
+      progress = (
+        <CircularProgress
+          style={AppStyles.progressSpinner}
+          size={60}
+          thickness={7}
+        />
+      );
+      windowOpacity = AppStyles.loadingOpacity;
+    }
+
+    console.log("window opacity: " + windowOpacity);
+
     return (
       <div style={AppStyles.mainWindow}>
-        <div style={AppStyles.centeredWindow}>
+        {progress}
+
+        <div style={(AppStyles.centeredWindow, { opacity: windowOpacity })}>
           <TextField
             multiLine={true}
             style={AppStyles.centeredElement}
@@ -336,7 +355,7 @@ class CreateTask extends Component {
           </div>
         </div>
 
-        <div style={styles.floatingFooter}>
+        <div style={(styles.floatingFooter, { opacity: windowOpacity })}>
           <RaisedButton
             backgroundColor={AppStyles.buttonColor}
             style={{
