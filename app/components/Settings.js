@@ -40,16 +40,16 @@ class Settings extends Component {
     this.props.removeLeftNavButton();
   }
 
-  _updateProfileLocally = (profile, shouldQueueUpdate) => {
-    if (shouldQueueUpdate) {
-      // mark update time, before queueing
-      profile.updatedAtDateTimeUtc = new Date();
+  _queueProfileUpdate = profile => {
+    // mark update time, before queueing
+    profile.updatedAtDateTimeUtc = new Date();
 
-      // profile is queued only when network could not be reached
-      this.props.addPendingProfileUpdate(profile);
-      ProfileStorage.queueProfileUpdate(profile);
-    }
+    // profile is queued only when network could not be reached
+    this.props.addPendingProfileUpdate(profile);
+    ProfileStorage.queueProfileUpdate(profile);
+  };
 
+  _updateProfileLocally = profile => {
     this.props.createOrUpdateProfile(profile);
     ProfileStorage.createOrUpdateProfile(profile);
 
@@ -70,26 +70,19 @@ class Settings extends Component {
               let updatedProfile = this.props.profile;
               updatedProfile.showCompletedTasks = !updatedProfile.showCompletedTasks;
 
+              /*
+                Update profile locally, before checking network access. This is
+                because we will perform a local update regardless, and doing
+                so immediately is a much better user experience.
+              */
+              this._updateProfileLocally(updatedProfile);
+
               if (UserController.canAccessNetwork(updatedProfile)) {
-                UserController.updateProfile(updatedProfile)
-                  .then(response => {
-                    let profile = response.profile;
-
-                    // TODO - handle PW in more secure way
-                    profile.password = this.props.profile.password;
-
-                    this._updateProfileLocally(profile);
-                  })
-                  .catch(error => {
-                    let shouldQueueUpdate = true;
-                    this._updateProfileLocally(
-                      updatedProfile,
-                      shouldQueueUpdate
-                    );
-                  });
+                UserController.updateProfile(updatedProfile).catch(error => {
+                  this._queueProfileUpdate(updatedProfile);
+                });
               } else {
-                let shouldQueueUpdate = true;
-                this._updateProfileLocally(updatedProfile, shouldQueueUpdate);
+                this._queueProfileUpdate(updatedProfile);
               }
             }}
           />

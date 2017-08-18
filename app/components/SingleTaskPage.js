@@ -188,6 +188,13 @@ class SingleTaskPage extends Component {
       return; // validation failed; cannot updated task
     }
 
+    /*
+      Update task locally, before checking network access. This is
+      because we will perform a local update regardless, and doing
+      so immediately is a much better user experience.
+    */
+    this._updateTaskLocally(task);
+
     if (
       task.id in this.props.pendingTaskCreates ||
       task.id in this.props.pendingTaskUpdates
@@ -197,7 +204,7 @@ class SingleTaskPage extends Component {
         attempt to submit the update to the server. A separate process will
         handle submitting the queued tasks.
       */
-      this._updateTaskLocally(task, true);
+      this._queueTaskUpdate(task);
     } else if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState(
         {
@@ -209,38 +216,33 @@ class SingleTaskPage extends Component {
           let userId = this.props.profile.id;
           let pw = this.props.profile.password;
 
-          TaskController.updateTask(task, userId, pw)
-            .then(response => {
-              // use the task in the reponse; it is the most up-to-date
-              this._updateTaskLocally(response.task);
-            })
-            .catch(error => {
-              if (error.name === "RetryableError") {
-                this._updateTaskLocally(task, true);
-              } else {
-                this.setState({
-                  updateError: error.message,
-                  isUpdating: false
-                });
-              }
-            });
+          TaskController.updateTask(task, userId, pw).catch(error => {
+            if (error.name === "RetryableError") {
+              this._queueTaskUpdate(task);
+            } else {
+              this.setState({
+                updateError: error.message,
+                isUpdating: false
+              });
+            }
+          });
         }
       );
     } else {
-      this._updateTaskLocally(task, true);
+      this._queueTaskUpdate(task);
     }
   };
 
-  _updateTaskLocally = (task, queueTaskUpdate) => {
-    if (queueTaskUpdate) {
-      // mark update time, before queueing
-      task.updatedAtDateTimeUtc = new Date();
+  _queueTaskUpdate = task => {
+    // mark update time, before queueing
+    task.updatedAtDateTimeUtc = new Date();
 
-      // task is queued only when network could not be reached
-      this.props.addPendingTaskUpdate(task);
-      TaskQueue.queueTaskUpdate(task);
-    }
+    // task is queued only when network could not be reached
+    this.props.addPendingTaskUpdate(task);
+    TaskQueue.queueTaskUpdate(task);
+  };
 
+  _updateTaskLocally = task => {
     TaskStorage.createOrUpdateTask(task);
     this.props.createOrUpdateTask(task);
 

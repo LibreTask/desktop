@@ -11,6 +11,7 @@ import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
+import CircularProgress from "material-ui/CircularProgress";
 
 import * as NavbarActions from "../actions/ui/navbar";
 import * as UserActions from "../actions/entities/user";
@@ -149,22 +150,30 @@ class Profile extends Component {
   _onProfileDelete = () => {
     // TODO - check network status
 
-    this.setState({ isUpdatingProfile: true }, () => {
-      UserController.deleteProfile(this.props.profile)
-        .then(response => {
-          this._deleteProfileLocallyAndRedirect();
-        })
-        .catch(error => {
-          if (error.name === "RetryableError") {
+    this.setState(
+      {
+        isUpdatingProfile: true,
+        updateError: "",
+        updateSuccess: "",
+        emailValidationError: ""
+      },
+      () => {
+        UserController.deleteProfile(this.props.profile)
+          .then(response => {
             this._deleteProfileLocallyAndRedirect();
-          } else {
-            this.setState({
-              updateError: error.message,
-              isUpdatingProfile: false
-            });
-          }
-        });
-    });
+          })
+          .catch(error => {
+            if (error.name === "RetryableError") {
+              this._deleteProfileLocallyAndRedirect();
+            } else {
+              this.setState({
+                updateError: error.message,
+                isUpdatingProfile: false
+              });
+            }
+          });
+      }
+    );
   };
 
   _deleteProfileLocallyAndRedirect = () => {
@@ -266,6 +275,20 @@ class Profile extends Component {
   };
 
   render = () => {
+    let progress = <div />;
+    let windowOpacity = 1;
+
+    if (this.state.isUpdatingProfile) {
+      progress = (
+        <CircularProgress
+          style={AppStyles.progressSpinner}
+          size={60}
+          thickness={7}
+        />
+      );
+      windowOpacity = AppStyles.loadingOpacity;
+    }
+
     const actions = [
       <FlatButton
         label="Cancel"
@@ -284,7 +307,9 @@ class Profile extends Component {
 
     return (
       <div style={AppStyles.mainWindow}>
-        <div style={AppStyles.centeredWindow}>
+        {progress}
+
+        <div style={(AppStyles.centeredWindow, { opacity: windowOpacity })}>
           <Dialog
             style={AppStyles.dialog}
             title="Profile Deletion"
