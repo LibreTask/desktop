@@ -181,6 +181,7 @@ class SingleTaskPage extends Component {
     if (nameValidationError || notesValidationError) {
       this.setState({
         updateError: "",
+        deleteError: "",
         nameValidationError: nameValidationError,
         notesValidationError: notesValidationError
       });
@@ -210,7 +211,9 @@ class SingleTaskPage extends Component {
         {
           isUpdating: true,
           nameValidationError: "",
-          notesValidationError: ""
+          notesValidationError: "",
+          updateError: "",
+          deleteError: ""
         },
         () => {
           let userId = this.props.profile.id;
@@ -240,18 +243,24 @@ class SingleTaskPage extends Component {
     // task is queued only when network could not be reached
     this.props.addPendingTaskUpdate(task);
     TaskQueue.queueTaskUpdate(task);
+
+    // re-update the local task reference, after modifying updatedAtDateTimeUtc
+    let displayMessage = false;
+    this._updateTaskLocally(task, displayMessage);
   };
 
-  _updateTaskLocally = task => {
+  _updateTaskLocally = (task, displayMessage = true) => {
     TaskStorage.createOrUpdateTask(task);
     this.props.createOrUpdateTask(task);
 
     this.props.refreshTaskViewCollapseStatus();
 
-    this.setState({ updateSuccess: "Successfully updated" });
+    if (displayMessage) {
+      this.setState({ updateSuccess: "Successfully updated" });
 
-    // erase update success text after 1.5 seconds
-    setTimeout(() => this.setState({ updateSuccess: "" }), 1500);
+      // erase update success text after 1.5 seconds
+      setTimeout(() => this.setState({ updateSuccess: "" }), 1500);
+    }
   };
 
   /*
@@ -262,6 +271,14 @@ class SingleTaskPage extends Component {
     let task = this.state.editedTask;
     task.isDeleted = true;
 
+    /*
+      Delete task locally, before checking network access. This is
+      because we will perform a local update regardless, and doing
+      so immediately is a much better user experience.
+    */
+    this._deleteTaskLocally(task);
+    hashHistory.replace("/tasks");
+
     if (
       task.id in this.props.pendingTaskCreates ||
       task.id in this.props.pendingTaskUpdates
@@ -271,20 +288,23 @@ class SingleTaskPage extends Component {
         attempt to submit the update to the server. A separate process will
         handle submitting the queued tasks.
       */
-      this._deleteTaskLocallyAndRedirect(task, true);
+      this._queueTaskDeletion(task);
     } else if (UserController.canAccessNetwork(this.props.profile)) {
-      this.setState({ isDeleting: true }, () => {
-        let userId = this.props.profile.id;
-        let pw = this.props.profile.password;
+      this.setState(
+        {
+          nameValidationError: "",
+          notesValidationError: "",
+          updateError: "",
+          deleteError: "",
+          isDeleting: true
+        },
+        () => {
+          let userId = this.props.profile.id;
+          let pw = this.props.profile.password;
 
-        TaskController.deleteTask(task.id, userId, pw)
-          .then(response => {
-            // use the task in the reponse; it is the most up-to-date
-            this._deleteTaskLocallyAndRedirect(response.task);
-          })
-          .catch(error => {
+          TaskController.deleteTask(task.id, userId, pw).catch(error => {
             if (error.name === "RetryableError") {
-              this._deleteTaskLocallyAndRedirect(task, true);
+              this._queueTaskDeletion(task, true);
             } else {
               this.setState({
                 deleteError: error.message,
@@ -292,22 +312,26 @@ class SingleTaskPage extends Component {
               });
             }
           });
-      });
+        }
+      );
     } else {
-      this._deleteTaskLocallyAndRedirect(task, true);
+      this._queueTaskDeletion(task);
     }
   };
 
-  _deleteTaskLocallyAndRedirect = (task, queueTaskDeletion) => {
-    if (queueTaskDeletion) {
-      // mark update time, before queueing
-      task.updatedAtDateTimeUtc = new Date();
+  _queueTaskDeletion = task => {
+    // mark update time, before queueing
+    task.updatedAtDateTimeUtc = new Date();
 
-      // task is queued only when network could not be reached
-      this.props.addPendingTaskDelete(task);
-      TaskQueue.queueTaskDelete(task);
-    }
+    // task is queued only when network could not be reached
+    this.props.addPendingTaskDelete(task);
+    TaskQueue.queueTaskDelete(task);
 
+    // re-update the local task reference, after modifying updatedAtDateTimeUtc
+    this._deleteTaskLocally(task);
+  };
+
+  _deleteTaskLocally = task => {
     /*
      The task has been marked `isDeleted = true`.
 
@@ -320,8 +344,6 @@ class SingleTaskPage extends Component {
     this.props.createOrUpdateTask(task);
 
     this.props.refreshTaskViewCollapseStatus();
-
-    hashHistory.replace("/tasks");
   };
 
   _datePicker = () => {

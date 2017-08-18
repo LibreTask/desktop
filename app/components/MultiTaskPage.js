@@ -290,6 +290,9 @@ class MultiTaskPage extends Component {
     // task is queued only when network could not be reached
     this.props.addPendingTaskUpdate(task);
     TaskQueue.queueTaskUpdate(task);
+
+    // re-update the local task reference, after modifying updatedAtDateTimeUtc
+    this._updateTaskLocally(task);
   };
 
   _updateTaskLocally = task => {
