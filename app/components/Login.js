@@ -57,6 +57,10 @@ class Login extends Component {
   }
 
   _login = () => {
+    if (this.state.isLoggingIn) {
+      return;
+    }
+
     let email = this.state.currentEmail;
     let password = this.state.currentPassword;
 

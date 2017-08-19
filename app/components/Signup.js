@@ -50,6 +50,10 @@ class Signup extends Component {
   }
 
   _signup = () => {
+    if (this.state.isSigningUp) {
+      return;
+    }
+
     let email = this.state.currentEmail;
     let password = this.state.currentPassword;
     let confirmPassword = this.state.currentConfirmPassword;

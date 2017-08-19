@@ -60,8 +60,7 @@ class SingleTaskPage extends Component {
       deleteError: "",
       updateError: "",
       updateSuccess: "",
-      isDeleting: false,
-      isUpdating: false,
+      isUpdatingTask: false,
       deleteTaskDialogIsOpen: false,
 
       // TODO - we keep these references in case props are updated
@@ -162,6 +161,10 @@ class SingleTaskPage extends Component {
   };
 
   _onEditTask = () => {
+    if (this.state.isUpdatingTask) {
+      return;
+    }
+
     let task = this.state.editedTask;
 
     let nameValidationError = "";
@@ -209,7 +212,7 @@ class SingleTaskPage extends Component {
     } else if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState(
         {
-          isUpdating: true,
+          isUpdatingTask: true,
           nameValidationError: "",
           notesValidationError: "",
           updateError: "",
@@ -225,7 +228,7 @@ class SingleTaskPage extends Component {
             } else {
               this.setState({
                 updateError: error.message,
-                isUpdating: false
+                isUpdatingTask: false
               });
             }
           });
@@ -268,6 +271,13 @@ class SingleTaskPage extends Component {
     dialog has been displayed.
   */
   _onDeleteTask = () => {
+    /*
+    TODO
+    if (this.state.isUpdatingTask) {
+      return;
+    }
+    */
+
     let task = this.state.editedTask;
     task.isDeleted = true;
 
@@ -296,7 +306,7 @@ class SingleTaskPage extends Component {
           notesValidationError: "",
           updateError: "",
           deleteError: "",
-          isDeleting: true
+          isUpdatingTask: true
         },
         () => {
           let userId = this.props.profile.id;
@@ -308,7 +318,7 @@ class SingleTaskPage extends Component {
             } else {
               this.setState({
                 deleteError: error.message,
-                isDeleting: false
+                isUpdatingTask: false
               });
             }
           });

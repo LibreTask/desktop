@@ -97,6 +97,10 @@ class CreateTask extends Component {
   }
 
   _createTask = () => {
+    if (this.state.isCreatingTask) {
+      return;
+    }
+
     let name = this.state.currentName;
 
     // only include optional attributes if their icon is selected

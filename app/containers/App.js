@@ -393,7 +393,7 @@ class App extends Component {
 
     const loginActions = [
       <FlatButton
-        label="Cancel"
+        label="Close"
         onTouchTap={() => {
           this.props.closeLoginDialog();
           this.props.closeSideMenu();

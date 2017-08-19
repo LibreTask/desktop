@@ -84,6 +84,10 @@ class Profile extends Component {
   }
 
   _onProfileUpdate = () => {
+    if (this.state.isUpdatingProfile) {
+      return;
+    }
+
     let updatedEmail = this.state.currentEmail || "";
 
     let emailValidationError = "";
@@ -148,7 +152,12 @@ class Profile extends Component {
     dialog has been displayed.
   */
   _onProfileDelete = () => {
-    // TODO - check network status
+    /*
+TODO
+    if (this.state.isUpdatingProfile) {
+      return;
+    }
+*/
 
     this.setState(
       {
