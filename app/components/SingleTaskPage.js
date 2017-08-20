@@ -258,6 +258,8 @@ class SingleTaskPage extends Component {
 
     this.props.refreshTaskViewCollapseStatus();
 
+    this.setState({ isUpdatingTask: false });
+
     if (displayMessage) {
       this.setState({ updateSuccess: "Successfully updated" });
 
