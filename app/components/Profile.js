@@ -169,27 +169,19 @@ TODO
       () => {
         UserController.deleteProfile(this.props.profile)
           .then(response => {
-            this._deleteProfileLocallyAndRedirect();
+            this.props.deleteProfile();
+            ProfileStorage.deleteProfile();
+
+            hashHistory.replace("/tasks"); // navigate to main on deletion
           })
           .catch(error => {
-            if (error.name === "RetryableError") {
-              this._deleteProfileLocallyAndRedirect();
-            } else {
-              this.setState({
-                updateError: error.message,
-                isUpdatingProfile: false
-              });
-            }
+            this.setState({
+              updateError: error.message,
+              isUpdatingProfile: false
+            });
           });
       }
     );
-  };
-
-  _deleteProfileLocallyAndRedirect = () => {
-    this.props.deleteProfile();
-    ProfileStorage.deleteProfile();
-
-    hashHistory.replace("/tasks"); // navigate to main on deletion
   };
 
   _hasPremiumSubscription = () => {
