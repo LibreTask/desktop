@@ -47,6 +47,9 @@ class Settings extends Component {
     // profile is queued only when network could not be reached
     this.props.addPendingProfileUpdate(profile);
     ProfileStorage.queueProfileUpdate(profile);
+
+    // re-update the local profile ref, after modifying updatedAtDateTimeUtc
+    this._updateProfileLocally(profile);
   };
 
   _updateProfileLocally = profile => {
