@@ -41,6 +41,10 @@
   z-index: 9999999999;
 }
 
+.DateInput {
+  width: 220px; /* expand width, so that custom format date can fully display */
+}
+
 /*
  HACK: this margin-top is meant to be exactly the height of the header.
  That means Header.height + Header.paddingBottom + Header.paddingTop
