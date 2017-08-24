@@ -209,7 +209,6 @@ class CreateTask extends Component {
       <span>
         <TextField
           multiLine={true}
-          rows={this._noteRowsToDisplay()}
           style={{
             ...styles.textField,
             ...AppStyles.centeredElement
@@ -302,18 +301,6 @@ class CreateTask extends Component {
         </IconButton>
       </div>
     );
-  };
-
-  /*
-    Intended to let the "Notes" textfield grow as user enters more text.
-    However, this approach is not correct. It only works if each line does
-    not exceed the screen width (ie, no wordwrap).
-
-    // TODO - can we do this better / more efficiently?
-  */
-  _noteRowsToDisplay = () => {
-    // TODO - can this be done more efficiently?
-    return (this.state.currentNotes || "").split(/\r\n|\r|\n/).length;
   };
 
   render = () => {

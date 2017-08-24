@@ -390,17 +390,6 @@ class SingleTaskPage extends Component {
     );
   };
 
-  /*
-    Intended to let the "Notes" textfield grow as user enters more text.
-    However, this approach is not correct. It only works if each line does
-    not exceed the screen width (ie, no wordwrap).
-
-    // TODO - can we do this better / more efficiently?
-  */
-  _noteRowsToDisplay = () => {
-    return (this.state.editedTask.notes || "").split(/\r\n|\r|\n/).length;
-  };
-
   render = () => {
     let task = this.state.editedTask;
 
@@ -461,7 +450,6 @@ class SingleTaskPage extends Component {
 
           <TextField
             multiLine={true}
-            rows={this._noteRowsToDisplay()}
             style={{
               ...styles.textField,
               ...AppStyles.centeredElement
