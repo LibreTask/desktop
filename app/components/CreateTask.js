@@ -238,7 +238,7 @@ class CreateTask extends Component {
     return (
       <div style={styles.datePicker}>
         <SingleDatePicker
-          displayFormat="dddd, MMMM Do, YYYY"
+          displayFormat="dddd, MMM Do, YYYY"
           placeholder="Due Date"
           withFullScreenPortal={true}
           reopenPickerOnClearDate={false}
