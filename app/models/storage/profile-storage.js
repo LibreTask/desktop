@@ -67,10 +67,6 @@ export async function getMyProfile() {
   return _endoraFormat(await db.get("profile"));
 }
 
-export function logout() {
-  return cleanProfileStorage();
-}
-
 export async function isLoggedIn() {
   // TODO - refine this approach
 

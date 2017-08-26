@@ -16,7 +16,6 @@ import CircularProgress from "material-ui/CircularProgress";
 import * as NavbarActions from "../actions/ui/navbar";
 import * as UserActions from "../actions/entities/user";
 import * as UserController from "../models/controllers/user";
-import * as ProfileStorage from "../models/storage/profile-storage";
 
 import moment from "moment";
 
@@ -124,7 +123,6 @@ class Profile extends Component {
             profile.password = this.props.profile.password;
 
             this.props.createOrUpdateProfile(profile);
-            ProfileStorage.createOrUpdateProfile(profile);
 
             this.setState(
               {
@@ -170,8 +168,6 @@ TODO
         UserController.deleteProfile(this.props.profile)
           .then(response => {
             this.props.deleteProfile();
-            ProfileStorage.deleteProfile();
-
             hashHistory.replace("/tasks"); // navigate to main on deletion
           })
           .catch(error => {

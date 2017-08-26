@@ -24,6 +24,9 @@ import {
 } from "../../actions/entities/task";
 import { updateObject } from "../reducer-utils";
 
+import * as TaskStorage from "../../models/storage/task-storage";
+import * as TaskQueue from "../../models/storage/task-queue";
+
 import * as _ from "lodash";
 
 function removeTask(tasks, taskId) {
@@ -42,6 +45,8 @@ function addPendingTaskCreate(state, action) {
     state.pendingTaskActions.create,
     newTaskEntry
   );
+
+  TaskQueue.queueTaskCreate(action.task);
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -66,6 +71,8 @@ function addPendingTaskUpdate(state, action) {
       newTaskEntry
     );
 
+    TaskQueue.queueTaskCreate(action.task);
+
     updatedPendingTaskActions = {
       create: queuedCreates,
       update: state.pendingTaskActions.update,
@@ -73,18 +80,20 @@ function addPendingTaskUpdate(state, action) {
     };
   } else {
     /*
-      This block handles the following cases:
-      1. The task is already queued to be deleted
-      2. The task is already queued to be updated
-      3. The task is not queued for anything
+       This block handles the following cases:
+       1. The task is already queued to be deleted
+       2. The task is already queued to be updated
+       3. The task is not queued for anything
 
-      For all these scenarios, we want to queue an update.
-   */
+       For all these scenarios, we want to queue an update.
+    */
 
     let queuedUpdates = updateObject(
       state.pendingTaskActions.update,
       newTaskEntry
     );
+
+    TaskQueue.queueTaskUpdate(action.task);
 
     updatedPendingTaskActions = {
       update: queuedUpdates,
@@ -114,6 +123,8 @@ function addPendingTaskDelete(state, action) {
       taskMap[task.id] = task;
     }
 
+    TaskQueue.dequeueTaskByTaskId(action.task.id);
+
     updatedPendingTaskActions = {
       create: taskMap,
       update: state.pendingTaskActions.update,
@@ -124,16 +135,18 @@ function addPendingTaskDelete(state, action) {
     taskId in state.pendingTaskActions.update
   ) {
     /*
-    If the task is not queued to be deleted, queue it now.
+     If the task is not queued to be deleted, queue it now.
 
-    If the task is already queued to be updated; queue it for deletion anyways,
-    because the backend design is such that deletes and updates do not conflict
-    with each other.
-   */
+     If the task is already queued to be updated; queue it for deletion anyways,
+     because the backend design is such that deletes and updates do not conflict
+     with each other.
+    */
     let queuedDeletes = updateObject(
       state.pendingTaskActions.delete,
       newTaskEntry
     );
+
+    TaskQueue.queueTaskDelete(action.task);
 
     updatedPendingTaskActions = {
       delete: queuedDeletes,
@@ -170,30 +183,30 @@ function removePendingTaskCreate(state, action) {
   // TODO - refine the approach of replacing the existing task
 
   /*
-    Each task has a unique ID. This identifier is usually assigned by the
-    server. However, if for some reason, the client is unable to reach the
-    server, the client will create a temporary ID and then queue the task
-    for creation.
+     Each task has a unique ID. This identifier is usually assigned by the
+     server. However, if for some reason, the client is unable to reach the
+     server, the client will create a temporary ID and then queue the task
+     for creation.
 
-    Later, when the client can finally reach the server, the server will give
-    the task a new ID. Here we replace the old, client-assigned ID with the new,
-    server-assigned ID.
+     Later, when the client can finally reach the server, the server will give
+     the task a new ID. Here we replace the old, client-assigned ID with the new,
+     server-assigned ID.
 
-    Three places must be checked
-    1. state.tasks
-        --- this is where all tasks live
-    2. state.pendingTaskActions.update
-        --- unlikely but possible the task is also queued for an update
-    3. state.pendingTaskActions.delete
-        --- unlikely but possible the task is also queued for deletion
-  */
+     Three places must be checked
+     1. state.tasks
+         --- this is where all tasks live
+     2. state.pendingTaskActions.update
+         --- unlikely but possible the task is also queued for an update
+     3. state.pendingTaskActions.delete
+         --- unlikely but possible the task is also queued for deletion
+   */
   let task = Object.assign({}, state.tasks[clientAssignedTaskId]);
   task.id = serverAssignedTaskId;
 
   /*
-    Keep a reference to the clientAssignedTaskId in case a local reference
-    exists. TODO - refine this approach.
-  */
+     Keep a reference to the clientAssignedTaskId in case a local reference
+     exists. TODO - refine this approach.
+   */
   task.clientAssignedTaskId = clientAssignedTaskId;
   delete state.tasks[clientAssignedTaskId]; // delete existing task
   state.tasks[serverAssignedTaskId] = task; // replace with new ID
@@ -202,12 +215,18 @@ function removePendingTaskCreate(state, action) {
   if (clientAssignedTaskId in pendingUpdates) {
     delete pendingUpdates[clientAssignedTaskId]; // delete existing task
     pendingUpdates[serverAssignedTaskId] = task; // replace with new ID
+
+    TaskQueue.dequeueTaskByTaskId(clientAssignedTaskId);
+    TaskQueue.queueTaskUpdate(task);
   }
 
   let pendingDeletes = state.pendingTaskActions.delete || {};
   if (clientAssignedTaskId in pendingDeletes) {
     delete pendingDeletes[clientAssignedTaskId]; // delete existing task
     pendingDeletes[serverAssignedTaskId] = task; // replace with new ID
+
+    TaskQueue.dequeueTaskByTaskId(clientAssignedTaskId);
+    TaskQueue.queueTaskDelete(task);
   }
 
   return updateObject(state, {
@@ -230,6 +249,8 @@ function removePendingTaskUpdate(state, action) {
     taskMap[task.id] = task;
   }
 
+  TaskQueue.dequeueTaskByTaskId(action.taskId);
+
   return updateObject(state, {
     pendingTaskActions: {
       update: taskMap,
@@ -249,6 +270,8 @@ function removePendingTaskDelete(state, action) {
   for (let task of remainingTasks) {
     taskMap[task.id] = task;
   }
+
+  TaskQueue.dequeueTaskByTaskId(action.taskId);
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -308,6 +331,9 @@ function stopTaskCleanup(state, action) {
 }
 
 function deleteAllTasks(state, action) {
+  TaskQueue.cleanTaskQueue();
+  TaskStorage.cleanTaskStorage();
+
   return updateObject(state, {
     tasks: {
       /* all tasks are deleted */
@@ -328,6 +354,8 @@ function deleteTask(state, action) {
     taskMap[task.id] = task;
   }
 
+  TaskStorage.deleteTaskByTaskId(action.taskId);
+
   return updateObject(state, { tasks: taskMap });
 }
 
@@ -336,6 +364,8 @@ function addTasks(state, action) {
   for (let task of action.tasks) {
     normalizedTasks[task.id] = task;
   }
+
+  TaskStorage.createOrUpdateTasks(action.tasks);
 
   return updateObject(state, {
     tasks: updateObject(state.tasks, normalizedTasks)
@@ -350,25 +380,21 @@ function addNormalizedTask(state, normalizedTask) {
   let updatedTaskEntry = {};
   updatedTaskEntry[normalizedTask.id] = normalizedTask;
 
+  TaskStorage.createOrUpdateTask(normalizedTask);
+
   return updateObject(state, {
     tasks: updateObject(state.tasks, updatedTaskEntry)
   });
 }
 
 /*
-  This function always updates the value lastSuccessfulSyncDateTimeUtc. This is
-  because it is assumed that this function is ONLY invoked after a successful
-  sync.
-*/
+   This function always updates the value lastSuccessfulSyncDateTimeUtc. This is
+   because it is assumed that this function is ONLY invoked after a successful
+   sync.
+ */
 function syncTasks(state, action) {
   const syncedTasks = action.tasks;
   const existingTasks = state.tasks;
-
-  console.log("ALL synced tasks...");
-  console.dir(syncedTasks);
-
-  console.log("existing tasks...");
-  console.dir(existingTasks);
 
   let tasksToCreateOrUpdate = [];
 
@@ -391,13 +417,13 @@ function syncTasks(state, action) {
         tasksToCreateOrUpdate.push(syncedTask);
       } else {
         /*
-          The synced task was less up-to-date than the version residing on the
-          client. This is expected in some scenarios, such as when the client
-          looses network connectivity, and must queue up a task action.
+           The synced task was less up-to-date than the version residing on the
+           client. This is expected in some scenarios, such as when the client
+           looses network connectivity, and must queue up a task action.
 
-          For this case, we do nothing here. The queue-logic is designed to
-          completely handle such scenarios.
-        */
+           For this case, we do nothing here. The queue-logic is designed to
+           completely handle such scenarios.
+         */
       }
     } else {
       // synced task does not already exist on this device.
@@ -406,9 +432,6 @@ function syncTasks(state, action) {
     }
   }
 
-  console.log("tasks to create or update...");
-  console.dir(tasksToCreateOrUpdate);
-
   return addTasks(state, {
     tasks: tasksToCreateOrUpdate,
     lastSuccessfulSyncDateTimeUtc: action.lastSuccessfulSyncDateTimeUtc
@@ -416,21 +439,15 @@ function syncTasks(state, action) {
 }
 
 /*
-  This method is not expected to always be correct. There are many nuances
-  involved with correctly syncing and queueing state, especially as more
-  clients are involved and the network is assumed to be unreliable.
+   This method is not expected to always be correct. There are many nuances
+   involved with correctly syncing and queueing state, especially as more
+   clients are involved and the network is assumed to be unreliable.
 
-  The current approach is to simply return false if the synced task was updated
-  at a LESS RECENT date than the task on the client.
-*/
+   The current approach is to simply return false if the synced task was updated
+   at a LESS RECENT date than the task on the client.
+ */
 function syncedTaskDoesNotConflictWithQueuedTask(state, syncedTask) {
   let pendingTaskActions = state.pendingTaskActions;
-
-  console.log("pending task actions...");
-  console.dir(pendingTaskActions);
-
-  console.log("synced task...");
-  console.dir(syncedTask);
 
   if (pendingTaskActions.create && syncedTask.id in pendingTaskActions.create) {
     // This should never happen. It would indicate either a bug (most likely)
@@ -500,83 +517,83 @@ const initialState = {
 function tasksReducer(state = initialState, action) {
   switch (action.type) {
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case START_QUEUED_TASK_SUBMIT:
       return startQueuedTaskSubmit(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case STOP_QUEUED_TASK_SUBMIT:
       return stopQueuedTaskSubmission(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case START_TASK_SYNC:
       return startTaskSync(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case END_TASK_SYNC:
       return endTaskSync(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case START_TASK_CLEANUP:
       return startTaskCleanup(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case STOP_TASK_CLEANUP:
       return stopTaskCleanup(state, action);
     /*
-     TODO - doc
-    */
+      TODO - doc
+     */
     case SYNC_TASKS:
       return syncTasks(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case CREATE_OR_UPDATE_TASK:
       return addTask(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case DELETE_ALL_TASKS:
       return deleteAllTasks(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case DELETE_TASK:
       return deleteTask(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case ADD_PENDING_TASK_DELETE:
       return addPendingTaskDelete(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case ADD_PENDING_TASK_UPDATE:
       return addPendingTaskUpdate(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case ADD_PENDING_TASK_CREATE:
       return addPendingTaskCreate(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case REMOVE_PENDING_TASK_DELETE:
       return removePendingTaskDelete(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case REMOVE_PENDING_TASK_UPDATE:
       return removePendingTaskUpdate(state, action);
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case REMOVE_PENDING_TASK_CREATE:
       return removePendingTaskCreate(state, action);
 

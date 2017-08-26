@@ -17,36 +17,28 @@ import * as _ from "lodash";
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-const db = new PouchDB("./endoradb", { adapter: "websql" });
+let db = new PouchDB("./endoradb", { adapter: "websql" });
 
 const UPDATE = "UPDATE";
 const DELETE = "DELETE";
 const CREATE = "CREATE";
 
-function _endoraFormat(task, deleteOperation = true) {
-  // output of `db.query` uses `task.key`, whereas `db.get` uses `task`
-  let endoraFormattedTask = task.key ? task.key : task;
+function _endoraFormat(task) {
+  let endoraFormattedTask = {};
 
   if (task) {
+    endoraFormattedTask = task.key;
     delete endoraFormattedTask._id;
     delete endoraFormattedTask._rev;
     delete endoraFormattedTask.type;
-
-    if (deleteOperation) {
-      delete endoraFormattedTask.operation;
-    }
+    delete endoraFormattedTask.operation;
   }
 
   return endoraFormattedTask;
 }
 
-export async function _getQueuedTaskByTaskId(taskId) {
-  /*
-    Do not delete the operation. The result of the query will be used
-    internally, and knowing the specific operation is useful.
-  */
-  let deleteOperation = false;
-  return _endoraFormat(await db.get(`queue/task/${taskId}`), deleteOperation);
+export async function getQueuedTaskByTaskId(taskId) {
+  return _endoraFormat(await db.get(taskId));
 }
 
 export async function getAllPendingUpdates() {
@@ -92,24 +84,11 @@ export function queueTaskCreate(task) {
 }
 
 export function queueTaskUpdate(task) {
-  _getQueuedTaskByTaskId(task.id).then(queuedTask => {
-    // If the task is already queued, do not override the existing "operation".
-    let method = queuedTask ? queuedTask.operation : UPDATE;
-    return _upsertTask(task, method);
-  });
+  return _upsertTask(task, UPDATE);
 }
 
-// TODO - if it is already queued, then just delete from the queue
 export function queueTaskDelete(task) {
-  _getQueuedTaskByTaskId(task.id).then(queuedTask => {
-    // If the task has not yet reached the server, we can simply delete
-    // the task from the queue. Otherwise, queue the delete.
-    if (queuedTask.operation === CREATE) {
-      return dequeueTaskByTaskId(task.id);
-    } else {
-      return _upsertTask(task, DELETE);
-    }
-  });
+  return _upsertTask(task, DELETE);
 }
 
 function _upsertTask(task, operation) {
@@ -129,4 +108,9 @@ export function dequeueTaskByTaskId(taskId) {
   });
 }
 
-export function cleanTaskQueue() {}
+export function cleanTaskQueue() {
+  // TODO - refine
+  return db.destroy().then(function(response) {
+    db = new PouchDB("./endoradb", { adapter: "websql" });
+  });
+}

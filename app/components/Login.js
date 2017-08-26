@@ -13,7 +13,6 @@ import CircularProgress from "material-ui/CircularProgress";
 
 import * as NavbarActions from "../actions/ui/navbar";
 import * as UserController from "../models/controllers/user";
-import * as ProfileStorage from "../models/storage/profile-storage";
 import * as UserActions from "../actions/entities/user";
 
 import AppStyles from "../styles";
@@ -104,7 +103,6 @@ class Login extends Component {
             profile.showCompletedTasks = this.props.profile.showCompletedTasks;
 
             this.props.createOrUpdateProfile(profile);
-            ProfileStorage.createOrUpdateProfile(profile);
 
             hashHistory.replace("/tasks"); // navigate to main on successful login
           })

@@ -40,7 +40,6 @@ import * as UserActions from "../actions/entities/user";
 import * as TaskActions from "../actions/entities/task";
 
 import * as UserController from "../models/controllers/user";
-import * as ProfileStorage from "../models/storage/profile-storage";
 
 let Sidebar = require("react-sidebar").default;
 
@@ -434,7 +433,6 @@ class App extends Component {
           // remove profile and all entities
           this.props.deleteProfile();
           this.props.deleteAllTasks();
-          ProfileStorage.logout();
 
           hashHistory.replace("/tasks");
         }}

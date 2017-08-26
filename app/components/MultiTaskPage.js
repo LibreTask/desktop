@@ -20,8 +20,6 @@ import * as NavbarActions from "../actions/ui/navbar";
 import * as TaskViewActions from "../actions/ui/taskview";
 import * as TaskActions from "../actions/entities/task";
 import * as TaskController from "../models/controllers/task";
-import * as TaskQueue from "../models/storage/task-queue";
-import * as TaskStorage from "../models/storage/task-storage";
 import * as UserController from "../models/controllers/user";
 
 import TaskUtils from "../utils/task-utils";
@@ -289,14 +287,12 @@ class MultiTaskPage extends Component {
 
     // task is queued only when network could not be reached
     this.props.addPendingTaskUpdate(task);
-    TaskQueue.queueTaskUpdate(task);
 
     // re-update the local task reference, after modifying updatedAtDateTimeUtc
     this._updateTaskLocally(task);
   };
 
   _updateTaskLocally = task => {
-    TaskStorage.createOrUpdateTask(task);
     this.props.createOrUpdateTask(task);
   };
 

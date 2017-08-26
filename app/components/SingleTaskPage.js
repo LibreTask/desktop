@@ -16,8 +16,6 @@ import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton";
 import * as NavbarActions from "../actions/ui/navbar";
 import * as TaskActions from "../actions/entities/task";
 import * as TaskController from "../models/controllers/task";
-import * as TaskQueue from "../models/storage/task-queue";
-import * as TaskStorage from "../models/storage/task-storage";
 import * as UserController from "../models/controllers/user";
 import * as TaskViewActions from "../actions/ui/taskview";
 
@@ -245,7 +243,6 @@ class SingleTaskPage extends Component {
 
     // task is queued only when network could not be reached
     this.props.addPendingTaskUpdate(task);
-    TaskQueue.queueTaskUpdate(task);
 
     // re-update the local task reference, after modifying updatedAtDateTimeUtc
     let displayMessage = false;
@@ -253,7 +250,6 @@ class SingleTaskPage extends Component {
   };
 
   _updateTaskLocally = (task, displayMessage = true) => {
-    TaskStorage.createOrUpdateTask(task);
     this.props.createOrUpdateTask(task);
 
     this.props.refreshTaskViewCollapseStatus();
@@ -337,7 +333,6 @@ class SingleTaskPage extends Component {
 
     // task is queued only when network could not be reached
     this.props.addPendingTaskDelete(task);
-    TaskQueue.queueTaskDelete(task);
 
     // re-update the local task reference, after modifying updatedAtDateTimeUtc
     this._deleteTaskLocally(task);
@@ -352,7 +347,6 @@ class SingleTaskPage extends Component {
      this task, a sync might receive an outdated (undeleted) version of the
      task and incorrectly re-recreate it.
     */
-    TaskStorage.createOrUpdateTask(task);
     this.props.createOrUpdateTask(task);
 
     this.props.refreshTaskViewCollapseStatus();

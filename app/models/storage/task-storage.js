@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-const db = new PouchDB("./endoradb", { adapter: "websql" });
+let db = new PouchDB("./endoradb", { adapter: "websql" });
 
 function _endoraFormat(task) {
   let endoraFormattedTask = {};
@@ -66,4 +66,9 @@ export function deleteTaskByTaskId(taskId) {
   });
 }
 
-export function cleanTaskStorage() {}
+export function cleanTaskStorage() {
+  // TODO - refine
+  return db.destroy().then(function(response) {
+    db = new PouchDB("./endoradb", { adapter: "websql" });
+  });
+}

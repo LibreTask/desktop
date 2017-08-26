@@ -15,8 +15,6 @@ import CircularProgress from "material-ui/CircularProgress";
 import * as NavbarActions from "../actions/ui/navbar";
 import * as TaskActions from "../actions/entities/task";
 import * as TaskController from "../models/controllers/task";
-import * as TaskQueue from "../models/storage/task-queue";
-import * as TaskStorage from "../models/storage/task-storage";
 import * as UserController from "../models/controllers/user";
 import * as TaskViewActions from "../actions/ui/taskview";
 
@@ -161,7 +159,6 @@ class CreateTask extends Component {
               let task = response.task;
               task.isCompleted = false; // initialize to false
 
-              TaskStorage.createOrUpdateTask(task);
               this.props.createOrUpdateTask(task);
 
               this.props.refreshTaskViewCollapseStatus();
@@ -189,9 +186,7 @@ class CreateTask extends Component {
   _createTaskLocallyAndRedirect = (name, notes, dueDateTimeUtc) => {
     // create task locally; user it not logged in or has no network connection
     let task = TaskController.constructTaskLocally(name, notes, dueDateTimeUtc);
-    TaskStorage.createOrUpdateTask(task);
     this.props.createOrUpdateTask(task);
-    TaskQueue.queueTaskCreate(task);
     this.props.addPendingTaskCreate(task);
 
     this.props.refreshTaskViewCollapseStatus();

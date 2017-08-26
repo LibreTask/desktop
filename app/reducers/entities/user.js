@@ -17,6 +17,8 @@ import {
 } from "../../actions/entities/user";
 import { updateObject } from "./../reducer-utils";
 
+import * as ProfileStorage from "../../models/storage/profile-storage";
+
 function startUserSync(state, action) {
   return updateObject(state, {
     isSyncing: true,
@@ -34,6 +36,8 @@ function endUserSync(state, action) {
 }
 
 function deleteProfile(state, action) {
+  ProfileStorage.deleteProfile();
+
   return updateObject(state, {
     profile: {},
     isLoggedIn: false
@@ -41,6 +45,8 @@ function deleteProfile(state, action) {
 }
 
 function addProfile(state, action) {
+  ProfileStorage.createOrUpdateProfile(action.profile);
+
   return updateObject(state, {
     profile: action.profile,
     isLoggedIn: action.isLoggedIn
@@ -48,9 +54,9 @@ function addProfile(state, action) {
 }
 
 /*
-  Always update lastSuccessfulSyncDateTimeUtc, because it is assumed that
-  this reducer is ONLY invoked after a successful sync.
-*/
+   Always update lastSuccessfulSyncDateTimeUtc, because it is assumed that
+   this reducer is ONLY invoked after a successful sync.
+ */
 function syncUser(state, action) {
   let queuedProfile = state.queuedProfile;
   let syncedProfile = action.profile;
@@ -69,19 +75,27 @@ function syncUser(state, action) {
     return updatedState;
   } else {
     // if an update to profile is available, update, otherwise, ignore
-    return action.profile
-      ? updateObject(updatedState, { profile: action.profile })
-      : updateState;
+    if (action.profile) {
+      ProfileStorage.createOrUpdateProfile(action.profile);
+
+      return updateObject(updatedState, { profile: action.profile });
+    } else {
+      return updateState;
+    }
   }
 }
 
 function addPendingProfileUpdate(state, action) {
+  ProfileStorage.queueProfileUpdate(action.queuedProfile);
+
   return updateObject(state, {
     queuedProfile: action.queuedProfile
   });
 }
 
 function removePendingProfileUpdate(state, action) {
+  ProfileStorage.deletedQueuedProfile();
+
   return updateObject(state, {
     queuedProfile: undefined
   });
@@ -115,56 +129,48 @@ const initialState = {
 function userReducer(state = initialState, action) {
   switch (action.type) {
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case START_USER_SYNC:
       return startUserSync(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case END_USER_SYNC:
       return endUserSync(state, action);
-
     /*
-     TODO - doc
-    */
+      TODO - doc
+     */
     case SYNC_USER:
       return syncUser(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case CREATE_OR_UPDATE_PROFILE:
       return addProfile(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case DELETE_PROFILE:
       return deleteProfile(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case ADD_PENDING_PROFILE_UPDATE:
       return addPendingProfileUpdate(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case REMOVE_PENDING_PROFILE_UPDATE:
       return removePendingProfileUpdate(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case START_QUEUED_PROFILE_SUBMIT:
       return startQueuedProfileSubmission(state, action);
-
     /*
-      TODO - doc
-    */
+       TODO - doc
+     */
     case STOP_QUEUED_PROFILE_SUBMIT:
       return stopQueuedProfileSubmission(state, action);
 
