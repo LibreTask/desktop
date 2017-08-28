@@ -231,8 +231,11 @@ class MultiTaskPage extends Component {
                 */
                 event.stopPropagation();
 
+                let completionDateTimeUtc = new Date().getTime();
+
                 task.isCompleted = !task.isCompleted;
-                task.completionDateTimeUtc = new Date().getTime();
+                task.completionDateTimeUtc = completionDateTimeUtc;
+                task.updatedAtDateTimeUtc = completionDateTimeUtc;
 
                 let userId = this.props.profile.id;
                 let pw = this.props.profile.password;
@@ -282,14 +285,8 @@ class MultiTaskPage extends Component {
   }
 
   _queueTaskUpdate = task => {
-    // mark update time, before queueing
-    task.updatedAtDateTimeUtc = new Date();
-
     // task is queued only when network could not be reached
     this.props.addPendingTaskUpdate(task);
-
-    // re-update the local task reference, after modifying updatedAtDateTimeUtc
-    this._updateTaskLocally(task);
   };
 
   _updateTaskLocally = task => {

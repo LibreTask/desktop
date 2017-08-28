@@ -195,6 +195,7 @@ class SingleTaskPage extends Component {
       because we will perform a local update regardless, and doing
       so immediately is a much better user experience.
     */
+    task.updatedAtDateTimeUtc = new Date().getTime();
     this._updateTaskLocally(task);
 
     if (
@@ -238,15 +239,8 @@ class SingleTaskPage extends Component {
   };
 
   _queueTaskUpdate = task => {
-    // mark update time, before queueing
-    task.updatedAtDateTimeUtc = new Date();
-
     // task is queued only when network could not be reached
     this.props.addPendingTaskUpdate(task);
-
-    // re-update the local task reference, after modifying updatedAtDateTimeUtc
-    let displayMessage = false;
-    this._updateTaskLocally(task, displayMessage);
   };
 
   _updateTaskLocally = (task, displayMessage = true) => {
@@ -278,6 +272,7 @@ class SingleTaskPage extends Component {
 
     let task = this.state.editedTask;
     task.isDeleted = true;
+    task.updatedAtDateTimeUtc = new Date().getTime();
 
     /*
       Delete task locally, before checking network access. This is
@@ -328,14 +323,8 @@ class SingleTaskPage extends Component {
   };
 
   _queueTaskDeletion = task => {
-    // mark update time, before queueing
-    task.updatedAtDateTimeUtc = new Date();
-
     // task is queued only when network could not be reached
     this.props.addPendingTaskDelete(task);
-
-    // re-update the local task reference, after modifying updatedAtDateTimeUtc
-    this._deleteTaskLocally(task);
   };
 
   _deleteTaskLocally = task => {
