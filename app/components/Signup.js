@@ -106,7 +106,8 @@ class Signup extends Component {
             profile.password = password;
 
             // preserve any of the offline-configured profile preferences
-            profile.showCompletedTasks = this.props.profile.showCompletedTasks;
+            profile.showCompletedTasks =
+              this.props.profile && this.props.profile.showCompletedTasks;
 
             this.props.createOrUpdateProfile(profile);
 
@@ -153,7 +154,7 @@ class Signup extends Component {
         >
           <TextField
             style={AppStyles.centeredElement}
-            hintText="Email Field"
+            hintText="Email"
             errorText={this.state.emailValidationError}
             floatingLabelText="Email"
             type="email"
@@ -168,7 +169,7 @@ class Signup extends Component {
           <TextField
             style={AppStyles.centeredElement}
             errorText={this.state.passwordValidationError}
-            hintText="Password Field"
+            hintText="Password"
             floatingLabelText="Password"
             type="password"
             onChange={(event, password) => {
@@ -182,7 +183,7 @@ class Signup extends Component {
           <TextField
             style={AppStyles.centeredElement}
             errorText={this.state.confirmPasswordValidationError}
-            hintText="Confirm Password Field"
+            hintText="Confirm Password"
             floatingLabelText="Confirm Password"
             type="password"
             onChange={(event, confirmPassword) => {

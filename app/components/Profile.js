@@ -34,8 +34,8 @@ const styles = {
     fontSize: "120%"
   },
   spacer: {
-    marginTop: 10,
-    marginBottom: 10
+    marginTop: 12,
+    marginBottom: 12
   },
   profileButtonLabel: {
     textTransform: "none",
@@ -80,6 +80,9 @@ class Profile extends Component {
       this.setState({ deleteProfileDialogIsOpen: true });
       this.props.setNavAction(undefined);
     }
+
+    // another device could have updated profile attributes
+    this.setState({ currentEmail: nextProps.profile.email });
   }
 
   _onProfileUpdate = () => {
@@ -219,7 +222,7 @@ TODO
           labelStyle={styles.profileButtonLabel}
           label="Learn about Premium"
           onTouchTap={() => {
-            shell.openExternal(AppConstants.PREMIUM_TOUR_LINK);
+            shell.openExternal(AppConstants.ACCOUNT_UPGRADE_LINK);
           }}
         />
       );
@@ -327,7 +330,7 @@ TODO
               ...styles.input,
               ...AppStyles.centeredElement
             }}
-            hintText="Email Field"
+            hintText="Email"
             floatingLabelText="Email"
             errorText={this.state.emailValidationError}
             type="email"
