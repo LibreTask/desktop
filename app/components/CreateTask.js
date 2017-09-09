@@ -241,10 +241,14 @@ class CreateTask extends Component {
           numberOfMonths={1}
           date={selectedDate}
           onDateChange={selectedDate => {
-            this.setState({
-              selectedDate: DateUtils.oneSecondBeforeMidnight(
+            if (selectedDate) {
+              selectedDate = DateUtils.oneSecondBeforeMidnight(
                 selectedDate
-              ).getTime()
+              ).getTime();
+            }
+
+            this.setState({
+              selectedDate: selectedDate
             });
           }}
           focused={this.state.datePickerIsFocused}
