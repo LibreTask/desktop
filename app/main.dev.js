@@ -84,6 +84,15 @@ app.on("window-all-closed", () => {
   }
 });
 
+app.on("activate", async () => {
+  if (mainWindow === null) {
+    launch();
+  } else {
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
+
 app.on("ready", async () => {
   if (
     process.env.NODE_ENV === "development" ||
@@ -92,12 +101,28 @@ app.on("ready", async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: AppConstants.INITIAL_WINDOW_WIDTH,
-    height: AppConstants.INITIAL_WINDOW_HEIGHT,
-    title: AppConstants.APP_NAME
-  });
+  launch();
+});
+
+/*
+  OSx-specific: keep track of whether a force quit has been initiated
+  (i.e., CMD+Q or QUIT), so that we can, otherwise, keep the app in
+  memory rather than kill it.
+*/
+var forceQuit = false;
+app.on("before-quit", function() {
+  forceQuit = true;
+});
+
+function launch() {
+  if (!mainWindow) {
+    mainWindow = new BrowserWindow({
+      show: false,
+      width: AppConstants.INITIAL_WINDOW_WIDTH,
+      height: AppConstants.INITIAL_WINDOW_HEIGHT,
+      title: AppConstants.APP_NAME
+    });
+  }
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
@@ -111,10 +136,23 @@ app.on("ready", async () => {
     mainWindow.focus();
   });
 
+  mainWindow.on("close", event => {
+    /*
+      The OSx convention is to keep the app in memory after is has
+      been closed. We follow that convention here for all scenarios
+      except a force-quit (i.e., "CMD + Q" or "QUIT").
+    */
+    if (process.platform === "darwin") {
+      if (!forceQuit) {
+        event.preventDefault();
+        mainWindow.hide();
+      }
+    }
+  });
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
-});
+}
