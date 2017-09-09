@@ -242,7 +242,9 @@ class CreateTask extends Component {
           date={selectedDate}
           onDateChange={selectedDate => {
             this.setState({
-              selectedDate: DateUtils.oneSecondBeforeMidnight(selectedDate)
+              selectedDate: DateUtils.oneSecondBeforeMidnight(
+                selectedDate
+              ).getTime()
             });
           }}
           focused={this.state.datePickerIsFocused}
