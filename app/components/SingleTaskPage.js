@@ -59,6 +59,7 @@ class SingleTaskPage extends Component {
       updateError: "",
       updateSuccess: "",
       isUpdatingTask: false,
+      isDeletingTask: false,
       deleteTaskDialogIsOpen: false,
 
       // TODO - we keep these references in case props are updated
@@ -263,12 +264,9 @@ class SingleTaskPage extends Component {
     dialog has been displayed.
   */
   _onDeleteTask = () => {
-    /*
-    TODO
-    if (this.state.isUpdatingTask) {
+    if (this.state.isDeletingTask) {
       return;
     }
-    */
 
     let task = this.state.editedTask;
     task.isDeleted = true;
@@ -280,7 +278,6 @@ class SingleTaskPage extends Component {
       so immediately is a much better user experience.
     */
     this._deleteTaskLocally(task);
-    hashHistory.replace("/tasks");
 
     if (
       task.id in this.props.pendingTaskCreates ||
@@ -299,22 +296,28 @@ class SingleTaskPage extends Component {
           notesValidationError: "",
           updateError: "",
           deleteError: "",
-          isUpdatingTask: true
+          isDeletingTask: true
         },
         () => {
           let userId = this.props.profile.id;
           let pw = this.props.profile.password;
 
-          TaskController.deleteTask(task.id, userId, pw).catch(error => {
-            if (error.name === "RetryableError") {
-              this._queueTaskDeletion(task, true);
-            } else {
-              this.setState({
-                deleteError: error.message,
-                isUpdatingTask: false
-              });
-            }
-          });
+          TaskController.deleteTask(task.id, userId, pw)
+            .then(response => {
+              hashHistory.replace("/tasks");
+            })
+            .catch(error => {
+              hashHistory.replace("/tasks");
+
+              if (error.name === "RetryableError") {
+                this._queueTaskDeletion(task, true);
+              } else {
+                this.setState({
+                  deleteError: error.message,
+                  isDeletingTask: false
+                });
+              }
+            });
         }
       );
     } else {
@@ -393,6 +396,8 @@ class SingleTaskPage extends Component {
     ];
 
     // TODO - consider scrollable dialog instead of dropdown
+
+    // TODO - progress here?
 
     return (
       <div style={AppStyles.mainWindow}>
