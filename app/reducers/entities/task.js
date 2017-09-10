@@ -46,7 +46,17 @@ function addPendingTaskCreate(state, action) {
     newTaskEntry
   );
 
-  TaskQueue.queueTaskCreate(action.task);
+  try {
+    TaskQueue.queueTaskCreate(action.task);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -71,7 +81,17 @@ function addPendingTaskUpdate(state, action) {
       newTaskEntry
     );
 
-    TaskQueue.queueTaskCreate(action.task);
+    try {
+      TaskQueue.queueTaskCreate(action.task);
+    } catch (err) {
+      /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+    }
 
     updatedPendingTaskActions = {
       create: queuedCreates,
@@ -93,7 +113,17 @@ function addPendingTaskUpdate(state, action) {
       newTaskEntry
     );
 
-    TaskQueue.queueTaskUpdate(action.task);
+    try {
+      TaskQueue.queueTaskUpdate(action.task);
+    } catch (err) {
+      /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+    }
 
     updatedPendingTaskActions = {
       update: queuedUpdates,
@@ -123,7 +153,17 @@ function addPendingTaskDelete(state, action) {
       taskMap[task.id] = task;
     }
 
-    TaskQueue.dequeueTaskByTaskId(action.task.id);
+    try {
+      TaskQueue.dequeueTaskByTaskId(action.task.id);
+    } catch (err) {
+      /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+    }
 
     updatedPendingTaskActions = {
       create: taskMap,
@@ -146,7 +186,17 @@ function addPendingTaskDelete(state, action) {
       newTaskEntry
     );
 
-    TaskQueue.queueTaskDelete(action.task);
+    try {
+      TaskQueue.queueTaskDelete(action.task);
+    } catch (err) {
+      /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+    }
 
     updatedPendingTaskActions = {
       delete: queuedDeletes,
@@ -216,8 +266,18 @@ function removePendingTaskCreate(state, action) {
     delete pendingUpdates[clientAssignedTaskId]; // delete existing task
     pendingUpdates[serverAssignedTaskId] = task; // replace with new ID
 
-    TaskQueue.dequeueTaskByTaskId(clientAssignedTaskId);
-    TaskQueue.queueTaskUpdate(task);
+    try {
+      TaskQueue.dequeueTaskByTaskId(clientAssignedTaskId);
+      TaskQueue.queueTaskUpdate(task);
+    } catch (err) {
+      /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+    }
   }
 
   let pendingDeletes = state.pendingTaskActions.delete || {};
@@ -225,8 +285,18 @@ function removePendingTaskCreate(state, action) {
     delete pendingDeletes[clientAssignedTaskId]; // delete existing task
     pendingDeletes[serverAssignedTaskId] = task; // replace with new ID
 
-    TaskQueue.dequeueTaskByTaskId(clientAssignedTaskId);
-    TaskQueue.queueTaskDelete(task);
+    try {
+      TaskQueue.dequeueTaskByTaskId(clientAssignedTaskId);
+      TaskQueue.queueTaskDelete(task);
+    } catch (err) {
+      /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+    }
   }
 
   return updateObject(state, {
@@ -249,7 +319,17 @@ function removePendingTaskUpdate(state, action) {
     taskMap[task.id] = task;
   }
 
-  TaskQueue.dequeueTaskByTaskId(action.taskId);
+  try {
+    TaskQueue.dequeueTaskByTaskId(action.taskId);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -271,7 +351,17 @@ function removePendingTaskDelete(state, action) {
     taskMap[task.id] = task;
   }
 
-  TaskQueue.dequeueTaskByTaskId(action.taskId);
+  try {
+    TaskQueue.dequeueTaskByTaskId(action.taskId);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     pendingTaskActions: {
@@ -331,8 +421,18 @@ function stopTaskCleanup(state, action) {
 }
 
 function deleteAllTasks(state, action) {
-  TaskQueue.cleanTaskQueue();
-  TaskStorage.cleanTaskStorage();
+  try {
+    TaskQueue.cleanTaskQueue();
+    TaskStorage.cleanTaskStorage();
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     tasks: {
@@ -354,7 +454,17 @@ function deleteTask(state, action) {
     taskMap[task.id] = task;
   }
 
-  TaskStorage.deleteTaskByTaskId(action.taskId);
+  try {
+    TaskStorage.deleteTaskByTaskId(action.taskId);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, { tasks: taskMap });
 }
@@ -365,7 +475,17 @@ function addTasks(state, action) {
     normalizedTasks[task.id] = task;
   }
 
-  TaskStorage.createOrUpdateTasks(action.tasks);
+  try {
+    TaskStorage.createOrUpdateTasks(action.tasks);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     tasks: updateObject(state.tasks, normalizedTasks)
@@ -380,7 +500,17 @@ function addNormalizedTask(state, normalizedTask) {
   let updatedTaskEntry = {};
   updatedTaskEntry[normalizedTask.id] = normalizedTask;
 
-  TaskStorage.createOrUpdateTask(normalizedTask);
+  try {
+    TaskStorage.createOrUpdateTask(normalizedTask);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     tasks: updateObject(state.tasks, updatedTaskEntry)

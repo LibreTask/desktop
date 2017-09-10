@@ -36,7 +36,17 @@ function endUserSync(state, action) {
 }
 
 function deleteProfile(state, action) {
-  ProfileStorage.deleteProfile();
+  try {
+    ProfileStorage.deleteProfile();
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     profile: {},
@@ -45,7 +55,17 @@ function deleteProfile(state, action) {
 }
 
 function addProfile(state, action) {
-  ProfileStorage.createOrUpdateProfile(action.profile);
+  try {
+    ProfileStorage.createOrUpdateProfile(action.profile);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     profile: action.profile,
@@ -76,7 +96,17 @@ function syncUser(state, action) {
   } else {
     // if an update to profile is available, update, otherwise, ignore
     if (action.profile) {
-      ProfileStorage.createOrUpdateProfile(action.profile);
+      try {
+        ProfileStorage.createOrUpdateProfile(action.profile);
+      } catch (err) {
+        /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+      }
 
       return updateObject(updatedState, { profile: action.profile });
     } else {
@@ -86,7 +116,17 @@ function syncUser(state, action) {
 }
 
 function addPendingProfileUpdate(state, action) {
-  ProfileStorage.queueProfileUpdate(action.queuedProfile);
+  try {
+    ProfileStorage.queueProfileUpdate(action.queuedProfile);
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     queuedProfile: action.queuedProfile
@@ -94,7 +134,17 @@ function addPendingProfileUpdate(state, action) {
 }
 
 function removePendingProfileUpdate(state, action) {
-  ProfileStorage.deletedQueuedProfile();
+  try {
+    ProfileStorage.deletedQueuedProfile();
+  } catch (err) {
+    /*
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
+
+    TODO - reevaluate
+  */
+  }
 
   return updateObject(state, {
     queuedProfile: undefined
