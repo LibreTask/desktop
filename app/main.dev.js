@@ -40,12 +40,52 @@ SOFTWARE.
  * @flow
  */
 
-import { app, BrowserWindow } from "electron";
+import { app, autoUpdater, dialog, BrowserWindow } from "electron";
 import MenuBuilder from "./menu";
 
 import AppConstants from "./constants";
 
 let mainWindow = null;
+
+/******************** ABILITY TO UPDATE APP ********************/
+
+const server = "https://algernon.io";
+
+// convert the Node platform naming convention to our own naming convention
+const platform =
+  process.platform === "darwin" ? "desktop-mac" : "desktop-windows";
+
+// TODO - cover linux here as well
+
+const feed = `${server}/api/v1/meta/get-latest-version/platform=${platform}`;
+
+autoUpdater.setFeedURL(feed);
+
+setInterval(() => {
+  autoUpdater.checkForUpdates();
+}, 60000);
+
+autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: "info",
+    buttons: ["Restart", "Later"],
+    title: "Application Update",
+    message: process.platform === "win32" ? releaseNotes : releaseName,
+    detail:
+      "A new version has been downloaded. Restart the application to apply the updates."
+  };
+
+  dialog.showMessageBox(dialogOpts, response => {
+    if (response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
+autoUpdater.on("error", message => {
+  console.error("There was a problem updating the application");
+  console.error(message);
+});
+
+/******************** ABILITY TO UPDATE APP ********************/
 
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
