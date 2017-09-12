@@ -12,6 +12,9 @@ const CONSTANTS = {
   WEBSITE_LINK: "https://algernon.io",
   SOURCE_CODE_LINK: "https://github.com/AlgernonLabs/mobile",
 
+  APP_UPDATE_LINK: "https://algernon.io/apps", // TODO -
+
+  APP_VERSION: "0.0.1", // TODO - pull from package.json instead
   APP_NAME: "Algernon",
 
   // TODO - move these button constants to more appropriate location

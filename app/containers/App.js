@@ -6,6 +6,7 @@
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";
+import { shell } from "electron";
 
 import TitlePanel from "./TitlePanel";
 import SideMenu from "./SideMenu";
@@ -34,11 +35,14 @@ import * as SideMenuActions from "../actions/ui/sidemenu";
 import * as NavbarActions from "../actions/ui/navbar";
 import * as LoginDialogActions from "../actions/ui/logindialog";
 import * as LogoutDialogActions from "../actions/ui/logoutdialog";
+import * as UpdateDialogActions from "../actions/ui/updatedialog";
+
 import * as TaskViewActions from "../actions/ui/taskview";
 
 import * as UserActions from "../actions/entities/user";
 import * as TaskActions from "../actions/entities/task";
 
+import * as MetaController from "../models/controllers/meta";
 import * as UserController from "../models/controllers/user";
 
 let Sidebar = require("react-sidebar").default;
@@ -219,6 +223,26 @@ class App extends Component {
     }, AppConstants.TASKVIEW_REFRESH_CHECK_INTERVAL_MILLIS);
   };
 
+  _startUpdateCheck = () => {
+    setInterval(() => {
+      /*
+        Open update dialog on three conditions
+        1. the user's app is out of date
+        2. the dialog is not already open
+        3. we have not already asked for this app session
+      */
+      if (!this.props.updateAlreadyShown && !this.props.updateDialogIsOpen) {
+        MetaController.getLatestVersion().then(response => {
+          let release = response.release;
+          if (release.currentVersion !== AppConstants.APP_VERSION) {
+            this.props.toggleUpdateDialog();
+            this.props.updateShown();
+          }
+        });
+      }
+    }, 3 * 1000); // ask once per minute
+  };
+
   componentDidMount() {
     this._startTaskSync();
     this._startProfileSync();
@@ -226,6 +250,7 @@ class App extends Component {
     this._startSubmissionOfQueuedTasks();
     this._startTaskCleanup();
     this._startSubmissionOfQueuedProfileUpdates();
+    this._startUpdateCheck();
 
     // refresh task view on startup
     this.props.refreshTaskViewCollapseStatus();
@@ -452,6 +477,22 @@ class App extends Component {
       />
     ];
 
+    const updateActions = [
+      <FlatButton
+        label="Update later"
+        onTouchTap={() => {
+          this.props.closeUpdateDialog();
+        }}
+      />,
+      <FlatButton
+        label="Update now"
+        onTouchTap={() => {
+          shell.openExternal(AppConstants.APP_UPDATE_LINK);
+          this.props.closeUpdateDialog();
+        }}
+      />
+    ];
+
     // ensure all non-sidemenu elements have opacity modified
     let titlePanelStyle = this.props.sideMenuIsOpen
       ? { opacity: 0.8 }
@@ -474,6 +515,18 @@ class App extends Component {
                   }}
                 >
                   You must be logged in before you can complete this action.
+                </Dialog>
+                <Dialog
+                  style={AppStyles.dialog}
+                  title="Update Available"
+                  actions={updateActions}
+                  modal={false}
+                  open={this.props.updateDialogIsOpen}
+                  onRequestClose={() => {
+                    this.props.closeUpdateDialog();
+                  }}
+                >
+                  A new Algernon version exists. Would you like to update now?
                 </Dialog>
                 <Dialog
                   style={AppStyles.dialog}
@@ -503,6 +556,8 @@ const mapStateToProps = state => ({
   sideMenuIsOpen: state.ui.sideMenu.isOpen,
   loginDialogIsOpen: state.ui.logindialog.isOpen,
   logoutDialogIsOpen: state.ui.logoutdialog.isOpen,
+  updateDialogIsOpen: state.ui.updatedialog.isOpen,
+  updateAlreadyShown: state.ui.updatedialog.updateAlreadyShown,
   isLoggedIn: state.entities.user.isLoggedIn,
   profile: state.entities.user.profile,
   navbarTitle: state.ui.navbar.title,
@@ -526,6 +581,9 @@ const mapDispatchToProps = {
   closeLoginDialog: LoginDialogActions.close,
   toggleLogoutDialog: LogoutDialogActions.toggle,
   closeLogoutDialog: LogoutDialogActions.toggle,
+  toggleUpdateDialog: UpdateDialogActions.toggle,
+  closeUpdateDialog: UpdateDialogActions.toggle,
+  updateShown: UpdateDialogActions.updateShown,
   createOrUpdateProfile: UserActions.createOrUpdateProfile,
   deleteProfile: UserActions.deleteProfile,
   startUserSync: UserActions.startUserSync,

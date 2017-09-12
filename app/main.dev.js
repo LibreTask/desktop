@@ -49,6 +49,10 @@ let mainWindow = null;
 
 /******************** ABILITY TO UPDATE APP ********************/
 
+/*
+
+TODO - implement auto-update (note that this requires app-signing)
+
 const server = "https://algernon.io";
 
 // convert the Node platform naming convention to our own naming convention
@@ -84,7 +88,7 @@ autoUpdater.on("error", message => {
   console.error("There was a problem updating the application");
   console.error(message);
 });
-
+*/
 /******************** ABILITY TO UPDATE APP ********************/
 
 if (process.env.NODE_ENV === "production") {

@@ -10,6 +10,7 @@ import sideMenu from "./ui/sidemenu";
 import navbar from "./ui/navbar";
 import logindialog from "./ui/logindialog";
 import logoutdialog from "./ui/logoutdialog";
+import updatedialog from "./ui/updatedialog";
 import taskview from "./ui/taskview";
 
 import userReducer from "./entities/user";
@@ -18,6 +19,7 @@ import taskReducer from "./entities/task";
 const uiReducer = combineReducers({
   logindialog,
   logoutdialog,
+  updatedialog,
   sideMenu,
   navbar,
   taskview
