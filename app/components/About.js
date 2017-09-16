@@ -64,6 +64,10 @@ class About extends Component {
 
           <Divider />
 
+          {/*
+
+            NOTE - we are not open sourcing until after the beta
+            
           <p
             style={styles.linkText}
             onClick={() => {
@@ -74,6 +78,8 @@ class About extends Component {
           </p>
 
           <Divider />
+
+          */}
 
           <p
             style={styles.linkText}

@@ -351,13 +351,16 @@ TODO
             }}
           />
 
-          {this._expirationDateDisplay()}
+          {/* NOTE: hiding expiration and status button during beta
 
-          <div style={styles.spacer} />
+            {this._expirationDateDisplay()}
 
-          {this._accountStatusButton()}
+            <div style={styles.spacer} />
 
-          <div style={styles.spacer} />
+            {this._accountStatusButton()}
+
+            <div style={styles.spacer} />
+            */}
 
           <div style={AppStyles.errorText}>
             {this.state.updateError}
