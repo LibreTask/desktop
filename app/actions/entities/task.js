@@ -58,9 +58,6 @@ export const SYNC_TASKS = "SYNC_TASKS";
 
 export const syncTasks = () => {
   return function(dispatch, getState) {
-    console.log("sync task state...");
-    //////console.dir(getState());
-
     let user = getState().entities.user;
 
     // only sync if the user can access the network
@@ -85,10 +82,7 @@ export const syncTasks = () => {
             lastSuccessfulSyncDateTimeUtc: DateUtils.fiveMinutesAgo()
           });
         })
-        .catch(error => {
-          console.log("sync error: " + error);
-          ////console.dir(error);
-        });
+        .catch(error => {});
     }
   };
 };
@@ -112,9 +106,6 @@ export const stopQueuedTaskSubmission = () => {
 
 export const submitQueuedTasks = () => {
   return function(dispatch, getState) {
-    console.log("queued task submit state...");
-    ////console.dir(getState());
-
     const profile = getState().entities.user.profile;
 
     // only submit queued tasks if the user can access the network
@@ -122,9 +113,6 @@ export const submitQueuedTasks = () => {
       const pendingTaskActions = getState().entities.task.pendingTaskActions;
       const userId = profile.id;
       const password = profile.password;
-
-      console.log("pending create...");
-      ////console.dir(pendingTaskActions.create);
 
       for (let taskId in pendingTaskActions.create) {
         let task = pendingTaskActions.create[taskId];
@@ -150,14 +138,8 @@ export const submitQueuedTasks = () => {
               serverAssignedTaskId: response.task.id
             });
           })
-          .catch(error => {
-            console.log("create task queue error....");
-            ////console.dir(error);
-          });
+          .catch(error => {});
       }
-
-      console.log("pending update...");
-      ////console.dir(pendingTaskActions.update);
 
       for (let taskId in pendingTaskActions.update) {
         let task = pendingTaskActions.update[taskId];
@@ -171,23 +153,13 @@ export const submitQueuedTasks = () => {
               taskId: task.id
             });
           })
-          .catch(error => {
-            console.log("update task queue error....");
-            ////console.dir(error);
-          });
+          .catch(error => {});
       }
-
-      console.log("pending delete...");
-      ////console.dir(pendingTaskActions.delete);
 
       for (let taskId in pendingTaskActions.delete) {
         let task = pendingTaskActions.delete[taskId];
 
-        console.log("delete task form queue...");
-        console.log("task...");
         console.dir(task);
-        console.log("userid: " + userId);
-        console.log("password: " + password);
 
         TaskController.deleteTaskFromQueue(task, userId, password)
           .then(response => {
@@ -198,10 +170,7 @@ export const submitQueuedTasks = () => {
               taskId: task.id
             });
           })
-          .catch(error => {
-            console.log("delete task queue error....");
-            ////console.dir(error);
-          });
+          .catch(error => {});
       }
 
       return;

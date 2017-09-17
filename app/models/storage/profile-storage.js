@@ -45,8 +45,6 @@ export async function getQueuedProfile() {
 }
 
 export function createOrUpdateProfile(profile) {
-  console.log("createOrUpdateProfile");
-
   console.dir(db);
 
   // TODO - use encrypted storage for confidential information

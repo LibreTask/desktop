@@ -81,7 +81,6 @@ function _invoke(endpoint, method, headers, body) {
   };
 
   return rp(options).then(response => JSON.parse(response)).catch(error => {
-    console.log("error...");
     console.dir(error);
 
     if (_isRetryableError(error)) {
@@ -107,8 +106,6 @@ function _isTimeoutError(err) {
 function _retryWait(retryAttemptNumber) {
   // TODO - refine this value
   let retryDurationMillis = 1000 * 1.5 ** retryAttemptNumber;
-
-  console.log("retrying for: " + retryDurationMillis);
 
   return new Promise(resolve => setTimeout(resolve, retryDurationMillis));
 }

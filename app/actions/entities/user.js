@@ -51,9 +51,6 @@ export const SYNC_USER = "SYNC_USER";
 
 export const syncUser = () => {
   return function(dispatch, getState) {
-    console.log(" FROM ACTION sync user state...");
-    //console.dir(getState());
-
     let user = getState().entities.user;
 
     // only sync is the user is logged in
@@ -72,11 +69,7 @@ export const syncUser = () => {
             dispatch(syncAction);
           }
         })
-        .catch(error => {
-          console.log("sync profile error....");
-          console.log("profile err: " + error);
-          //console.dir(error);
-        });
+        .catch(error => {});
     }
   };
 };
@@ -117,9 +110,6 @@ export const stopQueuedProfileSubmission = () => {
 
 export const submitQueuedProfileUpdate = () => {
   return function(dispatch, getState) {
-    console.log("queued profile submit state...");
-    ////console.dir(getState());
-
     const profile = getState().entities.user.profile;
 
     // only submit queued tasks if the user can access the network
@@ -139,10 +129,7 @@ export const submitQueuedProfileUpdate = () => {
               type: REMOVE_PENDING_PROFILE_UPDATE
             });
           })
-          .catch(error => {
-            console.log("submited queued profile error....");
-            ////console.dir(error);
-          });
+          .catch(error => {});
       }
 
       return;

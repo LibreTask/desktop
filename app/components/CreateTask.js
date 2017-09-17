@@ -319,8 +319,6 @@ class CreateTask extends Component {
       windowOpacity = AppStyles.loadingOpacity;
     }
 
-    console.log("window opacity: " + windowOpacity);
-
     return (
       <div style={AppStyles.mainWindow}>
         {progress}
