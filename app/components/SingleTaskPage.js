@@ -288,7 +288,7 @@ class SingleTaskPage extends Component {
         attempt to submit the update to the server. A separate process will
         handle submitting the queued tasks.
       */
-      this._queueTaskDeletion(task);
+      this._queueTaskDeletionAndRedirect(task);
     } else if (UserController.canAccessNetwork(this.props.profile)) {
       this.setState(
         {
@@ -310,7 +310,7 @@ class SingleTaskPage extends Component {
               hashHistory.replace("/tasks");
 
               if (error.name === "RetryableError") {
-                this._queueTaskDeletion(task, true);
+                this._queueTaskDeletionAndRedirect(task, true);
               } else {
                 this.setState({
                   deleteError: error.message,
@@ -321,13 +321,14 @@ class SingleTaskPage extends Component {
         }
       );
     } else {
-      this._queueTaskDeletion(task);
+      this._queueTaskDeletionAndRedirect(task);
     }
   };
 
-  _queueTaskDeletion = task => {
+  _queueTaskDeletionAndRedirect = task => {
     // task is queued only when network could not be reached
     this.props.addPendingTaskDelete(task);
+    hashHistory.replace("/tasks");
   };
 
   _deleteTaskLocally = task => {
