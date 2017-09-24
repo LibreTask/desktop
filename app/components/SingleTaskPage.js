@@ -222,16 +222,20 @@ class SingleTaskPage extends Component {
           let userId = this.props.profile.id;
           let pw = this.props.profile.password;
 
-          TaskController.updateTask(task, userId, pw).catch(error => {
-            if (error.name === "RetryableError") {
-              this._queueTaskUpdate(task);
-            } else {
-              this.setState({
-                updateError: error.message,
-                isUpdatingTask: false
-              });
-            }
-          });
+          TaskController.updateTask(task, userId, pw)
+            .then(response => {
+              this.setState({ isUpdatingTask: false });
+            })
+            .catch(error => {
+              if (error.name === "RetryableError") {
+                this._queueTaskUpdate(task);
+              } else {
+                this.setState({
+                  updateError: error.message,
+                  isUpdatingTask: false
+                });
+              }
+            });
         }
       );
     } else {
