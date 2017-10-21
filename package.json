@@ -1,6 +1,8 @@
 {
   "name": "Algernon",
   "version": "0.0.1",
+  "description": "Algernon - a minimalist task manager",
+  "author": "Algernon",
   "scripts": {
     "build": "npm run build-main & npm run build-renderer",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -33,7 +35,8 @@
       "app.html",
       "main.prod.js",
       "main.prod.js.map",
-      "package.json"
+      "package.json",
+      "build/"
     ],
     "dmg": {
       "contents": [
@@ -61,7 +64,7 @@
       ]
     },
     "directories": {
-      "buildResources": "resources",
+      "buildResources": "build",
       "output": "release"
     }
   },

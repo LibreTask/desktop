@@ -17,28 +17,28 @@ import * as _ from "lodash";
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-let db = new PouchDB("./endoradb", { adapter: "websql" });
+let db = new PouchDB("./algernondb", { adapter: "websql" });
 
 const UPDATE = "UPDATE";
 const DELETE = "DELETE";
 const CREATE = "CREATE";
 
-function _endoraFormat(task) {
-  let endoraFormattedTask = {};
+function _algernonFormat(task) {
+  let algernonFormattedTask = {};
 
   if (task) {
-    endoraFormattedTask = task.key;
-    delete endoraFormattedTask._id;
-    delete endoraFormattedTask._rev;
-    delete endoraFormattedTask.type;
-    delete endoraFormattedTask.operation;
+    algernonFormattedTask = task.key;
+    delete algernonFormattedTask._id;
+    delete algernonFormattedTask._rev;
+    delete algernonFormattedTask.type;
+    delete algernonFormattedTask.operation;
   }
 
-  return endoraFormattedTask;
+  return algernonFormattedTask;
 }
 
 export async function getQueuedTaskByTaskId(taskId) {
-  return _endoraFormat(await db.get(taskId));
+  return _algernonFormat(await db.get(taskId));
 }
 
 export async function getAllPendingUpdates() {
@@ -72,7 +72,7 @@ async function _getPendingTasks(map) {
 
   let taskMap = {};
   for (let task of tasks.rows) {
-    let formattedTask = _endoraFormat(task);
+    let formattedTask = _algernonFormat(task);
     taskMap[formattedTask.id] = formattedTask;
   }
 
@@ -111,6 +111,6 @@ export function dequeueTaskByTaskId(taskId) {
 export function cleanTaskQueue() {
   // TODO - refine
   return db.destroy().then(function(response) {
-    db = new PouchDB("./endoradb", { adapter: "websql" });
+    db = new PouchDB("./algernondb", { adapter: "websql" });
   });
 }

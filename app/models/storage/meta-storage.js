@@ -6,7 +6,7 @@
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-const db = new PouchDB("./endoradb", { adapter: "websql" });
+const db = new PouchDB("./algernondb", { adapter: "websql" });
 
 export const WINDOW_WIDTH = "window-width";
 export const WINDOW_HEIGHT = "window-height";

@@ -8,19 +8,19 @@
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-let db = new PouchDB("./endoradb", { adapter: "websql" });
+let db = new PouchDB("./algernondb", { adapter: "websql" });
 
-function _endoraFormat(profile) {
-  let endoraFormattedProfile = {};
+function _algernonFormat(profile) {
+  let algernonFormattedProfile = {};
 
   if (profile) {
-    endoraFormattedProfile = profile;
-    delete endoraFormattedProfile._id;
-    delete endoraFormattedProfile._rev;
-    delete endoraFormattedProfile.type;
+    algernonFormattedProfile = profile;
+    delete algernonFormattedProfile._id;
+    delete algernonFormattedProfile._rev;
+    delete algernonFormattedProfile.type;
   }
 
-  return endoraFormattedProfile;
+  return algernonFormattedProfile;
 }
 
 export function queueProfileUpdate(profile) {
@@ -41,7 +41,7 @@ export function deletedQueuedProfile() {
 }
 
 export async function getQueuedProfile() {
-  return _endoraFormat(await db.get("queue/profile"));
+  return _algernonFormat(await db.get("queue/profile"));
 }
 
 export function createOrUpdateProfile(profile) {
@@ -62,7 +62,7 @@ export function deleteProfile() {
 }
 
 export async function getMyProfile() {
-  return _endoraFormat(await db.get("profile"));
+  return _algernonFormat(await db.get("profile"));
 }
 
 export async function isLoggedIn() {
@@ -80,6 +80,6 @@ export function cleanProfileStorage() {
   return db.destroy().then(function(response) {
     // and then recreate the database, in case the user wants to
     // log in again or perform other actions
-    db = new PouchDB("./endoradb", { adapter: "websql" });
+    db = new PouchDB("./algernondb", { adapter: "websql" });
   });
 }

@@ -8,23 +8,23 @@ import * as _ from "lodash";
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-let db = new PouchDB("./endoradb", { adapter: "websql" });
+let db = new PouchDB("./algernondb", { adapter: "websql" });
 
-function _endoraFormat(task) {
-  let endoraFormattedTask = {};
+function _algernonFormat(task) {
+  let algernonFormattedTask = {};
 
   if (task) {
-    endoraFormattedTask = task.key;
-    delete endoraFormattedTask._id;
-    delete endoraFormattedTask._rev;
-    delete endoraFormattedTask.type;
+    algernonFormattedTask = task.key;
+    delete algernonFormattedTask._id;
+    delete algernonFormattedTask._rev;
+    delete algernonFormattedTask.type;
   }
 
-  return endoraFormattedTask;
+  return algernonFormattedTask;
 }
 
 export async function getTaskByTaskId(taskId) {
-  return _endoraFormat(await db.get(taskId));
+  return _algernonFormat(await db.get(taskId));
 }
 
 export async function getAllTasks() {
@@ -39,7 +39,7 @@ export async function getAllTasks() {
 
   let taskMap = {};
   for (let task of tasks.rows) {
-    taskMap[task.id] = _endoraFormat(task);
+    taskMap[task.id] = _algernonFormat(task);
   }
 
   return taskMap;
@@ -69,6 +69,6 @@ export function deleteTaskByTaskId(taskId) {
 export function cleanTaskStorage() {
   // TODO - refine
   return db.destroy().then(function(response) {
-    db = new PouchDB("./endoradb", { adapter: "websql" });
+    db = new PouchDB("./algernondb", { adapter: "websql" });
   });
 }
