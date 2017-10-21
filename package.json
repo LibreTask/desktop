@@ -64,7 +64,7 @@
       ]
     },
     "directories": {
-      "buildResources": "build",
+      "buildResources": "resources",
       "output": "release"
     }
   },
