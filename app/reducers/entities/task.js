@@ -219,49 +219,58 @@ function removePendingTaskCreate(state, action) {
     action.taskId
   );
 
-  TaskQueue.dequeueTaskByTaskId(action.taskId);
+  let remainingTasksQueuedForCreation = {};
+  for (let task of remainingTasks) {
+    remainingTasksQueuedForCreation[task.id] = task;
+  }
+
+  /*
+     Each task has a unique ID. This identifier is usually assigned by the
+     server. However, if for some reason, the client is unable to reach the
+     server, the client will create a temporary ID and then queue the task
+     for creation.
+
+     Later, when the client can finally reach the server, the server will give
+     the task a new ID. Here we replace the old, client-assigned ID with the new,
+     server-assigned ID.
+
+     Three places must be checked
+     1. state.tasks
+         --- this is where all tasks live
+     2. state.pendingTaskActions.update
+         --- unlikely but possible the task is also queued for an update
+     3. state.pendingTaskActions.delete
+         --- unlikely but possible the task is also queued for deletion
+   */
 
   // TODO - we must also update update / delete now that we have
   // the REAL task ID
-
-  let taskMap = {};
-  for (let task of remainingTasks) {
-    taskMap[task.id] = task;
-  }
 
   let clientAssignedTaskId = action.taskId;
   let serverAssignedTaskId = action.serverAssignedTaskId;
 
   // TODO - refine the approach of replacing the existing task
 
-  /*
-      Each task has a unique ID. This identifier is usually assigned by the
-      server. However, if for some reason, the client is unable to reach the
-      server, the client will create a temporary ID and then queue the task
-      for creation.
-
-      Later, when the client can finally reach the server, the server will give
-      the task a new ID. Here we replace the old, client-assigned ID with the new,
-      server-assigned ID.
-
-      Three places must be checked
-      1. state.tasks
-          --- this is where all tasks live
-      2. state.pendingTaskActions.update
-          --- unlikely but possible the task is also queued for an update
-      3. state.pendingTaskActions.delete
-          --- unlikely but possible the task is also queued for deletion
-    */
   let task = Object.assign({}, state.tasks[clientAssignedTaskId]);
   task.id = serverAssignedTaskId;
 
   /*
-      Keep a reference to the clientAssignedTaskId in case a local reference
-      exists. TODO - refine this approach.
-    */
+     Keep a reference to the clientAssignedTaskId in case a local reference
+     exists. TODO - refine this approach.
+   */
   task.clientAssignedTaskId = clientAssignedTaskId;
   delete state.tasks[clientAssignedTaskId]; // delete existing task
   state.tasks[serverAssignedTaskId] = task; // replace with new ID
+
+  TaskQueue.dequeueTaskByTaskId(action.taskId); // delete task from queue
+
+  /*
+    Delete the previously-queued task and reinsert the newly server-created
+    task. We do this because we need the server-assigned ID stored locally,
+    not the client-assigned ID.
+  */
+  TaskStorage.deleteTaskByTaskId(action.taskId);
+  TaskStorage.createOrUpdateTask(task);
 
   let pendingUpdates = state.pendingTaskActions.update || {};
   if (clientAssignedTaskId in pendingUpdates) {
@@ -273,12 +282,12 @@ function removePendingTaskCreate(state, action) {
       TaskQueue.queueTaskUpdate(task);
     } catch (err) {
       /*
-     If an error occurs when writing to disk, ignore it. Disk storage is a
-     non-critical feature, unlike the rest of the code here. We never want to
-     throw an error from a reducer.
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
 
-     TODO - reevaluate
-   */
+    TODO - reevaluate
+  */
     }
   }
 
@@ -292,18 +301,18 @@ function removePendingTaskCreate(state, action) {
       TaskQueue.queueTaskDelete(task);
     } catch (err) {
       /*
-     If an error occurs when writing to disk, ignore it. Disk storage is a
-     non-critical feature, unlike the rest of the code here. We never want to
-     throw an error from a reducer.
+    If an error occurs when writing to disk, ignore it. Disk storage is a
+    non-critical feature, unlike the rest of the code here. We never want to
+    throw an error from a reducer.
 
-     TODO - reevaluate
-   */
+    TODO - reevaluate
+  */
     }
   }
 
   return updateObject(state, {
     pendingTaskActions: {
-      create: taskMap,
+      create: remainingTasksQueuedForCreation,
       update: pendingUpdates,
       delete: pendingDeletes
     }
