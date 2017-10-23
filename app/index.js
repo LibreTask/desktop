@@ -44,7 +44,9 @@ async function getInitialState() {
   let queuedTaskCreates = {};
   let queuedTaskUpdates = {};
   let queuedTaskDeletes = {};
-  let profile = {};
+  let profile = {
+    showCompletedTasks: true // default to true
+  };
   let queuedProfile = undefined;
   let isLoggedIn = false;
 
@@ -110,7 +112,6 @@ async function getInitialState() {
         queuedProfile: queuedProfile,
         isLoggedIn: isLoggedIn,
         isSyncing: false,
-        showCompletedTasks: true,
         lastSuccessfulSyncDateTimeUtc: undefined,
         intervalId: undefined // used to cancel sync
       }

@@ -49,7 +49,9 @@ function deleteProfile(state, action) {
   }
 
   return updateObject(state, {
-    profile: {},
+    profile: {
+      showCompletedTasks: true // default to true
+    },
     isLoggedIn: false
   }); // on delete profile, wipe everything
 }
@@ -166,7 +168,9 @@ function stopQueuedProfileSubmission(state, action) {
 }
 
 const initialState = {
-  profile: {},
+  profile: {
+    showCompletedTasks: true
+  },
   queuedProfile: undefined,
   isLoggedIn: false,
   isSubmittingQueuedProfileUpdates: false,
