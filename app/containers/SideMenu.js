@@ -29,7 +29,8 @@ const styles = {
   },
   sidebarLink: {
     display: "block",
-    padding: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
     width: "100%",
     color: "black",
     fontSize: "140%",
@@ -37,12 +38,16 @@ const styles = {
   },
   sidebarLinkSelected: {
     display: "block",
-    padding: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
     width: "100%",
     color: "black",
     fontSize: "140%",
     cursor: "pointer",
     backgroundColor: AppStyles.selectedSidebarLinkColor
+  },
+  sidebarLinkText: {
+    marginLeft: 16
   },
   content: {
     marginTop: 50,
@@ -73,7 +78,9 @@ const SideMenu = props => {
         hashHistory.replace("/tasks");
       }}
     >
-      <span className={"sideMenuItem"}>Tasks</span>
+      <span style={styles.sidebarLinkText} className={"sideMenuItem"}>
+        Tasks
+      </span>
     </div>
   ];
 
@@ -90,7 +97,9 @@ const SideMenu = props => {
         }
       }}
     >
-      <span className={"sideMenuItem"}>Profile</span>
+      <span style={styles.sidebarLinkText} className={"sideMenuItem"}>
+        Profile
+      </span>
     </div>
   );
 
@@ -103,7 +112,9 @@ const SideMenu = props => {
           props.toggleLogoutDialog();
         }}
       >
-        <span className={"sideMenuItem"}>Logout</span>
+        <span style={styles.sidebarLinkText} className={"sideMenuItem"}>
+          Logout
+        </span>
       </div>
     );
   }
@@ -117,7 +128,9 @@ const SideMenu = props => {
         hashHistory.replace("/about");
       }}
     >
-      <span className={"sideMenuItem"}>About</span>
+      <span style={styles.sidebarLinkText} className={"sideMenuItem"}>
+        About
+      </span>
     </div>
   );
 
