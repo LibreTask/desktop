@@ -306,7 +306,7 @@ class CreateTask extends Component {
 
   render = () => {
     let progress = <div />;
-    let windowOpacity = 1;
+    let windowOpacity = { opacity: 1 };
 
     if (this.state.isCreatingTask) {
       progress = (
@@ -316,14 +316,19 @@ class CreateTask extends Component {
           thickness={7}
         />
       );
-      windowOpacity = AppStyles.loadingOpacity;
+      windowOpacity = { opacity: AppStyles.loadingOpacity };
     }
 
     return (
       <div style={AppStyles.mainWindow}>
         {progress}
 
-        <div style={(AppStyles.centeredWindow, { opacity: windowOpacity })}>
+        <div
+          style={{
+            ...AppStyles.centeredWindow,
+            ...windowOpacity
+          }}
+        >
           <TextField
             multiLine={true}
             style={AppStyles.centeredElement}
@@ -346,7 +351,12 @@ class CreateTask extends Component {
           </div>
         </div>
 
-        <div style={(styles.floatingFooter, { opacity: windowOpacity })}>
+        <div
+          style={{
+            ...styles.floatingFooter,
+            ...windowOpacity
+          }}
+        >
           <RaisedButton
             backgroundColor={AppStyles.buttonColor}
             style={{
