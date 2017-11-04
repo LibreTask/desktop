@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "description": "Algernon - a minimalist task manager",
   "author": "Algernon",
+  "homepage": "https://algernon.io",
+  "author": {
+      "name": "Algernon",
+      "email": "support@algernon.io",
+      "url": "https://algernon.io"
+    },
   "scripts": {
     "build": "npm run build-main & npm run build-renderer",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",

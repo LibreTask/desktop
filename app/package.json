@@ -1,5 +1,12 @@
 {
   "name": "Algernon",
   "version": "0.0.1",
-  "main": "./main.prod.js"
+  "main": "./main.prod.js",
+  "homepage": "https://algernon.io",
+  "description": "Algernon - a minimalist task manager",
+  "author": {
+    "name": "Algernon",
+    "email": "support@algernon.io",
+    "url": "https://algernon.io"
+  }
 }
