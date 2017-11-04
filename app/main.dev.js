@@ -165,7 +165,7 @@ function launch() {
       width: AppConstants.INITIAL_WINDOW_WIDTH,
       height: AppConstants.INITIAL_WINDOW_HEIGHT,
       title: AppConstants.APP_NAME,
-      icon: `${__dirname}/build/icon.icns`
+      icon: `${__dirname}/build/icon.png`
     });
   }
 
