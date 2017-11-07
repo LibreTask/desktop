@@ -240,7 +240,7 @@ class App extends Component {
           }
         });
       }
-    }, 60 * 1000); // ask once per minute
+    }, 12 * 60 * 60 * 1000); // ask once per twelve hours
   };
 
   componentDidMount() {
