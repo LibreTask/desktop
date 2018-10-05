@@ -6,7 +6,7 @@
 import RetryableError from "./errors/RetryableError";
 import ErrorCodes from "./errors/ErrorCodes";
 
-const API_ROOT = "https://algernon.io/api/v1/";
+const API_ROOT = "http://localhost:3001/api/v1/"; //"https://algernon.io/api/v1/";
 // TEST ENV - "http://192.168.1.111:3001/api/v1/";
 // PROD ENV - "http://174.138.64.49/api/v1/";
 // (production does not need port due to NGINX proxy)
@@ -80,15 +80,17 @@ function _invoke(endpoint, method, headers, body) {
     body: body
   };
 
-  return rp(options).then(response => JSON.parse(response)).catch(error => {
-    console.dir(error);
+  return rp(options)
+    .then(response => JSON.parse(response))
+    .catch(error => {
+      console.dir(error);
 
-    if (_isRetryableError(error)) {
-      throw new RetryableError();
-    } else {
-      throw new Error(humanReadableError(error));
-    }
-  });
+      if (_isRetryableError(error)) {
+        throw new RetryableError();
+      } else {
+        throw new Error(humanReadableError(error));
+      }
+    });
 }
 
 function _isRetryableError(err) {
