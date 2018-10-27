@@ -189,97 +189,6 @@ TODO
     );
   };
 
-  _hasPremiumSubscription = () => {
-    let today = new Date();
-
-    return (
-      this.props.profile &&
-      this.props.profile.currentPlan === "premium" &&
-      new Date(this.props.profile.planExpirationDateTimeUtc) > today
-    );
-  };
-
-  _accountStatusButton = () => {
-    let accountStatusButton;
-
-    if (this._hasPremiumSubscription()) {
-      accountStatusButton = (
-        <RaisedButton
-          style={{
-            ...styles.button,
-            ...AppStyles.centeredElement
-          }}
-          backgroundColor={AppStyles.buttonColor}
-          labelStyle={styles.profileButtonLabel}
-          label="Cancel Premium"
-          onTouchTap={() => {
-            shell.openExternal(AppConstants.ACCOUNT_DOWNGRADE_LINK);
-          }}
-        />
-      );
-    } else {
-      accountStatusButton = (
-        <RaisedButton
-          style={{
-            ...styles.button,
-            ...AppStyles.centeredElement
-          }}
-          backgroundColor={AppStyles.buttonColor}
-          labelStyle={styles.profileButtonLabel}
-          label="Learn about Premium"
-          onTouchTap={() => {
-            shell.openExternal(AppConstants.ACCOUNT_UPGRADE_LINK);
-          }}
-        />
-      );
-    }
-
-    return accountStatusButton;
-  };
-
-  _expirationDateDisplay = () => {
-    if (this._hasPremiumSubscription()) {
-      let planExpirationDateTimeUtc = this.props.profile
-        .planExpirationDateTimeUtc;
-
-      let formattedExpirationDate = planExpirationDateTimeUtc
-        ? moment(planExpirationDateTimeUtc).format("LLLL")
-        : "An error has occurred, please check back later";
-
-      // Styling here is intended to be identical to a non-disabled TextField.
-      return (
-        <TextField
-          style={{
-            ...styles.input,
-            ...AppStyles.centeredElement
-          }}
-          underlineDisabledStyle={{
-            width: "100%",
-            borderBottom: "1px solid #E0E0E0",
-            borderBottomColor: "#E0E0E0"
-          }}
-          style={{
-            cursor: "auto",
-            color: "black",
-            width: "100%"
-          }}
-          inputStyle={{
-            color: "black",
-            fontSize: "120%"
-          }}
-          floatingLabelStyle={{
-            fontSize: "120%"
-          }}
-          disabled={true}
-          floatingLabelText="Premium Plan Expiration"
-          value={formattedExpirationDate}
-        />
-      );
-    } else {
-      return <span />;
-    }
-  };
-
   render = () => {
     let progress = <div />;
     let windowOpacity = 1;
@@ -351,24 +260,9 @@ TODO
             }}
           />
 
-          {/* NOTE: hiding expiration and status button during beta
+          <div style={AppStyles.errorText}>{this.state.updateError}</div>
 
-            {this._expirationDateDisplay()}
-
-            <div style={styles.spacer} />
-
-            {this._accountStatusButton()}
-
-            <div style={styles.spacer} />
-            */}
-
-          <div style={AppStyles.errorText}>
-            {this.state.updateError}
-          </div>
-
-          <div style={styles.successText}>
-            {this.state.updateSuccess}
-          </div>
+          <div style={styles.successText}>{this.state.updateSuccess}</div>
         </div>
       </div>
     );
@@ -393,4 +287,7 @@ const mapDispatchToProps = {
   removeFarRightNavButton: NavbarActions.removeFarRightNavButton
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Profile);
