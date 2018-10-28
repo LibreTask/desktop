@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component, PropTypes } from "react";
@@ -293,9 +293,11 @@ class MultiTaskPage extends Component {
   };
 
   _renderHeader(header) {
-    let listsArrowImage = this._isHeaderCurrentlyCollapsed(header.name)
-      ? <FaChevronRight />
-      : <FaChevronDown />;
+    let listsArrowImage = this._isHeaderCurrentlyCollapsed(header.name) ? (
+      <FaChevronRight />
+    ) : (
+      <FaChevronDown />
+    );
 
     return (
       <ListItem
@@ -359,11 +361,7 @@ class MultiTaskPage extends Component {
       );
     }
 
-    return (
-      <List>
-        {listItems}
-      </List>
-    );
+    return <List>{listItems}</List>;
   }
 
   render() {
@@ -399,4 +397,7 @@ const mapDispatchToProps = {
   setNavAction: NavbarActions.setNavAction
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiTaskPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MultiTaskPage);

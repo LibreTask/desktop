@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { PropTypes } from "react";
@@ -47,11 +47,7 @@ const TitlePanel = props => {
   return (
     <div style={rootStyle}>
       <div style={styles.header}>
-
-        <div style={styles.headerText}>
-          {props.title}
-        </div>
-
+        <div style={styles.headerText}>{props.title}</div>
       </div>
 
       {props.children}

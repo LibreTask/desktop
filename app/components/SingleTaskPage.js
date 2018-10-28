@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -471,13 +471,9 @@ class SingleTaskPage extends Component {
 
           <br />
 
-          <div style={AppStyles.errorText}>
-            {this.state.updateError}
-          </div>
+          <div style={AppStyles.errorText}>{this.state.updateError}</div>
 
-          <div style={styles.successText}>
-            {this.state.updateSuccess}
-          </div>
+          <div style={styles.successText}>{this.state.updateSuccess}</div>
         </div>
       </div>
     );
@@ -509,4 +505,7 @@ const mapDispatchToProps = {
   refreshTaskViewCollapseStatus: TaskViewActions.refreshTaskViewCollapseStatus
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SingleTaskPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SingleTaskPage);

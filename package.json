@@ -1,13 +1,13 @@
 {
-  "name": "Algernon",
+  "name": "LibreTask",
   "version": "0.0.1",
-  "description": "Algernon - a minimalist task manager",
+  "description": "LibreTask - a minimalist task manager",
   "author": {
-    "name": "Algernon",
-    "email": "support@algernon.io",
-    "url": "https://algernon.io"
+    "name": "LibreTask",
+    "email": "support@libretask.org",
+    "url": "https://libretask.org"
   },
-  "homepage": "https://algernon.io",
+  "homepage": "https://libretask.org",
   "scripts": {
     "build": "npm run build-main & npm run build-renderer",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -32,8 +32,8 @@
     ]
   },
   "build": {
-    "productName": "Algernon",
-    "appId": "io.algernon.Algernon",
+    "productName": "LibreTask",
+    "appId": "org.libretask.LibreTask",
     "files": [
       "dist/",
       "node_modules/",

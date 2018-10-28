@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -100,4 +100,7 @@ const mapDispatchToProps = {
   removeLeftNavButton: NavbarActions.removeLeftNavButton
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Settings);

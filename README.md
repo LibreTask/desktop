@@ -13,7 +13,7 @@
 
 # The above does not package the application. See
 
-(NOT THIS ONE) `electron-packager . Algernon --platform=darwin --arch=x64`
+(NOT THIS ONE) `electron-packager . LibreTask --platform=darwin --arch=x64`
 
 1. `npm run package`
 

@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 // TODO - how to properly create DB and share across all storage adapters?
@@ -8,19 +8,19 @@
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-let db = new PouchDB("./algernondb", { adapter: "websql" });
+let db = new PouchDB("./libretaskdb", { adapter: "websql" });
 
-function _algernonFormat(profile) {
-  let algernonFormattedProfile = {};
+function _libretaskFormat(profile) {
+  let libretaskFormattedProfile = {};
 
   if (profile) {
-    algernonFormattedProfile = profile;
-    delete algernonFormattedProfile._id;
-    delete algernonFormattedProfile._rev;
-    delete algernonFormattedProfile.type;
+    libretaskFormattedProfile = profile;
+    delete libretaskFormattedProfile._id;
+    delete libretaskFormattedProfile._rev;
+    delete libretaskFormattedProfile.type;
   }
 
-  return algernonFormattedProfile;
+  return libretaskFormattedProfile;
 }
 
 export function queueProfileUpdate(profile) {
@@ -41,7 +41,7 @@ export function deletedQueuedProfile() {
 }
 
 export async function getQueuedProfile() {
-  return _algernonFormat(await db.get("queue/profile"));
+  return _libretaskFormat(await db.get("queue/profile"));
 }
 
 export function createOrUpdateProfile(profile) {
@@ -62,7 +62,7 @@ export function deleteProfile() {
 }
 
 export async function getMyProfile() {
-  return _algernonFormat(await db.get("profile"));
+  return _libretaskFormat(await db.get("profile"));
 }
 
 export async function isLoggedIn() {
@@ -80,6 +80,6 @@ export function cleanProfileStorage() {
   return db.destroy().then(function(response) {
     // and then recreate the database, in case the user wants to
     // log in again or perform other actions
-    db = new PouchDB("./algernondb", { adapter: "websql" });
+    db = new PouchDB("./libretaskdb", { adapter: "websql" });
   });
 }

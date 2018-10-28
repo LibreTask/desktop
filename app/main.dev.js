@@ -23,8 +23,8 @@ SOFTWARE.
  */
 
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 /* eslint global-require: 1, flowtype-errors/show-errors: 0 */
@@ -53,7 +53,7 @@ let mainWindow = null;
 
 TODO - implement auto-update (note that this requires app-signing)
 
-const server = "https://algernon.io";
+const server = "https://libretask.org";
 
 // convert the Node platform naming convention to our own naming convention
 const platform =

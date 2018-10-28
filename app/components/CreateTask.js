@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -346,9 +346,7 @@ class CreateTask extends Component {
 
           {this._constructDatePicker()}
 
-          <div style={AppStyles.errorText}>
-            {this.state.createError}
-          </div>
+          <div style={AppStyles.errorText}>{this.state.createError}</div>
         </div>
 
         <div
@@ -390,4 +388,7 @@ const mapDispatchToProps = {
   refreshTaskViewCollapseStatus: TaskViewActions.refreshTaskViewCollapseStatus
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTask);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateTask);

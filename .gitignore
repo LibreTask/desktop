@@ -3,7 +3,7 @@ npm-debug.log
 .DS_Store
 
 # Build
-Algernon-darwin-x64
+LibreTask-darwin-x64
 app/main.prod.js
 app/main.prod.js.map
 app/dist

@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import * as _ from "lodash";
@@ -8,23 +8,23 @@ import * as _ from "lodash";
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-upsert"));
 
-let db = new PouchDB("./algernondb", { adapter: "websql" });
+let db = new PouchDB("./libretaskdb", { adapter: "websql" });
 
-function _algernonFormat(task) {
-  let algernonFormattedTask = {};
+function _libretaskFormat(task) {
+  let libretaskFormattedTask = {};
 
   if (task) {
-    algernonFormattedTask = task.key;
-    delete algernonFormattedTask._id;
-    delete algernonFormattedTask._rev;
-    delete algernonFormattedTask.type;
+    libretaskFormattedTask = task.key;
+    delete libretaskFormattedTask._id;
+    delete libretaskFormattedTask._rev;
+    delete libretaskFormattedTask.type;
   }
 
-  return algernonFormattedTask;
+  return libretaskFormattedTask;
 }
 
 export async function getTaskByTaskId(taskId) {
-  return _algernonFormat(await db.get(taskId));
+  return _libretaskFormat(await db.get(taskId));
 }
 
 export async function getAllTasks() {
@@ -39,7 +39,7 @@ export async function getAllTasks() {
 
   let taskMap = {};
   for (let task of tasks.rows) {
-    taskMap[task.id] = _algernonFormat(task);
+    taskMap[task.id] = _libretaskFormat(task);
   }
 
   return taskMap;
@@ -69,6 +69,6 @@ export function deleteTaskByTaskId(taskId) {
 export function cleanTaskStorage() {
   // TODO - refine
   return db.destroy().then(function(response) {
-    db = new PouchDB("./algernondb", { adapter: "websql" });
+    db = new PouchDB("./libretaskdb", { adapter: "websql" });
   });
 }

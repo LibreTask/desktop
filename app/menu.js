@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 /*
@@ -76,11 +76,15 @@ export default class MenuBuilder {
 
   buildDarwinTemplate() {
     const subMenuAbout = {
-      label: "Algernon",
+      label: "LibreTask",
       submenu: [
-        { label: "About Algernon", selector: "orderFrontStandardAboutPanel:" },
+        { label: "About LibreTask", selector: "orderFrontStandardAboutPanel:" },
         { type: "separator" },
-        { label: "Hide Algernon", accelerator: "Command+H", selector: "hide:" },
+        {
+          label: "Hide LibreTask",
+          accelerator: "Command+H",
+          selector: "hide:"
+        },
         {
           label: "Hide Others",
           accelerator: "Command+Shift+H",
@@ -145,7 +149,7 @@ export default class MenuBuilder {
         {
           label: "Learn More",
           click() {
-            shell.openExternal("http://algernon.io");
+            shell.openExternal("http://libretask.org");
           }
         }
       ]
@@ -225,7 +229,7 @@ export default class MenuBuilder {
           {
             label: "Learn More",
             click() {
-              shell.openExternal("http://algernon.io");
+              shell.openExternal("http://libretask.org");
             }
           }
         ]

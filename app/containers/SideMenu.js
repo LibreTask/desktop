@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { PropTypes } from "react";
@@ -183,4 +183,7 @@ const mapDispatchToProps = {
   closeLogoutDialog: LogoutDialogActions.toggle
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideMenu);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SideMenu);

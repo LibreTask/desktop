@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -44,7 +44,7 @@ class About extends Component {
     return (
       <div style={AppStyles.mainWindow}>
         <div style={AppStyles.centeredWindow}>
-          <div style={styles.titleText}>Algernon</div>
+          <div style={styles.titleText}>LibreTask</div>
 
           <div style={styles.textField}>
             Organize your goals, track your progress, and have updates
@@ -67,7 +67,7 @@ class About extends Component {
           {/*
 
             NOTE - we are not open sourcing until after the beta
-            
+
           <p
             style={styles.linkText}
             onClick={() => {
@@ -102,6 +102,17 @@ class About extends Component {
           </p>
 
           <Divider />
+
+          <p
+            style={styles.linkText}
+            onClick={() => {
+              shell.openExternal(AppConstants.SOURCE_CODE_LINK);
+            }}
+          >
+            Source Code
+          </p>
+
+          <Divider />
         </div>
       </div>
     );
@@ -116,4 +127,7 @@ const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(About);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(About);

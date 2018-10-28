@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -138,12 +138,10 @@ class Login extends Component {
 
         <div
           style={
-            (
-              AppStyles.centeredWindow,
-              {
-                opacity: windowOpacity
-              }
-            )
+            (AppStyles.centeredWindow,
+            {
+              opacity: windowOpacity
+            })
           }
         >
           <TextField
@@ -192,9 +190,7 @@ class Login extends Component {
             Forgot password?
           </p>
 
-          <div style={AppStyles.errorText}>
-            {this.state.loginError}
-          </div>
+          <div style={AppStyles.errorText}>{this.state.loginError}</div>
         </div>
       </div>
     );
@@ -210,4 +206,7 @@ const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

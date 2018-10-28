@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -526,7 +526,7 @@ class App extends Component {
                     this.props.closeUpdateDialog();
                   }}
                 >
-                  A new Algernon version exists. Would you like to update now?
+                  A new LibreTask version exists. Would you like to update now?
                 </Dialog>
                 <Dialog
                   style={AppStyles.dialog}
@@ -541,9 +541,7 @@ class App extends Component {
                   Do you really want to logout?
                 </Dialog>
               </div>
-              <div>
-                {this.props.children}
-              </div>
+              <div>{this.props.children}</div>
             </div>
           </TitlePanel>
         </Sidebar>
@@ -610,4 +608,7 @@ const mapDispatchToProps = {
   stopTaskViewRefresh: TaskViewActions.stopTaskViewRefresh
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

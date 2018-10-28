@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 import React, { Component } from "react";
@@ -144,12 +144,10 @@ class Signup extends Component {
 
         <div
           style={
-            (
-              AppStyles.centeredWindow,
-              {
-                opacity: windowOpacity
-              }
-            )
+            (AppStyles.centeredWindow,
+            {
+              opacity: windowOpacity
+            })
           }
         >
           <TextField
@@ -200,9 +198,7 @@ class Signup extends Component {
             onTouchTap={this._signup}
           />
 
-          <div style={AppStyles.errorText}>
-            {this.state.signupError}
-          </div>
+          <div style={AppStyles.errorText}>{this.state.signupError}</div>
         </div>
       </div>
     );
@@ -218,4 +214,7 @@ const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Signup);

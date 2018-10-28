@@ -1,6 +1,6 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 /*
@@ -8,8 +8,7 @@
 */
 function RetryableError(message) {
   this.name = "RetryableError";
-  this.message =
-    message || "Something went wrong, please try again later";
+  this.message = message || "Something went wrong, please try again later";
   this.stack = new Error().stack;
 }
 RetryableError.prototype = Object.create(Error.prototype);

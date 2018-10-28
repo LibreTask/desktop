@@ -1,21 +1,21 @@
 /*
- * @link https://www.algernon.io/
- * @license https://github.com/AlgernonLabs/desktop/blob/master/LICENSE.md
+ * @link https://libretask.org/
+ * @license https://github.com/LibreTask/desktop/blob/master/LICENSE.md
  */
 
 const CONSTANTS = {
-  ACCOUNT_UPGRADE_LINK: "https://www.algernon.io/profile/upgrade",
-  ACCOUNT_DOWNGRADE_LINK: "https://www.algernon.io/profile/downgrade",
-  PASSWORD_RESET_LINK: "https://www.algernon.io/forgot-password",
-  PRODUCT_PRIVACY_LINK: "https://www.algernon.io/privacy",
-  PRODUCT_TERMS_LINK: "https://www.algernon.io/terms",
-  WEBSITE_LINK: "https://algernon.io",
-  SOURCE_CODE_LINK: "https://github.com/AlgernonLabs/mobile",
+  ACCOUNT_UPGRADE_LINK: "https://libretask.org/profile/upgrade",
+  ACCOUNT_DOWNGRADE_LINK: "https://libretask.org/profile/downgrade",
+  PASSWORD_RESET_LINK: "https://libretask.org/forgot-password",
+  PRODUCT_PRIVACY_LINK: "https://libretask.org/privacy",
+  PRODUCT_TERMS_LINK: "https://libretask.org/terms",
+  WEBSITE_LINK: "https://libretask.org",
+  SOURCE_CODE_LINK: "https://github.com/LibreTask/desktop",
 
-  APP_UPDATE_LINK: "https://algernon.io/apps", // TODO -
+  APP_UPDATE_LINK: "https://libretask.org/apps", // TODO -
 
   APP_VERSION: "0.0.1", // TODO - pull from package.json instead
-  APP_NAME: "Algernon",
+  APP_NAME: "LibreTask",
 
   // TODO - move these button constants to more appropriate location
   EDIT_NAVBAR_BUTTON: "EDIT_NAVBAR_BUTTON",
