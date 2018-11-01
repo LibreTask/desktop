@@ -27,13 +27,6 @@ const styles = {
     marginBottom: 10,
     marginTop: 30,
     fontSize: "140%"
-  },
-  link: {
-    color: AppStyles.linkColor,
-    cursor: "pointer",
-    fontSize: "90%",
-    marginTop: 15,
-    marginBottom: 15
   }
 };
 
@@ -182,7 +175,7 @@ class Login extends Component {
           />
 
           <p
-            style={styles.link}
+            style={AppStyles.link}
             onClick={() => {
               shell.openExternal(AppConstants.PASSWORD_RESET_LINK);
             }}

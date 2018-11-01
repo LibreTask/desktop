@@ -6,7 +6,7 @@
 const CONSTANTS = {
   ACCOUNT_UPGRADE_LINK: "https://libretask.org/profile/upgrade",
   ACCOUNT_DOWNGRADE_LINK: "https://libretask.org/profile/downgrade",
-  PASSWORD_RESET_LINK: "https://libretask.org/forgot-password",
+  PASSWORD_RESET_LINK: "https://libretask.org/reset-password",
   PRODUCT_PRIVACY_LINK: "https://libretask.org/privacy",
   PRODUCT_TERMS_LINK: "https://libretask.org/terms",
   WEBSITE_LINK: "https://libretask.org",

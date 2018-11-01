@@ -40,7 +40,14 @@ const STYLES = {
     zIndex: 100000000, // spinners should have precedence
     margin: "auto"
   },
-  loadingOpacity: 0.6
+  loadingOpacity: 0.6,
+  link: {
+    color: "#19198C", // linkColor,
+    cursor: "pointer",
+    fontSize: "90%",
+    marginTop: 15,
+    marginBottom: 15
+  }
 };
 
 module.exports = STYLES;

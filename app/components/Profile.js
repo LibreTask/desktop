@@ -260,6 +260,15 @@ TODO
             }}
           />
 
+          <p
+            style={AppStyles.link}
+            onClick={() => {
+              shell.openExternal(AppConstants.PASSWORD_RESET_LINK);
+            }}
+          >
+            Update Password
+          </p>
+
           <div style={AppStyles.errorText}>{this.state.updateError}</div>
 
           <div style={styles.successText}>{this.state.updateSuccess}</div>
