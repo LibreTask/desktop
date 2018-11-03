@@ -64,23 +64,6 @@ class About extends Component {
 
           <Divider />
 
-          {/*
-
-            NOTE - we are not open sourcing until after the beta
-
-          <p
-            style={styles.linkText}
-            onClick={() => {
-              shell.openExternal(AppConstants.SOURCE_CODE_LINK);
-            }}
-          >
-            Source Code
-          </p>
-
-          <Divider />
-
-          */}
-
           <p
             style={styles.linkText}
             onClick={() => {
@@ -119,9 +102,7 @@ class About extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  /* TODO */
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
   setNavbarTitle: NavbarActions.setNavbarTitle

@@ -182,49 +182,22 @@ const initialState = {
 
 function userReducer(state = initialState, action) {
   switch (action.type) {
-    /*
-       TODO - doc
-     */
     case START_USER_SYNC:
       return startUserSync(state, action);
-    /*
-       TODO - doc
-     */
     case END_USER_SYNC:
       return endUserSync(state, action);
-    /*
-      TODO - doc
-     */
     case SYNC_USER:
       return syncUser(state, action);
-    /*
-       TODO - doc
-     */
     case CREATE_OR_UPDATE_PROFILE:
       return addProfile(state, action);
-    /*
-       TODO - doc
-     */
     case DELETE_PROFILE:
       return deleteProfile(state, action);
-    /*
-       TODO - doc
-     */
     case ADD_PENDING_PROFILE_UPDATE:
       return addPendingProfileUpdate(state, action);
-    /*
-       TODO - doc
-     */
     case REMOVE_PENDING_PROFILE_UPDATE:
       return removePendingProfileUpdate(state, action);
-    /*
-       TODO - doc
-     */
     case START_QUEUED_PROFILE_SUBMIT:
       return startQueuedProfileSubmission(state, action);
-    /*
-       TODO - doc
-     */
     case STOP_QUEUED_PROFILE_SUBMIT:
       return stopQueuedProfileSubmission(state, action);
 

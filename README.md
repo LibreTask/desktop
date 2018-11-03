@@ -1,24 +1,13 @@
+# LibreTask Desktop
 
-# Run in development environment
-`npm run dev`
+This is the code that powers the LibreTask desktop app. The app is largely considered code-complete. Future improvements will be in the form of documentation and refining existing features.
 
-# Build for platform (example here is mac)
+#### Running locally
 
-# Please note these commands take a long time (up to several minutes, so
-# do please be patient)
+1. Install all packages: `npm install`
+2. Run an instance locally: `npm run dev`
 
-1. `npm run build`
+#### Building production app
 
-2. `npm run start`
-
-# The above does not package the application. See
-
-(NOT THIS ONE) `electron-packager . LibreTask --platform=darwin --arch=x64`
-
-1. `npm run package`
-
----
-
-Potential requirement?
-
-`npm install ajv@5.2.0`
+1. Run `npm run package-mac`
+    - Replace `package-mac` with `package-win`, etc, for alternate platforms

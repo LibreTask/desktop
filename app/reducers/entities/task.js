@@ -657,84 +657,36 @@ const initialState = {
 
 function tasksReducer(state = initialState, action) {
   switch (action.type) {
-    /*
-        TODO - doc
-      */
     case START_QUEUED_TASK_SUBMIT:
       return startQueuedTaskSubmit(state, action);
-    /*
-        TODO - doc
-      */
     case STOP_QUEUED_TASK_SUBMIT:
       return stopQueuedTaskSubmission(state, action);
-    /*
-        TODO - doc
-      */
     case START_TASK_SYNC:
       return startTaskSync(state, action);
-    /*
-        TODO - doc
-      */
     case END_TASK_SYNC:
       return endTaskSync(state, action);
-    /*
-        TODO - doc
-      */
     case START_TASK_CLEANUP:
       return startTaskCleanup(state, action);
-    /*
-        TODO - doc
-      */
     case STOP_TASK_CLEANUP:
       return stopTaskCleanup(state, action);
-    /*
-       TODO - doc
-      */
     case SYNC_TASKS:
       return syncTasks(state, action);
-    /*
-        TODO - doc
-      */
     case CREATE_OR_UPDATE_TASK:
       return addTask(state, action);
-    /*
-        TODO - doc
-      */
     case DELETE_ALL_TASKS:
       return deleteAllTasks(state, action);
-    /*
-        TODO - doc
-      */
     case DELETE_TASK:
       return deleteTask(state, action);
-    /*
-        TODO - doc
-      */
     case ADD_PENDING_TASK_DELETE:
       return addPendingTaskDelete(state, action);
-    /*
-        TODO - doc
-      */
     case ADD_PENDING_TASK_UPDATE:
       return addPendingTaskUpdate(state, action);
-    /*
-        TODO - doc
-      */
     case ADD_PENDING_TASK_CREATE:
       return addPendingTaskCreate(state, action);
-    /*
-        TODO - doc
-      */
     case REMOVE_PENDING_TASK_DELETE:
       return removePendingTaskDelete(state, action);
-    /*
-        TODO - doc
-      */
     case REMOVE_PENDING_TASK_UPDATE:
       return removePendingTaskUpdate(state, action);
-    /*
-        TODO - doc
-      */
     case REMOVE_PENDING_TASK_CREATE:
       return removePendingTaskCreate(state, action);
 
