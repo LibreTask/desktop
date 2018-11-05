@@ -16,7 +16,9 @@ const rp = require("request-promise");
 
 export function constructAuthHeader(userId, password) {
   if (!userId || !password) {
-    throw new "Failed to construct auth header because of invalid arguments!"();
+    throw new Error(
+      "Failed to construct auth header because of invalid arguments!"
+    );
   }
 
   return "Basic " + new Buffer(userId + ":" + password).toString("base64");
